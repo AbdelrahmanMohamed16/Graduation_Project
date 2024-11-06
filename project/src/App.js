@@ -10,6 +10,7 @@ import LastSection from "./sections/LastSection/LastSection";
 import { useState } from "react";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
+import Navbar from "./components/Navbar/Navbar";
 function App() {
   const theme = (outerTheme) =>
     createTheme({
@@ -34,6 +35,15 @@ function App() {
     <>
       <CacheProvider value={cacheRtl}>
         <ThemeProvider theme={theme}>
+          <Navbar
+            navItems={[
+              "المعلومات الصرفيه",
+              " المعلومات الصوتيه",
+              " المعلومات الدلاليه",
+            ]}
+          >
+            {" "}
+          </Navbar>
           {/* <Login /> */}
           <Grid2 container>
             <Grid2 mx={4} width={"100%"}>

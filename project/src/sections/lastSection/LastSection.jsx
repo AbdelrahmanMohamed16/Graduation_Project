@@ -58,7 +58,7 @@ function LastSection() {
           <MyFormControlLabel value="second" label="ناقص" control={<Radio />} />
         </RadioGroup>
       </div>
-      <div>
+      {/* <div>
         {" "}
         <h5>المسار:</h5>
         <RadioGroup
@@ -77,7 +77,7 @@ function LastSection() {
             control={<Radio />}
           />
         </RadioGroup>
-      </div>
+      </div> */}
       <div style={{ width: "350px" }}>
         <InputField multiLine={true} label="ملاحظات للمدقق" />
       </div>

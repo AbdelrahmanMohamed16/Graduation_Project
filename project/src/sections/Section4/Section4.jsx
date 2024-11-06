@@ -4,14 +4,34 @@ import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
 import DividerComponent from "../../components/Divider/DividerComponent";
+import Example from "../../components/Example/Example";
+import { Stack } from "@mui/material";
 
 function Section4() {
   const [components, setComponents] = useState([]);
+  const [collocations, setCollocations] = useState(["احمر وجه"]);
 
-  const handelExample = () => {};
+  const handelExample = () => {
+    setComponents([...components, <Example key={components.length} />]);
+  };
   return (
     <>
       <h3>المتصاحبات اللفظية:</h3>
+      <Stack>
+        {collocations.map((collocation, index) => (
+          <div
+            key={index}
+            style={{
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: "18px",
+              marginBottom: "15px",
+            }}
+          >
+            {collocation}
+          </div>
+        ))}
+      </Stack>
       <Box
         sx={{
           flexGrow: 1,
@@ -63,6 +83,9 @@ function Section4() {
             </div>
           </Grid>
         </Grid>
+        {components.map((component, index) => (
+          <div key={index}>{component}</div>
+        ))}
       </Box>
     </>
   );
