@@ -13,7 +13,7 @@ function ButtonCompnent({
   return (
     <Button
       onClick={() => {
-        onclick();
+        onclick && onclick();
       }}
       variant="contained"
       sx={{
