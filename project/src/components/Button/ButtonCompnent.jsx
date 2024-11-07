@@ -1,12 +1,20 @@
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 
-function ButtonCompnent({ text = "فارغ", rounded = false, icon = false }) {
+function ButtonCompnent({
+  text = "فارغ",
+  rounded = false,
+  icon = false,
+  onclick,
+}) {
   const roundedStyle = rounded
     ? { borderRadius: "20px" }
     : { borderRadius: "6px" };
   return (
     <Button
+      onClick={() => {
+        onclick();
+      }}
       variant="contained"
       sx={{
         background: "linear-gradient(to right, #0F2D4D, #2369B3)",

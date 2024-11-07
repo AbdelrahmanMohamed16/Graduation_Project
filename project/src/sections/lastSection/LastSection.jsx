@@ -7,7 +7,7 @@ import Radio from "@mui/material/Radio";
 import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
-import { Box, Grid2, Stack } from "@mui/material";
+import { Box, Grid2, Stack, Typography } from "@mui/material";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -45,10 +45,18 @@ MyFormControlLabel.propTypes = {
 
 function LastSection() {
   return (
-    <>
-      <div>
-        {" "}
-        <h5>حاله البطاقه:</h5>
+    <Grid2 container spacing={2}>
+      <Grid2 size={12}>
+        <Typography
+          variant="h6"
+          fontWeight={"bold"}
+          fontFamily={"El Messiri"}
+          color="#0F2D4D"
+        >
+          حالة البطاقة:
+        </Typography>
+      </Grid2>
+      <Grid2 size={12} ml={2}>
         <RadioGroup
           name="use-radio-group"
           defaultValue="first"
@@ -57,10 +65,19 @@ function LastSection() {
           <MyFormControlLabel value="first" label="مكتمل" control={<Radio />} />
           <MyFormControlLabel value="second" label="ناقص" control={<Radio />} />
         </RadioGroup>
-      </div>
-      {/* <div>
-        {" "}
-        <h5>المسار:</h5>
+      </Grid2>
+
+      <Grid2 size={12}>
+        <Typography
+          variant="h6"
+          fontWeight={"bold"}
+          fontFamily={"El Messiri"}
+          color="#0F2D4D"
+        >
+          المسار:
+        </Typography>
+      </Grid2>
+      <Grid2 size={12} ml={2}>
         <RadioGroup
           name="use-radio-group"
           defaultValue="first"
@@ -77,8 +94,8 @@ function LastSection() {
             control={<Radio />}
           />
         </RadioGroup>
-      </div> */}
-      <div style={{ width: "350px" }}>
+      </Grid2>
+      <div style={{ maxWidth: "500px" }}>
         <InputField multiLine={true} label="ملاحظات للمدقق" />
       </div>
       <Box
@@ -89,16 +106,16 @@ function LastSection() {
           width: "100%",
         }}
       >
-        <Grid container spacing={2} width={"20%"}>
-          <Grid size={6}>
+        <Grid container spacing={2} width={{ xs: "30%", sm: "20%" }} mt={2}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <ButtonCompnent text="حفظ"></ButtonCompnent>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <ButtonCompnent text="ارسل للمدق"></ButtonCompnent>
           </Grid>
         </Grid>
       </Box>
-    </>
+    </Grid2>
   );
 }
 

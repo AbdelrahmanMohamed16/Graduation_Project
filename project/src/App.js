@@ -7,9 +7,9 @@ import Login from "./pages/Login";
 import Section2 from "./sections/Section2/Section2";
 import Section4 from "./sections/Section4/Section4";
 import LastSection from "./sections/LastSection/LastSection";
-import { useState } from "react";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
+import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 function App() {
   const theme = (outerTheme) =>
@@ -24,12 +24,6 @@ function App() {
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
-
-  const [age, setAge] = useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   return (
     <>
@@ -46,10 +40,12 @@ function App() {
           </Navbar>
           {/* <Login /> */}
           <Grid2 container>
-            <Grid2 mx={4} width={"100%"}>
+            <Grid2 mx={4} my={3} width={"100%"}>
               <Section1 />
               <DividerComponent />
               <Section2 />
+              <DividerComponent />
+              <Section3 />
               <DividerComponent />
               <Section4 />
               <DividerComponent />
