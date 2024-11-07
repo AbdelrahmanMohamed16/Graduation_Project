@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 dotenv.config({ path: "./config.env" });
 const wordRouter = require("./routers/wordRouter");
