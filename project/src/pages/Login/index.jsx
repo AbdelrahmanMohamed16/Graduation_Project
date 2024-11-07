@@ -6,12 +6,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import login_background from "../../assets/images/login_background.png";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../redux/userSlice";
 
 export default function Login() {
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const handleLogin = async () => {
+    dispatch(loginUser({ code: name, password }));
+    setName("");
+    setPassword("");
+  };
   return (
     <Grid2
       container
@@ -43,10 +54,16 @@ export default function Login() {
         <Typography variant="h2" fontFamily={"El Messiri"}>
           تسجيل الدخول
         </Typography>
-        <InputField label="اسم المستخدم" text={true} />
-        <InputField label="كلمة المرور" text={true} type="password" />
+        <InputField label="اسم المستخدم" text={true} set={setName} val={name} />
+        <InputField
+          label="كلمة المرور"
+          text={true}
+          type="password"
+          set={setPassword}
+          val={password}
+        />
         <Stack sx={{ width: "50%", margin: "auto auto 0 auto !important" }}>
-          <ButtonCompnent text="الدخول" />
+          <ButtonCompnent text="الدخول" onclick={handleLogin} />
         </Stack>
       </Stack>
     </Grid2>

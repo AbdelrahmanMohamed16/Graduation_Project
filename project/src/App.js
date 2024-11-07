@@ -1,4 +1,6 @@
 import { createTheme, Grid2, ThemeProvider } from "@mui/material";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
@@ -11,7 +13,12 @@ import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
+
+import { useSelector } from "react-redux";
+
 function App() {
+  const auth = useSelector((state) => state.user.auth);
+
   const theme = (outerTheme) =>
     createTheme({
       direction: "rtl",
@@ -26,35 +33,48 @@ function App() {
   });
 
   return (
-    <>
-      <CacheProvider value={cacheRtl}>
-        <ThemeProvider theme={theme}>
-          <Navbar
-            navItems={[
-              "المعلومات الصرفيه",
-              " المعلومات الصوتيه",
-              " المعلومات الدلاليه",
-            ]}
-          >
-            {" "}
-          </Navbar>
-          {/* <Login /> */}
-          <Grid2 container>
-            <Grid2 mx={4} my={3} width={"100%"}>
-              <Section1 />
-              <DividerComponent />
-              <Section2 />
-              <DividerComponent />
-              <Section3 />
-              <DividerComponent />
-              <Section4 />
-              <DividerComponent />
-              <LastSection />
-            </Grid2>
-          </Grid2>
-        </ThemeProvider>
-      </CacheProvider>
-    </>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                auth ? (
+                  <>
+                    <Navbar
+                      navItems={[
+                        "المعلومات الصرفيه",
+                        " المعلومات الصوتيه",
+                        " المعلومات الدلاليه",
+                      ]}
+                    >
+                      {" "}
+                    </Navbar>
+                    <Grid2 container>
+                      <Grid2 mx={4} my={3} width={"100%"}>
+                        <Section1 />
+                        <DividerComponent />
+                        <Section2 />
+                        <DividerComponent />
+                        <Section3 />
+                        <DividerComponent />
+                        <Section4 />
+                        <DividerComponent />
+                        <LastSection />
+                      </Grid2>
+                    </Grid2>
+                  </>
+                ) : (
+                  <Login />
+                )
+              }
+            ></Route>
+            <Route path="*" element={<Login />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 
