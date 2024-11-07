@@ -4,7 +4,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-const VoiceRecorder = () => {
+const Voice = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const mediaRecorderRef = useRef(null);
@@ -31,7 +31,7 @@ const VoiceRecorder = () => {
   };
 
   const handleStopRecording = () => {
-    mediaRecorderRef.current.stop();
+    mediaRecorderRef.current?.stop();
     setIsRecording(false);
   };
 
@@ -41,35 +41,40 @@ const VoiceRecorder = () => {
         variant="contained"
         sx={{
           background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-          borderRadius: "20px",
-          padding: "1rem",
-          width: "120px",
+          borderRadius: "5px",
+          // padding: "1rem",
+          width: "130px",
+          marginRight: "10px",
           color: "#FFFFFF",
-          fontSize: "16px",
+          fontSize: "20px",
           fontFamily: "El Messiri",
         }}
+        size="large"
         onClick={isRecording ? handleStopRecording : handleStartRecording}
+        endIcon={
+          isRecording ? (
+            <StopIcon sx={{ color: "#E72929" }} />
+          ) : (
+            <MicIcon sx={{ color: "white" }} />
+          )
+        }
       >
         {isRecording ? (
           <span style={{ fontSize: "20px" }}>انهاء</span>
         ) : (
           <span style={{ fontSize: "20px" }}>النطق</span>
         )}
-
-        <IconButton>
-          {isRecording ? (
-            <StopIcon sx={{ color: "#E72929", fontSize: "30px" }} />
-          ) : (
-            <MicIcon sx={{ color: "white", fontSize: "30px" }} />
-          )}
-        </IconButton>
+        {/* {isRecording ? (
+          <StopIcon sx={{ color: "#E72929", fontSize: "30px" }} />
+        ) : (
+          <MicIcon sx={{ color: "white", fontSize: "30px" }} />
+        )} */}
       </Button>
       {audioURL && (
         <Button
           variant="outlined"
           sx={{
-            marginRight: "20px",
-            borderRadius: "20px",
+            borderRadius: "5px",
             color: "white", // Text color
             fontSize: "16px",
             fontFamily: "El Messiri",
@@ -90,4 +95,4 @@ const VoiceRecorder = () => {
   );
 };
 
-export default VoiceRecorder;
+export default Voice;

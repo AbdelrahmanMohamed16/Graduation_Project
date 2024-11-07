@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
 import DividerComponent from "../../components/Divider/DividerComponent";
+import { Grid2, Typography } from "@mui/material";
 
 function Section4() {
   const [components, setComponents] = useState([]);
@@ -11,7 +12,6 @@ function Section4() {
   const handelExample = () => {};
   return (
     <>
-      <h3>المتصاحبات اللفظية:</h3>
       <Box
         sx={{
           flexGrow: 1,
@@ -21,14 +21,24 @@ function Section4() {
         }}
       >
         <Grid container spacing={2}>
-          <Grid size={3}>
+          <Grid2 size={12}>
+            <Typography
+              variant="h6"
+              fontWeight={"bold"}
+              fontFamily={"El Messiri"}
+              color="#0F2D4D"
+            >
+              المتصاحبات اللفظية:
+            </Typography>
+          </Grid2>
+          <Grid size={{ xs: 12, md: 3 }}>
             <InputField text={true} label="التركيب التصاحبي" />
           </Grid>
-          <Grid size={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <InputField text={true} label="معني التركيب التصاحبي" />
           </Grid>
           <Grid
-            size={2}
+            size={{ xs: 12, md: 3 }}
             sx={{
               margin: "auto",
             }}
@@ -41,14 +51,14 @@ function Section4() {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <InputField text={true} label="أمثلة إستعمالية" />
           </Grid>
-          <Grid size={2}>
+          <Grid size={{ xs: 12, md: 2 }}>
             <InputField text={true} label="المصدر" />
           </Grid>
           <Grid
-            size={2}
+            size={{ xs: 12, md: 3 }}
             sx={{
               margin: "auto",
             }}

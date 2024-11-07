@@ -13,6 +13,7 @@ function InputField({
   variant = "filled",
   type = "text",
   options = [],
+  disabled = false,
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
@@ -59,6 +60,7 @@ function InputField({
         // helperText="هذا نص مساعد"
         variant={variant}
         type={type}
+        disabled={disabled ? disabled : null}
         sx={{
           width: "100%",
           ...(variant === "filled"
