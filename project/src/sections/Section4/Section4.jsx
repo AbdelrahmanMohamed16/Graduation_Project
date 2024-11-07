@@ -3,7 +3,6 @@ import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
-import DividerComponent from "../../components/Divider/DividerComponent";
 import Example from "../../components/Example/Example";
 import { Grid2, Stack, Typography } from "@mui/material";
 
