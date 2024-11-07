@@ -7,7 +7,7 @@ import Radio from "@mui/material/Radio";
 import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
-import { Box, Grid2, Stack, Typography } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -111,7 +111,7 @@ function LastSection() {
             <ButtonCompnent text="حفظ"></ButtonCompnent>
           </Grid>
           <Grid size={{ xs: 12, md: 8 }}>
-            <ButtonCompnent text="ارسل للمدق"></ButtonCompnent>
+            <ButtonCompnent text="ارسل للمدقق"></ButtonCompnent>
           </Grid>
         </Grid>
       </Box>

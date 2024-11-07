@@ -32,15 +32,33 @@ function Section2() {
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}
-          <InputField label={"الفئة الكلامية"} select={true}></InputField>
+          <InputField
+            label={"الفئة الكلامية"}
+            select={true}
+            name={"word_class"}
+            MorphologicalInfo={true}
+            options={["جمع تكسير", "جمع مذكر سالم"]}
+          ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}
-          <InputField label={"الصيغة الصرفية"} select={true}></InputField>
+          <InputField
+            label={"الصيغة الصرفية"}
+            select={true}
+            name={"morphological_form"}
+            MorphologicalInfo={true}
+            options={["عام", "خاص"]}
+          ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}
-          <InputField label={"المستوى اللغوي"} select={true}></InputField>
+          <InputField
+            label={"المستوى اللغوي"}
+            select={true}
+            name={"linguistic_level"}
+            MorphologicalInfo={true}
+            options={["فصيح", "غير فصيح"]}
+          ></InputField>
         </Grid>
       </Grid>
     </>

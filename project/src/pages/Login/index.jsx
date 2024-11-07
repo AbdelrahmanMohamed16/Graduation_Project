@@ -12,14 +12,20 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import login_background from "../../assets/images/login_background.png";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    dispatch(loginUser({ code: name, password }));
+    const logined = await dispatch(loginUser({ code: name, password }));
+    console.log(logined.payload);
+    if (logined.payload.data) {
+      navigate(`/words`);
+    }
     setName("");
     setPassword("");
   };

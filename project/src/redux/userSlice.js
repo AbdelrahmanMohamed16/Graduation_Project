@@ -22,7 +22,7 @@ export const loginUser = createAsyncThunk(
     );
     try {
       const response = await fetch(
-        "http://156.196.194.215:7070/api/v1/Auth/login",
+        "http://41.233.5.208:7070/api/v1/Auth/login",
         {
           method: "post",
           headers: { "Content-Type": "application/json" },

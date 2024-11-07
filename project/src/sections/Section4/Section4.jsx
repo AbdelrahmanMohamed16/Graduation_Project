@@ -8,7 +8,7 @@ import { Grid2, Stack, Typography } from "@mui/material";
 
 function Section4() {
   const [components, setComponents] = useState([]);
-  const [collocations, setCollocations] = useState(["احمر وجه"]);
+  const [collocations, setCollocations] = useState([]);
 
   const handelExample = () => {
     setComponents([...components, <Example key={components.length} />]);
