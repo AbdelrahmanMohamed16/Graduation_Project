@@ -2,27 +2,12 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const cors = require("cors");
-const mongoose = require("mongoose");
 
 dotenv.config({ path: "./config.env" });
 const wordRouter = require("./routers/wordRouter");
 const userRouter = require("./routers/userRouter");
 
 app.use(cors());
-
-async function connectDB() {
-  try {
-    await mongoose.connect(`${process.env.DATABASE}`, {
-      useNewUrlParser: true, // These options avoid deprecation warnings
-      useUnifiedTopology: true, // Ensures compatibility with MongoDB drivers
-    });
-    console.log("MongoDB Connected!");
-  } catch (error) {
-    console.error("Failed to connect to MongoDB:", error.message);
-  }
-}
-
-connectDB();
 
 app.use(express.static("public"));
 app.use(express.json());
