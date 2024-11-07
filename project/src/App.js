@@ -40,40 +40,38 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Routes>
+            {auth} && (
             <Route
               path="/"
               element={
-                auth ? (
-                  <>
-                    <Navbar
-                      navItems={[
-                        "المعلومات الصرفيه",
-                        " المعلومات الصوتيه",
-                        " المعلومات الدلاليه",
-                      ]}
-                      setWord={setWord}
-                    >
-                      {" "}
-                    </Navbar>
-                    <Grid2 container>
-                      <Grid2 mx={4} my={3} width={"100%"}>
-                        <Section1 word={word} />
-                        <DividerComponent />
-                        <Section2 />
-                        <DividerComponent />
-                        <Section3 />
-                        <DividerComponent />
-                        <Section4 />
-                        <DividerComponent />
-                        <LastSection />
-                      </Grid2>
+                <>
+                  <Navbar
+                    navItems={[
+                      "المعلومات الصرفيه",
+                      " المعلومات الصوتيه",
+                      " المعلومات الدلاليه",
+                    ]}
+                    setWord={setWord}
+                  >
+                    {" "}
+                  </Navbar>
+                  <Grid2 container>
+                    <Grid2 mx={4} my={3} width={"100%"}>
+                      <Section1 word={word} />
+                      <DividerComponent />
+                      <Section2 />
+                      <DividerComponent />
+                      <Section3 />
+                      <DividerComponent />
+                      <Section4 />
+                      <DividerComponent />
+                      <LastSection />
                     </Grid2>
-                  </>
-                ) : (
-                  <Login />
-                )
+                  </Grid2>
+                </>
               }
-            ></Route>
+            />
+            )
             <Route path="*" element={<Login />} />
           </Routes>
         </Router>

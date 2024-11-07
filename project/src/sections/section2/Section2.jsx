@@ -23,7 +23,12 @@ function Section2() {
           </Typography>
         </Grid2>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
-          <InputField label={"الاصل اللغوي"} text={true}></InputField>
+          <InputField
+            label={"الاصل اللغوي"}
+            text={true}
+            name={"root"}
+            MorphologicalInfo={true}
+          ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}

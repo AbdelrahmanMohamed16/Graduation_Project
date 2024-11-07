@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateForm } from "../../redux/userSlice";
+import { updateForm, updateMorphologicalInfo } from "../../redux/userSlice";
 
 function InputField({
   text = false,
@@ -19,6 +19,10 @@ function InputField({
   set,
   val,
   name,
+  word = false,
+  MorphologicalInfo = false,
+  semantic_info = false,
+  diacritics = false,
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
@@ -26,12 +30,32 @@ function InputField({
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
-    val(event.target.value);
-    dispatch(updateForm({ name, value: event.target.value }));
+    if (val) {
+      val(event.target.value);
+    }
+    if (word) {
+      dispatch(updateForm({ name, value: event.target.value }));
+    }
+    if (semantic_info) {
+    }
+    if (MorphologicalInfo) {
+      dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
+    }
+    if (diacritics) {
+    }
   };
   const handleInputChange = (event) => {
     console.log(event.target.value);
-    set(event.target.value);
+    if (set) {
+      set(event.target.value);
+    }
+    if (MorphologicalInfo) {
+      dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
+    }
+    if (semantic_info) {
+    }
+    if (diacritics) {
+    }
   };
   if (text) {
     return (

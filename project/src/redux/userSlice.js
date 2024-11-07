@@ -8,6 +8,7 @@ const initialState = {
   auth: localStorage.getItem("authToken") || false,
   form: {},
   diacritics: [],
+  morphological_info: {},
 };
 
 export const loginUser = createAsyncThunk(
@@ -70,6 +71,11 @@ export const userSlice = createSlice({
     updateDiacritics: (state, action) => {
       state.diacritics = action.payload;
     },
+    updateMorphologicalInfo: (state, action) => {
+      console.log(action.payload);
+      state.morphological_info[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.morphological_info)));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -95,6 +101,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, updateForm } = userSlice.actions;
+export const { login, updateForm, updateMorphologicalInfo, updateDiacritics } =
+  userSlice.actions;
 
 export default userSlice.reducer;
