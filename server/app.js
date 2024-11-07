@@ -12,7 +12,7 @@ app.use(cors());
 
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.DATABASE, {
+    await mongoose.connect(`${process.env.DATABASE}`, {
       useNewUrlParser: true, // These options avoid deprecation warnings
       useUnifiedTopology: true, // Ensures compatibility with MongoDB drivers
     });
