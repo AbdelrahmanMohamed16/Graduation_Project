@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -15,12 +14,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import InputField from "../Input/InputField";
-import { TextField } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
 function Navbar(props) {
-  const { window, navItems } = props;
+  const data = useSelector((state) => state.user.data);
+  const options = data.assigned_words.map((word) => word.text);
+
+  const { window, navItems, setWord } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -98,26 +100,29 @@ function Navbar(props) {
                 noWrap
                 component="div"
                 sx={{
-                  fontSize: "22px",
-                  fontWeight: "800",
+                  fontSize: "18px",
+                  fontWeight: "700",
                 }}
               >
-                كود المحرر: 123
+                كود المحرر: {data.code}
               </Typography>
               <Typography
                 noWrap
                 component="div"
                 sx={{
-                  fontSize: "22px",
-                  fontWeight: "800",
+                  fontSize: "18px",
+                  fontWeight: "700",
                 }}
               >
-                لجنة: 123
+                لجنة: {data.committee}
               </Typography>
               <Typography noWrap component="div" sx={{ width: "40%" }}>
                 <InputField
                   select={true}
                   label="قائمة المداخل المطلوب تحريرها"
+                  options={options}
+                  val={setWord}
+                  name={"text"}
                 />
               </Typography>
             </div>

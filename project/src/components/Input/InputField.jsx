@@ -4,6 +4,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateForm } from "../../redux/userSlice";
 
 function InputField({
   text = false,
@@ -16,13 +18,16 @@ function InputField({
   disabled = false,
   set,
   val,
+  name,
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
   const [selectedOption, setSelectedOption] = useState("");
-
+  const dispatch = useDispatch();
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
+    val(event.target.value);
+    dispatch(updateForm({ name, value: event.target.value }));
   };
   const handleInputChange = (event) => {
     console.log(event.target.value);

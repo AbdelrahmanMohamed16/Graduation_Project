@@ -28,7 +28,7 @@ function DataInputs() {
   );
 }
 
-export default function Section1() {
+export default function Section1({ word = "المدخل" }) {
   const [examples, setExamples] = useState([<DataInputs />]);
   return (
     <>
@@ -48,7 +48,7 @@ export default function Section1() {
         columnSpacing={{ xs: 1, sm: 2, md: 5 }}
       >
         <Grid2 size={{ xs: 8, sm: 4, md: 3 }}>
-          <InputField label="المدخل" text={true} disabled={true} />
+          <InputField label={word} text={true} disabled={true} />
         </Grid2>
         <Grid2 size={12}>
           <Typography

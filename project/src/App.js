@@ -14,10 +14,13 @@ import DividerComponent from "./components/Divider/DividerComponent";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 function App() {
   const auth = useSelector((state) => state.user.auth);
+
+  const [word, setWord] = useState("المدخل");
 
   const theme = (outerTheme) =>
     createTheme({
@@ -48,12 +51,13 @@ function App() {
                         " المعلومات الصوتيه",
                         " المعلومات الدلاليه",
                       ]}
+                      setWord={setWord}
                     >
                       {" "}
                     </Navbar>
                     <Grid2 container>
                       <Grid2 mx={4} my={3} width={"100%"}>
-                        <Section1 />
+                        <Section1 word={word} />
                         <DividerComponent />
                         <Section2 />
                         <DividerComponent />

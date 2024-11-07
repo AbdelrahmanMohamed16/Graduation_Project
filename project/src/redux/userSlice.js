@@ -7,6 +7,7 @@ const initialState = {
   message: "",
   auth: localStorage.getItem("authToken") || false,
   form: {},
+  diacritics: [],
 };
 
 export const loginUser = createAsyncThunk(
@@ -59,7 +60,15 @@ export const userSlice = createSlice({
       localStorage.clear();
     },
     updateForm: (state, action) => {
+      console.log(action.payload);
+      console.log(action.payload.name);
+      console.log(action.payload.value);
+
       state.form[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.form)));
+    },
+    updateDiacritics: (state, action) => {
+      state.diacritics = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -86,6 +95,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, register, logout } = userSlice.actions;
+export const { login, updateForm } = userSlice.actions;
 
 export default userSlice.reducer;
