@@ -18,6 +18,14 @@ const VisuallyHiddenInput = styled("input")({
 });
 export default function Section3() {
   const [examples, setExamples] = useState([<ExampleData />]);
+  const [options, setOptions] = useState([
+    "العلوم",
+    "الفنون",
+    "الزراعة",
+    "نظم المعلومات",
+    "الاخلاق",
+  ]);
+  const [option, setOption] = useState("");
   const [file, setFile] = useState(null);
   function ExampleData() {
     return (
@@ -39,15 +47,20 @@ export default function Section3() {
       rowSpacing={5}
       columnSpacing={{ xs: 1, sm: 2, md: 5 }}
     >
-      <Grid2 size={12}>
-        <Typography
-          variant="h6"
-          fontWeight={"bold"}
-          fontFamily={"El Messiri"}
-          color="#0F2D4D"
-        >
-          المعلومات الدلالية:
-        </Typography>
+      <Grid2 container size={12}>
+        <Grid2 size={6.5}>
+          <Typography
+            variant="h6"
+            fontWeight={"bold"}
+            fontFamily={"El Messiri"}
+            color="#0F2D4D"
+          >
+            المعلومات الدلالية:
+          </Typography>
+        </Grid2>
+        <Grid2 size={2}>
+          <ButtonCompnent text="اضف معلومة دلالية جديدة" icon={true} />
+        </Grid2>
       </Grid2>
       <Grid2
         container
@@ -56,10 +69,19 @@ export default function Section3() {
         columnSpacing={{ xs: 1, sm: 2, md: 5 }}
       >
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <InputField label="المجال الدلالي" select={true} />
+          <InputField label="المجال الدلالي" select={true} options={options} />
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <InputField label="اضف" text={true} />
+          <InputField label="اضف" text={true} val={option} set={setOption} />
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <ButtonCompnent
+            text="اضف"
+            icon={true}
+            onclick={() => {
+              setOptions((prevFields) => [...prevFields, option]);
+            }}
+          />
         </Grid2>
       </Grid2>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -105,14 +127,18 @@ export default function Section3() {
             <VisuallyHiddenInput
               type="file"
               onChange={(event) => {
-                console.log(event.target.files[0]);
+                if (event.target.files[0]) {
+                  const imageURL = URL.createObjectURL(event.target.files[0]); // Generate a temporary URL for the file
+                  setFile(imageURL);
+                }
               }}
             />
           </Button>
         </Grid2>
-        <Grid2 size={{ xs: 6, sm: 2 }}>
+        <Grid2 size={{ xs: 6, sm: 4 }}>
           <img
             width={"100%"}
+            style={{ maxHeight: "300px" }}
             src={file ? file : PlaceholderImage}
             alt={file ? file : PlaceholderImage}
           ></img>
@@ -120,7 +146,7 @@ export default function Section3() {
         <Grid2 size={{ xs: 12, sm: 4 }}>
           <InputField label="وصف الصورة الشارحة" multiLine={true} />
         </Grid2>
-        <Grid2 size={{ xs: 12, sm: 4 }}>
+        <Grid2 size={{ xs: 12, sm: 2 }}>
           <InputField label="المصدر" text={true} />
         </Grid2>
       </Grid2>

@@ -37,7 +37,7 @@ function Section2() {
             select={true}
             name={"word_class"}
             MorphologicalInfo={true}
-            options={["جمع تكسير", "جمع مذكر سالم"]}
+            options={["مشتق", "مصدر", "علم", "ظرف"]}
           ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
@@ -47,7 +47,21 @@ function Section2() {
             select={true}
             name={"morphological_form"}
             MorphologicalInfo={true}
-            options={["عام", "خاص"]}
+            options={[
+              "اسم فاعل",
+              "اسم مفعول",
+              "صيغة مبالغة",
+              "مصدر ميمي",
+              "مصدر صناعي",
+              "نسبة",
+              "اسم مكان",
+              "اسم زمان",
+              "اسم آلة",
+              "صفة مشبهة",
+              "اسم همزة",
+              "اسم هيئة",
+              "اسم تفضيل",
+            ]}
           ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
@@ -57,7 +71,7 @@ function Section2() {
             select={true}
             name={"linguistic_level"}
             MorphologicalInfo={true}
-            options={["فصيح", "غير فصيح"]}
+            options={["تراثي", "معاصر", "دخيل", "معرَّب"]}
           ></InputField>
         </Grid>
       </Grid>

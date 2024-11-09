@@ -20,7 +20,8 @@ const drawerWidth = 240;
 
 function Navbar(props) {
   const data = useSelector((state) => state.user.data);
-  const options = data.assigned_words.map((word) => word.text);
+  // const options = data.assigned_words.map((word) => word.text);
+  const options = [];
 
   const { window, navItems, setWord } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -104,7 +105,7 @@ function Navbar(props) {
                   fontWeight: "700",
                 }}
               >
-                كود المحرر: {data.code}
+                كود المحرر: {data?.code}
               </Typography>
               <Typography
                 noWrap
@@ -114,7 +115,7 @@ function Navbar(props) {
                   fontWeight: "700",
                 }}
               >
-                لجنة: {data.committee}
+                لجنة: {data?.committee}
               </Typography>
               <Typography noWrap component="div" sx={{ width: "40%" }}>
                 <InputField

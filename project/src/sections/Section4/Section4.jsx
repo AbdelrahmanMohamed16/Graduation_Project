@@ -21,6 +21,7 @@ function Section4() {
           display: "flex",
           flexDirection: "column",
           gap: "30px",
+          mt: 15,
         }}
       >
         <Grid container spacing={2}>
@@ -89,6 +90,45 @@ function Section4() {
                 icon={true}
               ></ButtonCompnent>
             </div>
+          </Grid>
+          <Grid
+            container
+            size={12}
+            sx={{
+              mt: 10,
+              justifyContent: "start",
+            }}
+          >
+            <Grid size={{ xs: 12, sm: 6, md: 1 }}>
+              <Typography
+                variant="h5"
+                fontWeight={"bold"}
+                fontFamily={"El Messiri"}
+                color="#0F2D4D"
+              >
+                مواقع للبحث:
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <a href="https://falak.ksaa.gov.sa/" target="_blank">
+                <ButtonCompnent text="فلك" />
+              </a>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <a href="https://www.sketchengine.eu/" target="_blank">
+                <ButtonCompnent text="Sketch" />
+              </a>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+              <a href="https://chat.com/" target="_blank">
+                <ButtonCompnent text="AI" />
+              </a>
+            </Grid>
+            <Grid container justifyContent={"center"} size={12} mt={10}>
+              <Grid size={2}>
+                <ButtonCompnent text="اضف معلومة دلالية جديدة" icon={true} />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         {components.map((component, index) => (
