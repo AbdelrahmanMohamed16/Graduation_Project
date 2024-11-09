@@ -49,9 +49,9 @@ function App() {
                 <>
                   <Navbar
                     navItems={[
-                      "المعلومات الصرفيه",
-                      " المعلومات الصوتيه",
-                      " المعلومات الدلاليه",
+                      { text: " المعلومات الصوتيه", id: "section1" },
+                      { text: "المعلومات الصرفيه", id: "section2" },
+                      { text: " المعلومات الدلاليه", id: "section3" },
                     ]}
                     setWord={setWord}
                   >

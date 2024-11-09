@@ -41,112 +41,118 @@ export default function Section3() {
   }
 
   return (
-    <Grid2
-      container
-      size={12}
-      rowSpacing={5}
-      columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-    >
-      <Grid2 container size={12}>
-        <Grid2 size={12}>
-          <Typography
-            variant="h6"
-            fontWeight={"bold"}
-            fontFamily={"El Messiri"}
-            color="#0F2D4D"
-          >
-            المعلومات الدلالية:
-          </Typography>
-        </Grid2>
-      </Grid2>
+    <div id="section3">
       <Grid2
         container
         size={12}
         rowSpacing={5}
         columnSpacing={{ xs: 1, sm: 2, md: 5 }}
       >
-        <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <InputField label="المجال الدلالي" select={true} options={options} />
+        <Grid2 container size={12}>
+          <Grid2 size={12}>
+            <Typography
+              variant="h6"
+              fontWeight={"bold"}
+              fontFamily={"El Messiri"}
+              color="#0F2D4D"
+            >
+              المعلومات الدلالية:
+            </Typography>
+          </Grid2>
+        </Grid2>
+        <Grid2
+          container
+          size={12}
+          rowSpacing={5}
+          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
+        >
+          <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <InputField
+              label="المجال الدلالي"
+              select={true}
+              options={options}
+            />
+          </Grid2>
+          <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <InputField label="اضف" text={true} val={option} set={setOption} />
+          </Grid2>
+          <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <ButtonCompnent
+              text="اضف"
+              icon={true}
+              onclick={() => {
+                setOptions((prevFields) => [...prevFields, option]);
+              }}
+            />
+          </Grid2>
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <InputField label="اضف" text={true} val={option} set={setOption} />
+          <InputField label="المعني" multiLine={true} />
+        </Grid2>
+        <Grid2
+          container
+          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+          rowSpacing={5}
+          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
+        >
+          {examples.map((example, i) => (
+            <Fragment key={i}>{example}</Fragment>
+          ))}
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <ButtonCompnent
-            text="اضف"
+            text="اضف مثال جديد"
             icon={true}
             onclick={() => {
-              setOptions((prevFields) => [...prevFields, option]);
+              setExamples((prevFields) => [...prevFields, <ExampleData />]);
             }}
           />
         </Grid2>
-      </Grid2>
-      <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <InputField label="المعني" multiLine={true} />
-      </Grid2>
-      <Grid2
-        container
-        size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-        rowSpacing={5}
-        columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-      >
-        {examples.map((example, i) => (
-          <Fragment key={i}>{example}</Fragment>
-        ))}
-      </Grid2>
-      <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <ButtonCompnent
-          text="اضف مثال جديد"
-          icon={true}
-          onclick={() => {
-            setExamples((prevFields) => [...prevFields, <ExampleData />]);
-          }}
-        />
-      </Grid2>
-      <Grid2
-        container
-        size={12}
-        rowSpacing={5}
-        columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-      >
-        <Grid2 size={{ xs: 4, sm: 2 }}>
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            endIcon={<CloudUploadIcon />}
-            sx={{
-              background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-            }}
-          >
-            صورة شارحة
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(event) => {
-                if (event.target.files[0]) {
-                  const imageURL = URL.createObjectURL(event.target.files[0]); // Generate a temporary URL for the file
-                  setFile(imageURL);
-                }
+        <Grid2
+          container
+          size={12}
+          rowSpacing={5}
+          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
+        >
+          <Grid2 size={{ xs: 4, sm: 2 }}>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              endIcon={<CloudUploadIcon />}
+              sx={{
+                background: "linear-gradient(to right, #0F2D4D, #2369B3)",
               }}
-            />
-          </Button>
-        </Grid2>
-        <Grid2 size={{ xs: 6, sm: 4 }}>
-          <img
-            width={"100%"}
-            style={{ maxHeight: "300px" }}
-            src={file ? file : PlaceholderImage}
-            alt={file ? file : PlaceholderImage}
-          ></img>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 4 }}>
-          <InputField label="وصف الصورة الشارحة" multiLine={true} />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 2 }}>
-          <InputField label="المصدر" text={true} />
+            >
+              صورة شارحة
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(event) => {
+                  if (event.target.files[0]) {
+                    const imageURL = URL.createObjectURL(event.target.files[0]); // Generate a temporary URL for the file
+                    setFile(imageURL);
+                  }
+                }}
+              />
+            </Button>
+          </Grid2>
+          <Grid2 size={{ xs: 6, sm: 4 }}>
+            <img
+              width={"100%"}
+              style={{ maxHeight: "300px" }}
+              src={file ? file : PlaceholderImage}
+              alt={file ? file : PlaceholderImage}
+            ></img>
+          </Grid2>
+          <Grid2 size={{ xs: 12, sm: 4 }}>
+            <InputField label="وصف الصورة الشارحة" multiLine={true} />
+          </Grid2>
+          <Grid2 size={{ xs: 12, sm: 2 }}>
+            <InputField label="المصدر" text={true} />
+          </Grid2>
         </Grid2>
       </Grid2>
-    </Grid2>
+    </div>
   );
 }

@@ -33,12 +33,45 @@ function Navbar(props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
+        <ListItem>
+          <ListItemText>
+            <Typography
+              noWrap
+              component="div"
+              sx={{
+                fontSize: "18px",
+                fontWeight: "700",
+              }}
+            >
+              كود المحرر: {data?.code}
+            </Typography>
+          </ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>
+            <Typography
+              noWrap
+              component="div"
+              sx={{
+                fontSize: "18px",
+                fontWeight: "700",
+              }}
+            >
+              لجنة: {data?.committee}
+            </Typography>
+          </ListItemText>
+        </ListItem>
+        {navItems.map((item, index) => (
+          <a
+            href={`#${item.id}`}
+            style={{ textDecoration: "none", color: "#0F2D4D" }}
+          >
+            <ListItem key={index} disablePadding>
+              <ListItemButton sx={{ textAlign: "center" }}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </a>
         ))}
       </List>
     </Box>
@@ -63,30 +96,32 @@ function Navbar(props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { lg: "none" } }}
           >
             <MenuIcon />
           </IconButton>
 
           <Box
             sx={{
-              display: { xs: "none", sm: "flex" },
+              display: { xs: "none", lg: "flex" },
               alignItems: "center",
               width: "100%",
             }}
           >
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{
-                  color: "#fff",
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                  marginInline: "10px",
-                }}
-              >
-                {item}
-              </Button>
+            {navItems.map((item, index) => (
+              <a href={`#${item.id}`}>
+                <Button
+                  key={index}
+                  sx={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: "18px",
+                    marginInline: "10px",
+                  }}
+                >
+                  {item.text}
+                </Button>
+              </a>
             ))}
             <div
               style={{
@@ -128,6 +163,20 @@ function Navbar(props) {
               </Typography>
             </div>
           </Box>
+          <Typography
+            noWrap
+            component="div"
+            sx={{ width: "40%", display: { lg: "none" } }}
+            ml={"auto"}
+          >
+            <InputField
+              select={true}
+              label="قائمة المداخل المطلوب تحريرها"
+              options={options}
+              val={setWord}
+              name={"text"}
+            />
+          </Typography>
         </Toolbar>
       </AppBar>
       <nav>
@@ -140,7 +189,7 @@ function Navbar(props) {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", lg: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,

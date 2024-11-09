@@ -31,7 +31,7 @@ function DataInputs() {
 export default function Section1({ word = "المدخل" }) {
   const [examples, setExamples] = useState([<DataInputs />]);
   return (
-    <>
+    <div id="section1">
       <Typography
         variant="h4"
         fontWeight={"bold"}
@@ -73,6 +73,6 @@ export default function Section1({ word = "المدخل" }) {
           />
         </Grid2>
       </Grid2>
-    </>
+    </div>
   );
 }

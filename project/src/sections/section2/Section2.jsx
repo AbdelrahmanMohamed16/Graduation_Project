@@ -5,7 +5,7 @@ import DividerComponent from "../../components/Divider/DividerComponent";
 
 function Section2() {
   return (
-    <>
+    <div id="section2">
       <Grid
         container
         rowSpacing={5}
@@ -75,7 +75,7 @@ function Section2() {
           ></InputField>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
 
