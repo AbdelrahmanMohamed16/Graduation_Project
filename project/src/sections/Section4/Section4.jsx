@@ -92,6 +92,18 @@ function Section4() {
             </div>
           </Grid>
           <Grid
+            size={12}
+            sx={{
+              margin: "auto",
+            }}
+          >
+            {components.map((component, index) => (
+              <div key={index} style={{ marginTop: 15 }}>
+                {component}
+              </div>
+            ))}
+          </Grid>
+          <Grid
             container
             size={12}
             sx={{
@@ -125,15 +137,12 @@ function Section4() {
               </a>
             </Grid>
             <Grid container justifyContent={"center"} size={12} mt={10}>
-              <Grid size={2}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ButtonCompnent text="اضف معلومة دلالية جديدة" icon={true} />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        {components.map((component, index) => (
-          <div key={index}>{component}</div>
-        ))}
       </Box>
     </>
   );

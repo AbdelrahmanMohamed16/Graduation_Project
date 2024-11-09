@@ -94,10 +94,10 @@ function LastSection() {
             control={<Radio />}
           />
         </RadioGroup>
+        <div style={{ maxWidth: "500px" }}>
+          <InputField multiLine={true} label="ملاحظات للمدقق" />
+        </div>
       </Grid2>
-      <div style={{ maxWidth: "500px" }}>
-        <InputField multiLine={true} label="ملاحظات للمدقق" />
-      </div>
       <Box
         sx={{
           flexGrow: 1,
