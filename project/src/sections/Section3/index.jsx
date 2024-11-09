@@ -48,7 +48,7 @@ export default function Section3() {
       columnSpacing={{ xs: 1, sm: 2, md: 5 }}
     >
       <Grid2 container size={12}>
-        <Grid2 size={6.5}>
+        <Grid2 size={12}>
           <Typography
             variant="h6"
             fontWeight={"bold"}
@@ -57,9 +57,6 @@ export default function Section3() {
           >
             المعلومات الدلالية:
           </Typography>
-        </Grid2>
-        <Grid2 size={2}>
-          <ButtonCompnent text="اضف معلومة دلالية جديدة" icon={true} />
         </Grid2>
       </Grid2>
       <Grid2
