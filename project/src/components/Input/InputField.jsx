@@ -30,8 +30,8 @@ function InputField({
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
-    if (val) {
-      val(event.target.value);
+    if (set) {
+      set(event.target.value);
     }
     if (word) {
       dispatch(updateForm({ name, value: event.target.value }));
@@ -142,7 +142,7 @@ function InputField({
       <FormControl
         variant={variant}
         onChange={handleInputChange}
-        value={val}
+        value={set}
         sx={{
           width: "100%",
           minWidth: 120,

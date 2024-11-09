@@ -20,10 +20,9 @@ const drawerWidth = 240;
 
 function Navbar(props) {
   const data = useSelector((state) => state.user.data);
-  // const options = data.assigned_words.map((word) => word.text);
-  const options = [];
+  const options = data.assigned_words.map((word) => word.text);
 
-  const { window, navItems, setWord } = props;
+  const { window, navItems, setWord, word } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -157,7 +156,8 @@ function Navbar(props) {
                   select={true}
                   label="قائمة المداخل المطلوب تحريرها"
                   options={options}
-                  val={setWord}
+                  set={setWord}
+                  val={word}
                   name={"text"}
                 />
               </Typography>
@@ -173,7 +173,8 @@ function Navbar(props) {
               select={true}
               label="قائمة المداخل المطلوب تحريرها"
               options={options}
-              val={setWord}
+              set={setWord}
+              val={word}
               name={"text"}
             />
           </Typography>
