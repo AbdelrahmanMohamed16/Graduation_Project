@@ -81,132 +81,135 @@ function Navbar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        component="nav"
-        sx={{
-          background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-          paddingY: "10px",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { lg: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Box
-            sx={{
-              display: { xs: "none", lg: "flex" },
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {navItems.map((item, index) => (
-              <a href={`#${item.id}`}>
-                <Button
-                  key={index}
-                  sx={{
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                    marginInline: "10px",
-                  }}
-                >
-                  {item.text}
-                </Button>
-              </a>
-            ))}
-            <div
-              style={{
-                marginRight: "auto",
-                display: "flex",
-                alignItems: "center",
-                width: "40%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography
-                noWrap
-                component="div"
-                sx={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                }}
-              >
-                كود المحرر: {data?.code}
-              </Typography>
-              <Typography
-                noWrap
-                component="div"
-                sx={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                }}
-              >
-                لجنة: {data?.committee}
-              </Typography>
-              <Typography noWrap component="div" sx={{ width: "40%" }}>
-                <InputField
-                  select={true}
-                  label="قائمة المداخل المطلوب تحريرها"
-                  options={options}
-                  set={setWord}
-                  dataOptions={dataOptions}
-                  val={word}
-                  name={"text"}
-                />
-              </Typography>
-            </div>
-          </Box>
-          <Typography
-            noWrap
-            component="div"
-            sx={{ width: "40%", display: { lg: "none" } }}
-            ml={"auto"}
-          >
-            <InputField
-              select={true}
-              label="قائمة المداخل المطلوب تحريرها"
-              options={options}
-              set={setWord}
-              val={word}
-              dataOptions={dataOptions}
-              name={"text"}
-            />
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <nav>
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+    <div className="no-print">
+      {" "}
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          component="nav"
           sx={{
-            display: { xs: "block", lg: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
+            background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+            paddingY: "10px",
           }}
         >
-          {drawer}
-        </Drawer>
-      </nav>
-      <Box component="main" sx={{ p: 3 }}>
-        <Toolbar />
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { lg: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Box
+              sx={{
+                display: { xs: "none", lg: "flex" },
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              {navItems.map((item, index) => (
+                <a href={`#${item.id}`}>
+                  <Button
+                    key={index}
+                    sx={{
+                      color: "#fff",
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      marginInline: "10px",
+                    }}
+                  >
+                    {item.text}
+                  </Button>
+                </a>
+              ))}
+              <div
+                style={{
+                  marginRight: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "45%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  noWrap
+                  component="div"
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "700",
+                  }}
+                >
+                  كود المحرر: {data?.code}
+                </Typography>
+                <Typography
+                  noWrap
+                  component="div"
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "700",
+                  }}
+                >
+                  لجنة: {data?.committee}
+                </Typography>
+                <Typography noWrap component="div" sx={{ width: "50%" }}>
+                  <InputField
+                    select={true}
+                    label="قائمة المداخل المطلوب تحريرها"
+                    options={options}
+                    set={setWord}
+                    dataOptions={dataOptions}
+                    val={word}
+                    name={"text"}
+                  />
+                </Typography>
+              </div>
+            </Box>
+            <Typography
+              noWrap
+              component="div"
+              sx={{ width: "40%", display: { lg: "none" } }}
+              ml={"auto"}
+            >
+              <InputField
+                select={true}
+                label="قائمة المداخل المطلوب تحريرها"
+                options={options}
+                set={setWord}
+                val={word}
+                dataOptions={dataOptions}
+                name={"text"}
+              />
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <nav>
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", lg: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </nav>
+        <Box component="main" sx={{ p: 3 }}>
+          <Toolbar />
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 }
 

@@ -62,8 +62,12 @@ function LastSection() {
           defaultValue="first"
           sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
         >
-          <MyFormControlLabel value="first" label="مكتمل" control={<Radio />} />
-          <MyFormControlLabel value="second" label="ناقص" control={<Radio />} />
+          <MyFormControlLabel value="first" label="ناقص" control={<Radio />} />
+          <MyFormControlLabel
+            value="second"
+            label="مكتمل"
+            control={<Radio />}
+          />
         </RadioGroup>
       </Grid2>
 

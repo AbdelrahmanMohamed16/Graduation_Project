@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getWord,
+  updateCollocates_obj,
   updateForm,
   updateMorphologicalInfo,
 } from "../../redux/userSlice";
@@ -27,6 +28,7 @@ function InputField({
   MorphologicalInfo = false,
   semantic_info = false,
   diacritics = false,
+  collocates_obj = false,
   defaultOption,
   setWord,
   dataOptions,
@@ -70,26 +72,19 @@ function InputField({
     }
   };
   const handleInputChange = (event) => {
-    console.log(event.target.value);
     if (set) {
-      // console.log(val);
-      // if (val !== "المدخل") {
-      //   const option = options.filter((option) => option.text === val);
-      //   if (option.length > 0) {
-      //     const [fristElement] = option;
-      //     console.log(fristElement._id);
-      //     dispatch(getWord({ wordId: fristElement._id }));
-      //   }
-      // }
-      console.log("------------------------------------------------------");
       set(event.target.value);
     }
+
     if (MorphologicalInfo) {
       dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
     }
     if (semantic_info) {
     }
     if (diacritics) {
+    }
+    if (collocates_obj) {
+      dispatch(updateCollocates_obj({ name, value: event.target.value }));
     }
   };
 
@@ -105,23 +100,34 @@ function InputField({
         value={val}
         sx={{
           width: "100%",
+          fontSize: "2px", // Adjust the label font size here
+
           ...(variant === "filled"
             ? {
+                "& label": {
+                  color: "#757575",
+                  fontSize: "1.2rem", // Adjust the label font size here
+                },
                 "& .MuiFilledInput-root": {
                   "&:after": {
                     borderBottomColor: "#255080",
                     borderBottomWidth: "3px",
                   },
+                  "& .MuiInputLabel-root": {},
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "#255080",
                   },
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "1.4rem", // Adjust the input text size here
                 },
                 background: "white",
                 borderRadius: "5px",
               }
             : variant === "outlined" && {
                 "& label": {
-                  color: "#1976d2",
+                  color: "#757575",
+                  fontSize: "1.2rem", // Adjust the label font size here
                 },
                 "& label.Mui-focused": {
                   color: "#1976d2",
@@ -139,6 +145,9 @@ function InputField({
                   },
                   "&.Mui-focused fieldset": {
                     borderColor: "#255080",
+                  },
+                  "& .MuiInputBase-input": {
+                    fontSize: "1.4rem", // Adjust the input text size here
                   },
                 },
                 background: "white",
@@ -159,6 +168,10 @@ function InputField({
         value={val}
         sx={{
           width: "100%",
+          "& label": {
+            color: "#757575",
+            fontSize: "1.2rem", // Adjust the label font size here
+          },
           "& .MuiFilledInput-root": {
             "&:after": {
               borderBottomColor: "#255080",
@@ -167,6 +180,9 @@ function InputField({
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#255080",
             },
+          },
+          "& .MuiInputBase-input": {
+            fontSize: "1.4rem", // Adjust the input text size here
           },
           background: "white",
           borderRadius: "5px",
@@ -180,6 +196,10 @@ function InputField({
         sx={{
           width: "100%",
           minWidth: 120,
+          "& label": {
+            color: "#757575",
+            fontSize: "1.2rem", // Adjust the label font size here
+          },
           "& .MuiInputBase-root": {
             "& ::before": {
               border: "0px",
@@ -187,6 +207,9 @@ function InputField({
           },
           "& .MuiSelect-select": {
             textAlign: "start",
+          },
+          "& .MuiInputBase-input": {
+            fontSize: "1.4rem", // Adjust the input text size here
           },
           background: "white",
           borderRadius: "5px",
@@ -199,6 +222,7 @@ function InputField({
           value={selectedOption}
           onChange={handleChange}
           color="white"
+
           // sx={{
           //   width: "350px",
           //   "& .MuiFilledInput-root": {

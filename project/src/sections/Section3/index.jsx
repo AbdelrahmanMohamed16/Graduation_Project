@@ -31,10 +31,10 @@ export default function Section3({ arr }) {
   function ExampleData() {
     return (
       <Grid2 container size={12} rowSpacing={5} columnSpacing={1}>
-        <Grid2 size={6}>
+        <Grid2 size={9}>
           <InputField label="أمثلة" text={true} />
         </Grid2>
-        <Grid2 size={6}>
+        <Grid2 size={3}>
           <InputField label="المرجع" text={true} />
         </Grid2>
       </Grid2>
@@ -92,7 +92,7 @@ export default function Section3({ arr }) {
         </Grid2>
         <Grid2
           container
-          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+          size={{ xs: 12, sm: 6, md: 4, lg: 7 }}
           rowSpacing={5}
           columnSpacing={{ xs: 1, sm: 2, md: 5 }}
         >
@@ -100,7 +100,7 @@ export default function Section3({ arr }) {
             <Fragment key={i}>{example}</Fragment>
           ))}
         </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
           <ButtonCompnent
             text="اضف مثال جديد"
             icon={true}

@@ -3,18 +3,49 @@ import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
-import Example from "../../components/Example/Example";
 import { Grid2, Stack, Typography } from "@mui/material";
+function Example({ data, onChange }) {
+  const { text, source } = data;
+
+  return (
+    <Grid container spacing={2} size={12} sx={{ my: "10px" }}>
+      <Grid size={{ xs: 12, md: 8 }}>
+        <InputField
+          text={true}
+          label="أمثلة إستعمالية"
+          val={text}
+          set={(value) => onChange("text", value)}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, md: 2 }}>
+        <InputField
+          text={true}
+          label="المصدر"
+          val={source}
+          set={(value) => onChange("source", value)}
+        />
+      </Grid>
+    </Grid>
+  );
+}
 
 function Section4() {
-  const [components, setComponents] = useState([]);
-  const [collocations, setCollocations] = useState([]);
+  const [collocate_text, setCollocate_text] = useState("");
+  const [meaning, Setmeaning] = useState("");
+  const [example, setExamples] = useState([{ text: "", source: "" }]);
 
-  const handelExample = () => {
-    setComponents([...components, <Example key={components.length} />]);
+  const handleChange = (index, field, value) => {
+    setExamples((prev) =>
+      prev.map((example, i) =>
+        i === index ? { ...example, [field]: value } : example
+      )
+    );
+  };
+  const addExample = () => {
+    setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
   return (
-    <>
+    <div id="section4">
       <Box
         sx={{
           flexGrow: 1,
@@ -34,30 +65,25 @@ function Section4() {
             >
               المتصاحبات اللفظية:
             </Typography>
-            <Stack>
-              {collocations.map((collocation, index) => (
-                <div
-                  key={index}
-                  style={{
-                    cursor: "pointer",
-                    fontWeight: "600",
-                    fontSize: "18px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {collocation}
-                </div>
-              ))}
-            </Stack>
           </Grid2>
           <Grid size={{ xs: 12, md: 3 }}>
-            <InputField text={true} label="التركيب التصاحبي" />
+            <InputField
+              text={true}
+              label="التركيب التصاحبي"
+              name={"collocate_text"}
+              collocates_obj={true}
+            />
           </Grid>
-          <Grid size={{ xs: 12, md: 5 }}>
-            <InputField text={true} label="معني التركيب التصاحبي" />
+          <Grid size={{ xs: 12, md: 7 }}>
+            <InputField
+              text={true}
+              label="معني التركيب التصاحبي"
+              name={"meaning"}
+              collocates_obj={true}
+            />
           </Grid>
           <Grid
-            size={{ xs: 12, md: 3 }}
+            size={{ xs: 12, md: 2 }}
             sx={{
               margin: "auto",
             }}
@@ -70,19 +96,24 @@ function Section4() {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <InputField text={true} label="أمثلة إستعمالية" />
-          </Grid>
-          <Grid size={{ xs: 12, md: 2 }}>
-            <InputField text={true} label="المصدر" />
-          </Grid>
           <Grid
-            size={{ xs: 12, md: 3 }}
+            size={12}
             sx={{
               margin: "auto",
             }}
           >
-            <div style={{ width: "100%" }} onClick={handelExample}>
+            {example.map((data, index) => (
+              <Example
+                key={index}
+                data={data}
+                onChange={(field, value) => {
+                  handleChange(index, field, value);
+                }}
+              />
+            ))}
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <div style={{ width: "100%" }} onClick={addExample}>
               {" "}
               <ButtonCompnent
                 text="أضف مثال آخر"
@@ -90,18 +121,6 @@ function Section4() {
                 icon={true}
               ></ButtonCompnent>
             </div>
-          </Grid>
-          <Grid
-            size={12}
-            sx={{
-              margin: "auto",
-            }}
-          >
-            {components.map((component, index) => (
-              <div key={index} style={{ marginTop: 15 }}>
-                {component}
-              </div>
-            ))}
           </Grid>
           <Grid
             container
@@ -144,7 +163,7 @@ function Section4() {
           </Grid>
         </Grid>
       </Box>
-    </>
+    </div>
   );
 }
 

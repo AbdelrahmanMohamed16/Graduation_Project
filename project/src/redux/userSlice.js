@@ -109,6 +109,10 @@ export const userSlice = createSlice({
       state.morphological_info[action.payload.name] = action.payload.value;
       console.log(JSON.parse(JSON.stringify(state.morphological_info)));
     },
+    updateCollocates_obj: (state, action) => {
+      state.collocates_obj[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.collocates_obj)));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -157,7 +161,12 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, updateForm, updateMorphologicalInfo, updateDiacritics } =
-  userSlice.actions;
+export const {
+  login,
+  updateForm,
+  updateMorphologicalInfo,
+  updateDiacritics,
+  updateCollocates_obj,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -64,6 +64,7 @@ function App() {
                           { text: " المعلومات الصوتيه", id: "section1" },
                           { text: "المعلومات الصرفيه", id: "section2" },
                           { text: " المعلومات الدلاليه", id: "section3" },
+                          { text: "المتصاحبات اللفظية", id: "section4" },
                         ]}
                         setWord={setWord}
                         word={word}
@@ -73,9 +74,15 @@ function App() {
                       <Grid2 container>
                         <Grid2 mx={4} my={3} width={"100%"}>
                           <Section1 word={word} />
-                          <DividerComponent />
+                          <div className="no-print">
+                            {" "}
+                            <DividerComponent />
+                          </div>
                           <Section2 />
-                          <DividerComponent />
+                          <div className="no-print">
+                            {" "}
+                            <DividerComponent />
+                          </div>
                           {semantic_info_arr?.length > 0 ? (
                             value === -1 ? (
                               <>
@@ -100,9 +107,11 @@ function App() {
                               <Section4 />
                             </>
                           )}
-                          <DividerComponent />
+                          <div className="no-print">
+                            {" "}
+                            <DividerComponent />
+                          </div>
                           <LastSection />
-                          <DividerComponent />
                           <button onClick={handlePrint}>Print as PDF</button>
                         </Grid2>
                       </Grid2>

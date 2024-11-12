@@ -37,39 +37,43 @@ const Voice = () => {
 
   return (
     <Stack flexDirection={"row"}>
-      <Button
-        variant="contained"
-        sx={{
-          background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-          borderRadius: "5px",
-          // padding: "1rem",
-          width: "130px",
-          marginRight: "10px",
-          color: "#FFFFFF",
-          fontSize: "20px",
-          fontFamily: "El Messiri",
-        }}
-        size="large"
-        onClick={isRecording ? handleStopRecording : handleStartRecording}
-        endIcon={
-          isRecording ? (
-            <StopIcon sx={{ color: "#E72929" }} />
+      <div className="no-print">
+        {" "}
+        <Button
+          variant="contained"
+          sx={{
+            background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+            borderRadius: "5px",
+            // padding: "1rem",
+            width: "130px",
+            marginRight: "10px",
+            color: "#FFFFFF",
+            fontSize: "20px",
+            fontFamily: "El Messiri",
+          }}
+          size="large"
+          onClick={isRecording ? handleStopRecording : handleStartRecording}
+          endIcon={
+            isRecording ? (
+              <StopIcon sx={{ color: "#E72929" }} />
+            ) : (
+              <MicIcon sx={{ color: "white" }} />
+            )
+          }
+        >
+          {isRecording ? (
+            <span style={{ fontSize: "20px" }}>انهاء</span>
           ) : (
-            <MicIcon sx={{ color: "white" }} />
-          )
-        }
-      >
-        {isRecording ? (
-          <span style={{ fontSize: "20px" }}>انهاء</span>
-        ) : (
-          <span style={{ fontSize: "20px" }}>النطق</span>
-        )}
-        {/* {isRecording ? (
+            <span style={{ fontSize: "20px" }}>النطق</span>
+          )}
+          {/* {isRecording ? (
           <StopIcon sx={{ color: "#E72929", fontSize: "30px" }} />
         ) : (
           <MicIcon sx={{ color: "white", fontSize: "30px" }} />
         )} */}
-      </Button>
+        </Button>
+      </div>
+
       {audioURL && (
         <Button
           variant="outlined"
