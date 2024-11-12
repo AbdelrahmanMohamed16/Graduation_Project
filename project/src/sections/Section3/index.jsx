@@ -31,6 +31,7 @@ export default function Section3() {
   const modules = {
     toolbar: [
       ["bold"], // Bold button
+      [{ 'color': [] }], // Text color dropdown
     ],
   };
   
