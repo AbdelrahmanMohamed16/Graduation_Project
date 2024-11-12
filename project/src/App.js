@@ -1,5 +1,6 @@
 import { createTheme, Grid2, ThemeProvider } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
@@ -13,23 +14,13 @@ import DividerComponent from "./components/Divider/DividerComponent";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
-import { useSelector } from "react-redux";
-import { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 function App() {
   const auth = useSelector((state) => state.user.auth);
+
   const [word, setWord] = useState("المدخل");
-  const timeSpentRef = useRef(0); // Use ref to store the time spent
-
-  const [totalTimeSpent, setTotalTimeSpent] = useState(0); // Display time in UI
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      timeSpentRef.current += 1; // Increment time spent without re-rendering
-      setTotalTimeSpent(timeSpentRef.current); // Update UI with the new time
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []); // Only run once, when the component mounts
 
   const theme = (outerTheme) =>
     createTheme({
@@ -49,6 +40,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Routes>
+            {/* <Route path="/" element={<Login />} />
+            {auth && (
+              <> */}
             <Route
               path="/"
               element={
@@ -60,7 +54,9 @@ function App() {
                       { text: " المعلومات الدلاليه", id: "section3" },
                     ]}
                     setWord={setWord}
-                  />
+                  >
+                    {" "}
+                  </Navbar>
                   <Grid2 container>
                     <Grid2 mx={4} my={3} width={"100%"}>
                       <Section1 word={word} />
@@ -68,15 +64,19 @@ function App() {
                       <Section2 />
                       <DividerComponent />
                       <Section3 />
-                      <DividerComponent />
+                      {/* <DividerComponent /> */}
                       <Section4 />
                       <DividerComponent />
-                      <LastSection totalTimeSpent={totalTimeSpent} />
+                      <LastSection />
                     </Grid2>
                   </Grid2>
                 </>
               }
             />
+            {/* </>
+            )}
+
+            <Route path="*" element={<Login />} /> */}
           </Routes>
         </Router>
       </ThemeProvider>
