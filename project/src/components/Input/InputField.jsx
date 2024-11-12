@@ -3,9 +3,13 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateForm, updateMorphologicalInfo } from "../../redux/userSlice";
+import {
+  getWord,
+  updateForm,
+  updateMorphologicalInfo,
+} from "../../redux/userSlice";
 
 function InputField({
   text = false,
@@ -23,14 +27,32 @@ function InputField({
   MorphologicalInfo = false,
   semantic_info = false,
   diacritics = false,
+  defaultOption,
+  setWord,
+  dataOptions,
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(defaultOption || "");
+  useEffect(() => {
+    setSelectedOption(defaultOption);
+  }, [defaultOption]);
+
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
     if (set) {
+      if (dataOptions.length) {
+        const option = dataOptions.filter(
+          (option) => option.text === event.target.value
+        );
+        console.log(dataOptions);
+        if (option.length > 0) {
+          const [fristElement] = option;
+          console.log(fristElement._id);
+          dispatch(getWord({ wordId: fristElement._id }));
+        }
+      }
       set(event.target.value);
     }
     if (word) {
@@ -39,6 +61,9 @@ function InputField({
     if (semantic_info) {
     }
     if (MorphologicalInfo) {
+      if (set) {
+        set(event.target.value);
+      }
       dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
     }
     if (diacritics) {
@@ -47,6 +72,16 @@ function InputField({
   const handleInputChange = (event) => {
     console.log(event.target.value);
     if (set) {
+      // console.log(val);
+      // if (val !== "المدخل") {
+      //   const option = options.filter((option) => option.text === val);
+      //   if (option.length > 0) {
+      //     const [fristElement] = option;
+      //     console.log(fristElement._id);
+      //     dispatch(getWord({ wordId: fristElement._id }));
+      //   }
+      // }
+      console.log("------------------------------------------------------");
       set(event.target.value);
     }
     if (MorphologicalInfo) {
@@ -57,6 +92,7 @@ function InputField({
     if (diacritics) {
     }
   };
+
   if (text) {
     return (
       <TextField
@@ -141,8 +177,6 @@ function InputField({
     return (
       <FormControl
         variant={variant}
-        onChange={handleInputChange}
-        value={set}
         sx={{
           width: "100%",
           minWidth: 120,

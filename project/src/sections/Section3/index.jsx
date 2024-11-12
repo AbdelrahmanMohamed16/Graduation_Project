@@ -16,7 +16,8 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-export default function Section3() {
+export default function Section3({ arr }) {
+  console.log(arr);
   const [examples, setExamples] = useState([<ExampleData />]);
   const [options, setOptions] = useState([
     "العلوم",

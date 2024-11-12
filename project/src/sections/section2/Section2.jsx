@@ -2,8 +2,24 @@ import Grid from "@mui/material/Grid2";
 import InputField from "../../components/Input/InputField";
 import { Divider, Grid2, Typography } from "@mui/material";
 import DividerComponent from "../../components/Divider/DividerComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 
 function Section2() {
+  const dispatch = useDispatch();
+  const morphologicalInfo = useSelector(
+    (state) => state.user.form?.morphological_info
+  );
+  const [form_morphological_info, setForm_morphological_info] = useState(
+    morphologicalInfo || {}
+  );
+  console.log(form_morphological_info);
+  useEffect(() => {
+    setForm_morphological_info(morphologicalInfo);
+    setTex(morphologicalInfo?.root);
+  }, [morphologicalInfo]);
+
+  const [tex, setTex] = useState(form_morphological_info?.root);
   return (
     <div id="section2">
       <Grid
@@ -27,6 +43,8 @@ function Section2() {
             label={"الاصل اللغوي"}
             text={true}
             name={"root"}
+            val={tex}
+            set={setTex}
             MorphologicalInfo={true}
           ></InputField>
         </Grid>
@@ -37,6 +55,8 @@ function Section2() {
             select={true}
             name={"word_class"}
             MorphologicalInfo={true}
+            val={form_morphological_info?.word_class}
+            defaultOption={form_morphological_info?.word_class}
             options={["مشتق", "مصدر", "علم", "ظرف"]}
           ></InputField>
         </Grid>
@@ -62,6 +82,7 @@ function Section2() {
               "اسم هيئة",
               "اسم تفضيل",
             ]}
+            defaultOption={form_morphological_info?.morphological_form}
           ></InputField>
         </Grid>
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
@@ -72,6 +93,7 @@ function Section2() {
             name={"linguistic_level"}
             MorphologicalInfo={true}
             options={["تراثي", "معاصر", "دخيل", "معرَّب"]}
+            defaultOption={form_morphological_info?.linguistic_level}
           ></InputField>
         </Grid>
       </Grid>
