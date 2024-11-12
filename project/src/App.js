@@ -16,7 +16,7 @@ import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { getWord } from "./redux/userSlice";
 
 function App() {
@@ -91,8 +91,11 @@ function App() {
                                   value={value}
                                   setValue={setValue}
                                 />
-                                <Section3 />
-                                <Section4 />
+                                <div style={{ padding: 24 }}>
+                                  {" "}
+                                  <Section3 />
+                                  <Section4 />
+                                </div>
                               </>
                             ) : (
                               <BigSection

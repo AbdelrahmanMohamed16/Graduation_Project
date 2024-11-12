@@ -22,7 +22,9 @@ function Example({ data, onChange }) {
           text={true}
           label="المصدر"
           val={source}
-          set={(value) => onChange("source", value)}
+          set={(value) => {
+            onChange("source", value);
+          }}
         />
       </Grid>
     </Grid>
@@ -108,6 +110,7 @@ function Section4() {
                 data={data}
                 onChange={(field, value) => {
                   handleChange(index, field, value);
+                  console.log(example);
                 }}
               />
             ))}

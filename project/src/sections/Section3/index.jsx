@@ -16,9 +16,34 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
+function ExampleData({ data, onChange }) {
+  const { text, source } = data;
+
+  return (
+    <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
+      <Grid2 size={{ xs: 12, md: 8 }}>
+        <InputField
+          text={true}
+          label="أمثلة"
+          val={text}
+          set={(value) => onChange("text", value)}
+        />
+      </Grid2>
+      <Grid2 size={{ xs: 12, md: 2 }}>
+        <InputField
+          text={true}
+          label="المرجع"
+          val={source}
+          set={(value) => {
+            onChange("source", value);
+          }}
+        />
+      </Grid2>
+    </Grid2>
+  );
+}
 export default function Section3({ arr }) {
-  console.log(arr);
-  const [examples, setExamples] = useState([<ExampleData />]);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",
@@ -28,19 +53,18 @@ export default function Section3({ arr }) {
   ]);
   const [option, setOption] = useState("");
   const [file, setFile] = useState(null);
-  function ExampleData() {
-    return (
-      <Grid2 container size={12} rowSpacing={5} columnSpacing={1}>
-        <Grid2 size={9}>
-          <InputField label="أمثلة" text={true} />
-        </Grid2>
-        <Grid2 size={3}>
-          <InputField label="المرجع" text={true} />
-        </Grid2>
-      </Grid2>
+  const [example, setExamples] = useState([{ text: "", source: "" }]);
+  const [image, setImage] = useState({});
+  const handleChange = (index, field, value) => {
+    setExamples((prev) =>
+      prev.map((example, i) =>
+        i === index ? { ...example, [field]: value } : example
+      )
     );
-  }
-
+  };
+  const addExample = () => {
+    setExamples((prev) => [...prev, { text: "", source: "" }]);
+  };
   return (
     <div id="section3">
       <Grid2
@@ -72,6 +96,8 @@ export default function Section3({ arr }) {
               label="المجال الدلالي"
               select={true}
               options={options}
+              name={"Semantic_fields"}
+              semantic_info={true}
             />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -88,7 +114,12 @@ export default function Section3({ arr }) {
           </Grid2>
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <InputField label="المعني" multiLine={true} />
+          <InputField
+            label="المعني"
+            multiLine={true}
+            meaning={true}
+            name={"text"}
+          />
         </Grid2>
         <Grid2
           container
@@ -96,8 +127,16 @@ export default function Section3({ arr }) {
           rowSpacing={5}
           columnSpacing={{ xs: 1, sm: 2, md: 5 }}
         >
-          {examples.map((example, i) => (
-            <Fragment key={i}>{example}</Fragment>
+          {example.map((data, index) => (
+            <ExampleData
+              key={index}
+              data={data}
+              onChange={(field, value) => {
+                handleChange(index, field, value);
+                console.log(example);
+                console.log(image);
+              }}
+            />
           ))}
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
@@ -105,7 +144,7 @@ export default function Section3({ arr }) {
             text="اضف مثال جديد"
             icon={true}
             onclick={() => {
-              setExamples((prevFields) => [...prevFields, <ExampleData />]);
+              addExample();
             }}
           />
         </Grid2>
@@ -147,10 +186,22 @@ export default function Section3({ arr }) {
             ></img>
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 4 }}>
-            <InputField label="وصف الصورة الشارحة" multiLine={true} />
+            <InputField
+              label="وصف الصورة الشارحة"
+              multiLine={true}
+              name={"description"}
+              setImage={setImage}
+              image={image}
+            />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 2 }}>
-            <InputField label="المصدر" text={true} />
+            <InputField
+              label="المصدر"
+              text={true}
+              name={"source"}
+              setImage={setImage}
+              image={image}
+            />
           </Grid2>
         </Grid2>
       </Grid2>

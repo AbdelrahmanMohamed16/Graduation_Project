@@ -9,7 +9,9 @@ import {
   getWord,
   updateCollocates_obj,
   updateForm,
+  updateMeaning,
   updateMorphologicalInfo,
+  updateSemantic_info_obj,
 } from "../../redux/userSlice";
 
 function InputField({
@@ -29,9 +31,12 @@ function InputField({
   semantic_info = false,
   diacritics = false,
   collocates_obj = false,
+  meaning = false,
   defaultOption,
   setWord,
   dataOptions,
+  setImage,
+  image,
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
@@ -61,6 +66,7 @@ function InputField({
       dispatch(updateForm({ name, value: event.target.value }));
     }
     if (semantic_info) {
+      dispatch(updateSemantic_info_obj({ name, value: event.target.value }));
     }
     if (MorphologicalInfo) {
       if (set) {
@@ -80,11 +86,18 @@ function InputField({
       dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
     }
     if (semantic_info) {
+      dispatch(updateSemantic_info_obj({ name, value: event.target.value }));
     }
     if (diacritics) {
     }
     if (collocates_obj) {
       dispatch(updateCollocates_obj({ name, value: event.target.value }));
+    }
+    if (meaning) {
+      dispatch(updateMeaning({ name, value: event.target.value }));
+    }
+    if (setImage) {
+      setImage({ ...image, [name]: event.target.value });
     }
   };
 

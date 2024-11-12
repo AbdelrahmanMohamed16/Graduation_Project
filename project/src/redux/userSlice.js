@@ -113,6 +113,14 @@ export const userSlice = createSlice({
       state.collocates_obj[action.payload.name] = action.payload.value;
       console.log(JSON.parse(JSON.stringify(state.collocates_obj)));
     },
+    updateSemantic_info_obj: (state, action) => {
+      state.semantic_info_obj[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.semantic_info_obj)));
+    },
+    updateMeaning: (state, action) => {
+      state.meaning[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.meaning)));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -167,6 +175,8 @@ export const {
   updateMorphologicalInfo,
   updateDiacritics,
   updateCollocates_obj,
+  updateSemantic_info_obj,
+  updateMeaning,
 } = userSlice.actions;
 
 export default userSlice.reducer;
