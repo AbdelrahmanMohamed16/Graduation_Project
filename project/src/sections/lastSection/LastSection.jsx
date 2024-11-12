@@ -37,13 +37,24 @@ function MyFormControlLabel(props) {
 }
 
 MyFormControlLabel.propTypes = {
-  /**
-   * The value of the component.
-   */
   value: PropTypes.any,
 };
 
-function LastSection() {
+function LastSection({ totalTimeSpent }) {
+  const formatTime = (seconds) => {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let secs = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours} ساعات ${minutes} دقائق ${secs} ثواني`;
+    } else if (minutes > 0) {
+      return `${minutes} دقائق ${secs} ثواني`;
+    } else {
+      return `${secs} ثواني`;
+    }
+  };
+
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>
@@ -115,6 +126,13 @@ function LastSection() {
           </Grid>
         </Grid>
       </Box>
+
+      {/* Display total time spent on the website */}
+      <Grid2 container justifyContent={"center"} sx={{ mt: 5 }}>
+        <Typography variant="h6" fontWeight={"bold"} color="#0F2D4D">
+          إجمالي الوقت المستغرق في الموقع: {formatTime(totalTimeSpent)}
+        </Typography>
+      </Grid2>
     </Grid2>
   );
 }
