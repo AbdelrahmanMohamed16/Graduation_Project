@@ -9,6 +9,11 @@ const initialState = {
   form: JSON.parse(localStorage.getItem("form")) || {},
   diacritics: [],
   morphological_info: {},
+  semantic_info: [],
+  semantic_info_obj: {},
+  collocates: [],
+  collocates_obj: {},
+  meaning: {},
 };
 
 export const loginUser = createAsyncThunk(
@@ -133,10 +138,12 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getWord.fulfilled, (state, action) => {
+        console.log("helllllllllllllllllllllllllllllllllo");
         console.log(action.payload);
         console.log(action.payload.data);
         state.loading = false;
         state.form = action.payload.data.data;
+        state.semantic_info = state.form.semantic_info;
         localStorage.setItem("form", JSON.stringify(action.payload.data.data));
       })
       .addCase(getWord.rejected, (state, action) => {

@@ -21,6 +21,7 @@ const drawerWidth = 240;
 function Navbar(props) {
   const data = useSelector((state) => state.user.data);
   const options = data.assigned_words.map((word) => word.text);
+  const dataOptions = data.assigned_words;
 
   const { window, navItems, setWord, word } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -157,6 +158,7 @@ function Navbar(props) {
                   label="قائمة المداخل المطلوب تحريرها"
                   options={options}
                   set={setWord}
+                  dataOptions={dataOptions}
                   val={word}
                   name={"text"}
                 />
@@ -175,6 +177,7 @@ function Navbar(props) {
               options={options}
               set={setWord}
               val={word}
+              dataOptions={dataOptions}
               name={"text"}
             />
           </Typography>

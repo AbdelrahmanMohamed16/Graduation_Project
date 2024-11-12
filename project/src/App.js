@@ -11,27 +11,29 @@ import Section4 from "./sections/Section4/Section4";
 import LastSection from "./sections/LastSection/LastSection";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
+import BigSection from "./sections/BigSection/BigSection";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getWord } from "./redux/userSlice";
 
 function App() {
-  const auth = useSelector((state) => state.user.auth);
-  const options = useSelector((state) => state.user.data.assigned_words);
-  const dispatch = useDispatch();
-  const [word, setWord] = useState("المدخل");
-  if (word !== "المدخل") {
-    const option = options.filter((option) => option.text == word);
-    if (option.length > 0) {
-      const [fristElement] = option;
-      console.log(fristElement._id);
-      dispatch(getWord({ wordId: fristElement._id }));
-    }
-  }
+  const [value, setValue] = useState(-1);
 
+  useEffect(() => {
+    console.log("helllllllllo");
+  });
+  const handlePrint = () => {
+    window.print();
+  };
+  const auth = useSelector((state) => state.user.auth);
+  const semantic_info_arr = useSelector(
+    (state) => state.user.form?.semantic_info
+  );
+  console.log(semantic_info_arr);
+  const [word, setWord] = useState("المدخل");
   const theme = (outerTheme) =>
     createTheme({
       direction: "rtl",
@@ -74,11 +76,34 @@ function App() {
                           <DividerComponent />
                           <Section2 />
                           <DividerComponent />
-                          <Section3 />
-                          {/* <DividerComponent /> */}
-                          <Section4 />
+                          {semantic_info_arr?.length > 0 ? (
+                            value === -1 ? (
+                              <>
+                                <BigSection
+                                  arr={semantic_info_arr}
+                                  value={value}
+                                  setValue={setValue}
+                                />
+                                <Section3 />
+                                <Section4 />
+                              </>
+                            ) : (
+                              <BigSection
+                                arr={semantic_info_arr}
+                                value={value}
+                                setValue={setValue}
+                              />
+                            )
+                          ) : (
+                            <>
+                              <Section3 />
+                              <Section4 />
+                            </>
+                          )}
                           <DividerComponent />
                           <LastSection />
+                          <DividerComponent />
+                          <button onClick={handlePrint}>Print as PDF</button>
                         </Grid2>
                       </Grid2>
                     </>
