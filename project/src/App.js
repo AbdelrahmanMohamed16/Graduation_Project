@@ -23,12 +23,13 @@ function App() {
 
   const [totalTimeSpent, setTotalTimeSpent] = useState(0); // Display time in UI
 
+
   useEffect(() => {
     const interval = setInterval(() => {
       timeSpentRef.current += 1; // Increment time spent
-      // Update state every 5 seconds to reduce re-renders
-      if (timeSpentRef.current % 5 === 0) {
-        setTotalTimeSpent(timeSpentRef.current); // Update state every 5 seconds
+      // Update state every 1 minute to reduce re-renders
+      if (timeSpentRef.current % 60 === 0) {
+        setTotalTimeSpent(timeSpentRef.current); // Update state every 60 seconds
       }
     }, 1000);
 

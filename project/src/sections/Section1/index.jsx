@@ -34,8 +34,12 @@ const DataInputs = () => {
 
   const handleKeyPress = useCallback((key) => {
     setInputValue((prevValue) => prevValue + key); // Update the input value
-    inputRef.current?.focus(); // Ensure the input stays focused
   }, []);
+
+  // Ensure input stays focused after each key press
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, [inputValue]);
 
   return (
     <Grid2 container size={12} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
