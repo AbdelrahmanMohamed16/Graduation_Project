@@ -47,7 +47,7 @@ export default function BasicTabs({
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log(value2);
+  console.log("----------= simintic array =--------------", arr);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -56,7 +56,7 @@ export default function BasicTabs({
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {arr.map((item, index) => (
+          {arr?.map((item, index) => (
             <Tab label={item.meaning.text} key={index} {...a11yProps(index)} />
           ))}
         </Tabs>
@@ -75,6 +75,7 @@ export default function BasicTabs({
                 arr={item.collocates}
                 value={value2}
                 setValue={setValue2}
+                setValue2={setValue}
               />
             </>
           </CustomTabPanel>

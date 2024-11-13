@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [value, setValue] = useState(-1);
+  const [value2, setValue2] = useState(-1);
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
 
@@ -50,7 +51,6 @@ function App() {
     console.log("files: ", files);
     console.log("records: ", records);
   }, [files, records]);
-  const [value2, setValue2] = useState(-1);
 
   const handlePrint = () => {
     window.print();
@@ -126,6 +126,7 @@ function App() {
                                   <TabSection
                                     value={value2}
                                     setValue={setValue2}
+                                    setValue2={setValue}
                                   />
                                 </div>
                               </>
@@ -146,6 +147,7 @@ function App() {
                                 value={value2}
                                 value1={value}
                                 setValue={setValue2}
+                                setValue2={setValue}
                               />
                             </>
                           )}

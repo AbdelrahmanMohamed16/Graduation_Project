@@ -134,7 +134,11 @@ export const userSlice = createSlice({
       );
     },
     updateSemantic_info_obj: (state, action) => {
-      state.semantic_info_obj[action.payload.name] = action.payload.value;
+      if (action.payload.name === "collocates") {
+        state.semantic_info_obj[action.payload.name] = state.collocates;
+      } else {
+        state.semantic_info_obj[action.payload.name] = action.payload.value;
+      }
       console.log(
         "semantic_info_obj: ",
         JSON.parse(JSON.stringify(state.semantic_info_obj))
@@ -166,6 +170,16 @@ export const userSlice = createSlice({
         "semantic_info: ",
         JSON.parse(JSON.stringify(state.semantic_info))
       );
+    },
+    updateCollocates: (state) => {
+      console.log("-------------------------------------------");
+      state.collocates = [...state.collocates, state.collocates_obj];
+      console.log("-------------------------------------------");
+      console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
+    },
+    clearCollocates: (state) => {
+      state.collocates = [];
+      console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
     },
   },
   extraReducers: (builder) => {
@@ -225,6 +239,8 @@ export const {
   updateSemantic_info,
   updateMeaning,
   updateImage_obj,
+  updateCollocates,
+  clearCollocates,
 } = userSlice.actions;
 
 export default userSlice.reducer;
