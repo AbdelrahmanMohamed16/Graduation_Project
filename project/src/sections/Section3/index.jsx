@@ -4,10 +4,10 @@ import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const VisuallyHiddenInput = styled("input")({
-  //   clip: "rect(0 0 0 0)",
-  //   clipPath: "inset(50%)",
   height: 1,
   overflow: "hidden",
   position: "absolute",
@@ -16,6 +16,7 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
 export default function Section3() {
   const [examples, setExamples] = useState([<ExampleData />]);
   const [options, setOptions] = useState([
@@ -27,11 +28,44 @@ export default function Section3() {
   ]);
   const [option, setOption] = useState("");
   const [file, setFile] = useState(null);
+  const modules = {
+    toolbar: [
+      ["bold"], // Bold button
+      [{ 'color': [] }], // Text color dropdown
+    ],
+  };
+  
   function ExampleData() {
+    const [isRichTextEnabled, setIsRichTextEnabled] = useState(false);
+    const [text, setText] = useState("");
+  
     return (
       <Grid2 container size={12} rowSpacing={5} columnSpacing={1}>
-        <Grid2 size={6}>
-          <InputField label="أمثلة" text={true} />
+        <Grid2 size={12}>
+          {isRichTextEnabled ? (
+            <ReactQuill
+              value={text}
+              onChange={setText}
+              modules={modules} // Add custom toolbar configuration here
+              style={{ height: "200px", marginBottom: "1px" }}
+            />
+          ) : (
+            <InputField
+              label="أمثلة"
+              text={true}
+              val={text}
+              set={setText}
+              multiline={true}
+              minRows={2}
+            />
+          )}
+          <Button
+            variant="text"
+            onClick={() => setIsRichTextEnabled((prev) => !prev)}
+            sx={{ marginTop: 1 }}
+          >
+            {isRichTextEnabled ? "التبديل إلى نص عادي" : "تمكين التنسيق"}
+          </Button>
         </Grid2>
         <Grid2 size={6}>
           <InputField label="المرجع" text={true} />
@@ -39,15 +73,12 @@ export default function Section3() {
       </Grid2>
     );
   }
+  
+  
 
   return (
     <div id="section3">
-      <Grid2
-        container
-        size={12}
-        rowSpacing={5}
-        columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-      >
+      <Grid2 container size={12} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
         <Grid2 container size={12}>
           <Grid2 size={12}>
             <Typography
@@ -60,18 +91,9 @@ export default function Section3() {
             </Typography>
           </Grid2>
         </Grid2>
-        <Grid2
-          container
-          size={12}
-          rowSpacing={5}
-          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-        >
+        <Grid2 container size={12} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
           <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-            <InputField
-              label="المجال الدلالي"
-              select={true}
-              options={options}
-            />
+            <InputField label="المجال الدلالي" select={true} options={options} />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <InputField label="اضف" text={true} val={option} set={setOption} />
@@ -89,12 +111,7 @@ export default function Section3() {
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <InputField label="المعني" multiLine={true} />
         </Grid2>
-        <Grid2
-          container
-          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-          rowSpacing={5}
-          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-        >
+        <Grid2 container size={{ xs: 12, sm: 6, md: 4, lg: 3 }} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
           {examples.map((example, i) => (
             <Fragment key={i}>{example}</Fragment>
           ))}
@@ -108,12 +125,7 @@ export default function Section3() {
             }}
           />
         </Grid2>
-        <Grid2
-          container
-          size={12}
-          rowSpacing={5}
-          columnSpacing={{ xs: 1, sm: 2, md: 5 }}
-        >
+        <Grid2 container size={12} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
           <Grid2 size={{ xs: 4, sm: 2 }}>
             <Button
               component="label"
@@ -121,16 +133,14 @@ export default function Section3() {
               variant="contained"
               tabIndex={-1}
               endIcon={<CloudUploadIcon />}
-              sx={{
-                background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-              }}
+              sx={{ background: "linear-gradient(to right, #0F2D4D, #2369B3)" }}
             >
               صورة شارحة
               <VisuallyHiddenInput
                 type="file"
                 onChange={(event) => {
                   if (event.target.files[0]) {
-                    const imageURL = URL.createObjectURL(event.target.files[0]); // Generate a temporary URL for the file
+                    const imageURL = URL.createObjectURL(event.target.files[0]);
                     setFile(imageURL);
                   }
                 }}
