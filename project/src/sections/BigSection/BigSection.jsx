@@ -69,6 +69,7 @@ export default function BasicTabs({
                 arr={item.meaning}
                 Semantic_fields={item.Semantic_fields}
                 word={word}
+                index={index}
               />
               <TabSection
                 arr={item.collocates}

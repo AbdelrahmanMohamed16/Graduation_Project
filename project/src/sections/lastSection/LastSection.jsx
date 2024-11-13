@@ -44,6 +44,44 @@ MyFormControlLabel.propTypes = {
 };
 
 function LastSection({ files, records }) {
+  let imageFormData = new FormData();
+  let recordFormData = new FormData();
+  const sendImages = async () => {
+    imageFormData.append("img", files[0]);
+    try {
+      const imageURL = await fetch(
+        "http://156.196.36.161:5001/api/v1/upload/image",
+        {
+          method: "POST",
+          body: imageFormData,
+        }
+      );
+      console.log(imageURL);
+      imageFormData = new FormData();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const sendRecord = async () => {
+    try {
+      recordFormData.append("record", records[0]);
+      const recordURL = await fetch(
+        "http://156.196.36.161:5001/api/v1/upload/record",
+        {
+          method: "POST",
+          body: recordFormData,
+        }
+      );
+      console.log(recordURL);
+      recordFormData = new FormData();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const submitPublics = () => {
+    sendImages();
+    sendRecord();
+  };
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>
@@ -112,7 +150,7 @@ function LastSection({ files, records }) {
       >
         <Grid container spacing={2} width={{ xs: "30%", sm: "20%" }} mt={2}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <ButtonCompnent text="حفظ"></ButtonCompnent>
+            <ButtonCompnent text="حفظ" onclick={submitPublics}></ButtonCompnent>
           </Grid>
           <Grid size={{ xs: 12, md: 8 }}>
             <ButtonCompnent text="ارسل للمدقق"></ButtonCompnent>

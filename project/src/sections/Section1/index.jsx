@@ -6,9 +6,8 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
 
-function DataInputs({ data, onChange, addRecord }) {
+function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
   const { word_with_diacritics, phonetic_writing } = data;
-
   return (
     <Grid2
       container
@@ -36,8 +35,10 @@ function DataInputs({ data, onChange, addRecord }) {
         <Voice
           setVoice={(value) => {
             onChange("pronounciation", value);
+            setRecorded(true);
           }}
           addRecord={addRecord}
+          index={index}
         />
       </Grid2>
     </Grid2>
@@ -45,6 +46,7 @@ function DataInputs({ data, onChange, addRecord }) {
 }
 
 export default function Section1({ word = "المدخل", addRecord }) {
+  const [recorded, setRecorded] = useState(false);
   const [examples, setExamples] = useState(
     useSelector((state) => state.user?.form?.diacritics) || [
       { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
@@ -64,10 +66,17 @@ export default function Section1({ word = "المدخل", addRecord }) {
   };
 
   const addExample = () => {
-    setExamples((prev) => [
-      ...prev,
-      { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
-    ]);
+    if (recorded) {
+      setExamples((prev) => [
+        ...prev,
+        {
+          word_with_diacritics: "",
+          phonetic_writing: "",
+          pronounciation: null,
+        },
+      ]);
+      setRecorded(false);
+    }
   };
 
   return (
@@ -106,6 +115,8 @@ export default function Section1({ word = "المدخل", addRecord }) {
             data={example}
             onChange={(field, value) => handleChange(index, field, value)}
             addRecord={addRecord}
+            index={index}
+            setRecorded={setRecorded}
           />
         ))}
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>

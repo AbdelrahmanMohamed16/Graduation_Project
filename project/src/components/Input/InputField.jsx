@@ -239,7 +239,7 @@ function InputField({
         <Select
           labelId="select-filled-label"
           id="select-filled"
-          value={selectedOption}
+          value={selectedOption ? selectedOption : ""}
           onChange={handleChange}
           color="white"
 

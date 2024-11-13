@@ -44,7 +44,7 @@ function ExampleData({ data, onChange }) {
     </Grid2>
   );
 }
-export default function Section3({ arr, Semantic_fields, addFile }) {
+export default function Section3({ arr, Semantic_fields, addFile, index }) {
   console.log("arr in section 3: ", arr);
   console.log("Semantic_fields in section 3: ", arr);
   const [options, setOptions] = useState([
@@ -59,9 +59,7 @@ export default function Section3({ arr, Semantic_fields, addFile }) {
   const [imageText, setImageText] = useState(arr?.image.description);
   const [imageSource, setImageSource] = useState(arr?.image.source);
   const [imageURL, setImageURL] = useState(null);
-  const semanticFields = useSelector(
-    (state) => state.user.semantic_info_obj?.Semantic_fields
-  );
+
   const [example, setExamples] = useState(
     arr?.example || [{ file: "", text: "", source: "" }]
   );
@@ -211,7 +209,7 @@ export default function Section3({ arr, Semantic_fields, addFile }) {
                 type="file"
                 onChange={(event) => {
                   if (event.target.files[0]) {
-                    addFile(event.target.files[0]);
+                    addFile(event.target.files[0], index);
                     setImageURL(URL.createObjectURL(event.target.files[0]));
                   }
                 }}

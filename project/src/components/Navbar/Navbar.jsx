@@ -65,6 +65,7 @@ function Navbar(props) {
           <a
             href={`#${item.id}`}
             style={{ textDecoration: "none", color: "#0F2D4D" }}
+            key={index}
           >
             <ListItem key={index} disablePadding>
               <ListItemButton sx={{ textAlign: "center" }}>
@@ -111,7 +112,7 @@ function Navbar(props) {
               }}
             >
               {navItems.map((item, index) => (
-                <a href={`#${item.id}`}>
+                <a href={`#${item.id}`} key={index}>
                   <Button
                     key={index}
                     sx={{

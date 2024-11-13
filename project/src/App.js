@@ -7,7 +7,7 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import Login from "./pages/Login";
 import Section2 from "./sections/section2/Section2";
-import Section4 from "./sections/Section4/Section4";
+// import Section4 from "./sections/Section4/Section4";
 import LastSection from "./sections/lastSection/LastSection";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
@@ -16,21 +16,34 @@ import TabSection from "./sections/TabSection/TabSection";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
-import { useDispatch, useSelector } from "react-redux";
-import { Fragment, useEffect, useState } from "react";
-import { getWord } from "./redux/userSlice";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+// import { getWord } from "./redux/userSlice";
 
 function App() {
   const [value, setValue] = useState(-1);
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
 
-  const addFile = (file) => {
-    setFiles([...files, file]);
+  const addFile = (file, index) => {
+    console.log(index);
+    if (index !== undefined && index < files.length) {
+      const updatedFiles = [...files];
+      updatedFiles[index].image = file.image;
+      setFiles(updatedFiles);
+    } else {
+      setFiles([{ image: file, index: 0 }]);
+    }
   };
 
-  const addRecord = (record) => {
-    setRecords([...records, record]);
+  const addRecord = (record, index) => {
+    if (index !== undefined && index < records.length) {
+      const updatedRecords = [...records];
+      updatedRecords[index] = record;
+      setRecords(updatedRecords);
+    } else {
+      setRecords([...records, record]);
+    }
   };
 
   useEffect(() => {
@@ -51,13 +64,9 @@ function App() {
     setSemantic_info_arr(semantic_info);
   }, [semantic_info]);
   const [word, setWord] = useState("المدخل");
-  const theme = (outerTheme) =>
-    createTheme({
-      direction: "rtl",
-      palette: {
-        // mode: outerTheme.palette.mode,
-      },
-    });
+  const theme = createTheme({
+    direction: "rtl",
+  });
 
   const cacheRtl = createCache({
     key: "muirtl",
@@ -146,6 +155,7 @@ function App() {
                           </div>
                           <LastSection files={files} records={records} />
                           <button onClick={handlePrint}>Print as PDF</button>
+                          <img src="public/uploads/images/1731522171393-logo 2.png"></img>
                         </Grid2>
                       </Grid2>
                     </>

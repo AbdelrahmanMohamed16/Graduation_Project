@@ -4,7 +4,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-const Voice = ({ setVoice, addRecord }) => {
+const Voice = ({ setVoice, addRecord, index }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const mediaRecorderRef = useRef(null);
@@ -23,7 +23,12 @@ const Voice = ({ setVoice, addRecord }) => {
 
     mediaRecorderRef.current.onstop = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-      addRecord(audioBlob);
+      const audioFile = new File([audioBlob], `recording_${Date.now()}.wav`, {
+        type: "audio/wav",
+      });
+      console.log("index: ", index);
+      if (index !== undefined) addRecord(audioFile, index);
+      else addRecord(audioFile);
       const audioURL = URL.createObjectURL(audioBlob);
       setAudioURL(audioURL);
       setVoice(audioURL);
