@@ -6,7 +6,9 @@ import { useState } from "react";
 import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearCollocates,
   clearSemantic_info_obj,
+  updateCollocates,
   updateCollocates_obj,
   updateSemantic_info,
   updateSemantic_info_obj,
@@ -38,7 +40,17 @@ function Example({ data, onChange }) {
   );
 }
 
-function Section4({ data, setValue }) {
+function Section4({
+  data,
+  setValue,
+  setValue2,
+  arrCollocates,
+  setArrCollocates,
+}) {
+  console.log(
+    "-------------------arrCollocates--------------------------------",
+    arrCollocates
+  );
   const [collocate_text, setCollocate_text] = useState(data?.collocate_text);
   const [meaning, Setmeaning] = useState(data?.meaning);
   const [example, setExamples] = useState(
@@ -48,13 +60,14 @@ function Section4({ data, setValue }) {
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
-    dispatch(
-      updateSemantic_info_obj({ name: "collocates", value: collocates_obj })
-    );
+    dispatch(updateCollocates());
+    dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
     dispatch(updateSemantic_info());
     dispatch(clearSemantic_info_obj());
+    dispatch(clearCollocates());
     setValue(-1);
+    setValue2(-1);
   };
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
@@ -63,6 +76,20 @@ function Section4({ data, setValue }) {
       )
     );
     dispatch(updateCollocates_obj({ name: "example", value: example }));
+  };
+  const handleAddNewCollocates = () => {
+    dispatch(updateCollocates());
+    if (!arrCollocates) {
+      setArrCollocates([collocates_obj]);
+      console.log("from collocates--------------------------------");
+    } else {
+      setArrCollocates([...arrCollocates, collocates_obj]);
+    }
+
+    setCollocate_text("");
+    Setmeaning("");
+    setExamples([]);
+    setValue2(-1);
   };
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
@@ -118,6 +145,7 @@ function Section4({ data, setValue }) {
               text="أضف متصاحبة جديدة"
               rounded={true}
               icon={true}
+              onclick={handleAddNewCollocates}
             ></ButtonCompnent>
           </Grid>
         </Grid>

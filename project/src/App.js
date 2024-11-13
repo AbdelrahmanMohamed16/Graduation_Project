@@ -6,9 +6,9 @@ import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import Login from "./pages/Login";
-import Section2 from "./sections/section2/Section2";
+import Section2 from "./sections/Section2/Section2";
 import Section4 from "./sections/Section4/Section4";
-import LastSection from "./sections/lastSection/LastSection";
+import LastSection from "./sections/LastSection/LastSection";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
 import BigSection from "./sections/BigSection/BigSection";
@@ -22,6 +22,7 @@ import { getWord } from "./redux/userSlice";
 
 function App() {
   const [value, setValue] = useState(-1);
+  const [value2, setValue2] = useState(-1);
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
 
@@ -37,7 +38,6 @@ function App() {
     console.log("files: ", files);
     console.log("records: ", records);
   }, [files, records]);
-  const [value2, setValue2] = useState(-1);
 
   const handlePrint = () => {
     window.print();
@@ -117,6 +117,7 @@ function App() {
                                   <TabSection
                                     value={value2}
                                     setValue={setValue2}
+                                    setValue2={setValue}
                                   />
                                 </div>
                               </>
@@ -137,6 +138,7 @@ function App() {
                                 value={value2}
                                 value1={value}
                                 setValue={setValue2}
+                                setValue2={setValue}
                               />
                             </>
                           )}

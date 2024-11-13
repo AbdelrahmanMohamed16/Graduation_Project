@@ -34,15 +34,24 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ arr, value, setValue }) {
+export default function BasicTabs({ arr, value, setValue, setValue2 }) {
+  const [arrCollocates, setArrCollocates] = React.useState([]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const [length, setLength] = React.useState(0);
   React.useEffect(() => {
     setLength(arr?.length);
+    setArrCollocates(arr);
   }, [arr]);
+  React.useEffect(() => {
+    if (arrCollocates?.length > 0) {
+      setLength(arrCollocates?.length);
 
+      setArrCollocates(arrCollocates);
+    }
+  }, [arrCollocates]);
+  console.log(length);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -53,7 +62,7 @@ export default function BasicTabs({ arr, value, setValue }) {
             aria-label="basic tabs example"
           >
             {" "}
-            {arr.map((item, index) => (
+            {arrCollocates?.map((item, index) => (
               <Tab
                 label={item.collocate_text}
                 key={index}
@@ -65,14 +74,25 @@ export default function BasicTabs({ arr, value, setValue }) {
       </Box>
       {value === -1 && (
         <div style={{ padding: 24 }}>
-          <Section4 setValue2={setValue} />
+          <Section4
+            setValue={setValue2}
+            setValue2={setValue}
+            setArrCollocates={setArrCollocates}
+            arrCollocates={arrCollocates}
+          />
         </div>
       )}
-      {arr?.map((item, index) => {
+      {arrCollocates?.map((item, index) => {
         return (
           <CustomTabPanel value={value} index={index}>
             <>
-              <Section4 data={item} setValue2={setValue} />
+              <Section4
+                data={item}
+                setValue={setValue2}
+                setValue2={setValue}
+                setArrCollocates={setArrCollocates}
+                arrCollocates={arrCollocates}
+              />
             </>
           </CustomTabPanel>
         );
