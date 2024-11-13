@@ -38,25 +38,36 @@ export default function BasicTabs({ arr, value, setValue }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [length, setLength] = React.useState(0);
+  React.useEffect(() => {
+    setLength(arr?.length);
+  }, [arr]);
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          {" "}
-          {arr.map((item, index) => (
-            <Tab
-              label={item.collocate_text}
-              key={index}
-              {...a11yProps(index)}
-            />
-          ))}
-        </Tabs>
+        {length > 0 && (
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            {" "}
+            {arr.map((item, index) => (
+              <Tab
+                label={item.collocate_text}
+                key={index}
+                {...a11yProps(index)}
+              />
+            ))}
+          </Tabs>
+        )}
       </Box>
+      {value === -1 && (
+        <div style={{ padding: 24 }}>
+          <Section4 setValue2={setValue} />
+        </div>
+      )}
       {arr?.map((item, index) => {
         return (
           <CustomTabPanel value={value} index={index}>

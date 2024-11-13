@@ -48,11 +48,11 @@ function Section4({ data, setValue }) {
   const image_obj = useSelector((state) => state.user.image_obj);
   const dispatch = useDispatch();
   const handleNewSemantic = async () => {
-    await dispatch(updateMeaning({ name: "image", value: image_obj }));
+    dispatch(updateMeaning({ name: "image", value: image_obj }));
+    dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
     dispatch(
       updateSemantic_info_obj({ name: "collocates", value: collocates_obj })
     );
-    dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
     setValue(-1);
   };
   const handleChange = (index, field, value) => {
@@ -74,7 +74,6 @@ function Section4({ data, setValue }) {
           display: "flex",
           flexDirection: "column",
           gap: "30px",
-          mt: 15,
         }}
       >
         <Grid container spacing={2}>
