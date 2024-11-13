@@ -4,6 +4,12 @@ import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
 import { Grid2, Stack, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCollocates_obj,
+  updateMeaning,
+  updateSemantic_info_obj,
+} from "../../redux/userSlice";
 function Example({ data, onChange }) {
   const { text, source } = data;
 
@@ -31,17 +37,31 @@ function Example({ data, onChange }) {
   );
 }
 
-function Section4() {
-  const [collocate_text, setCollocate_text] = useState("");
-  const [meaning, Setmeaning] = useState("");
-  const [example, setExamples] = useState([{ text: "", source: "" }]);
-
+function Section4({ data, setValue }) {
+  const [collocate_text, setCollocate_text] = useState(data?.collocate_text);
+  const [meaning, Setmeaning] = useState(data?.meaning);
+  const [example, setExamples] = useState(
+    data?.example || [{ text: "", source: "" }]
+  );
+  const collocates_obj = useSelector((state) => state.user.collocates_obj);
+  const meaning_obj = useSelector((state) => state.user.meaning);
+  const image_obj = useSelector((state) => state.user.image_obj);
+  const dispatch = useDispatch();
+  const handleNewSemantic = async () => {
+    await dispatch(updateMeaning({ name: "image", value: image_obj }));
+    dispatch(
+      updateSemantic_info_obj({ name: "collocates", value: collocates_obj })
+    );
+    dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
+    setValue(-1);
+  };
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
       prev.map((example, i) =>
         i === index ? { ...example, [field]: value } : example
       )
     );
+    dispatch(updateCollocates_obj({ name: "example", value: example }));
   };
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
@@ -74,6 +94,8 @@ function Section4() {
               label="التركيب التصاحبي"
               name={"collocate_text"}
               collocates_obj={true}
+              val={collocate_text}
+              set={setCollocate_text}
             />
           </Grid>
           <Grid size={{ xs: 12, md: 7 }}>
@@ -82,6 +104,8 @@ function Section4() {
               label="معني التركيب التصاحبي"
               name={"meaning"}
               collocates_obj={true}
+              val={meaning}
+              set={Setmeaning}
             />
           </Grid>
           <Grid
@@ -160,7 +184,11 @@ function Section4() {
             </Grid>
             <Grid container justifyContent={"center"} size={12} mt={10}>
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                <ButtonCompnent text="اضف معلومة دلالية جديدة" icon={true} />
+                <ButtonCompnent
+                  text="اضف معلومة دلالية جديدة"
+                  icon={true}
+                  onclick={handleNewSemantic}
+                />
               </Grid>
             </Grid>
           </Grid>

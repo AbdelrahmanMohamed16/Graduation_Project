@@ -4,7 +4,8 @@ import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
-
+import { useDispatch } from "react-redux";
+import { updateMeaning } from "../../redux/userSlice";
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
   //   clipPath: "inset(50%)",
@@ -43,7 +44,8 @@ function ExampleData({ data, onChange }) {
     </Grid2>
   );
 }
-export default function Section3({ arr }) {
+export default function Section3({ arr, Semantic_fields }) {
+  console.log(arr);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",
@@ -52,15 +54,22 @@ export default function Section3({ arr }) {
     "الاخلاق",
   ]);
   const [option, setOption] = useState("");
+  const [text, setText] = useState(arr?.text);
+  const [imageText, setImageText] = useState(arr?.image.description);
+  const [imageSource, setImageSource] = useState(arr?.image.source);
   const [file, setFile] = useState(null);
-  const [example, setExamples] = useState([{ text: "", source: "" }]);
+  const [example, setExamples] = useState(
+    arr?.example || [{ text: "", source: "" }]
+  );
   const [image, setImage] = useState({});
+  const dispatch = useDispatch();
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
       prev.map((example, i) =>
         i === index ? { ...example, [field]: value } : example
       )
     );
+    dispatch(updateMeaning({ name: "example", value: example }));
   };
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
@@ -96,6 +105,7 @@ export default function Section3({ arr }) {
               label="المجال الدلالي"
               select={true}
               options={options}
+              defaultOption={Semantic_fields}
               name={"Semantic_fields"}
               semantic_info={true}
             />
@@ -118,6 +128,8 @@ export default function Section3({ arr }) {
             label="المعني"
             multiLine={true}
             meaning={true}
+            val={text}
+            set={setText}
             name={"text"}
           />
         </Grid2>
@@ -192,6 +204,8 @@ export default function Section3({ arr }) {
               name={"description"}
               setImage={setImage}
               image={image}
+              val={imageText}
+              set={setImageText}
             />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 2 }}>
@@ -201,6 +215,8 @@ export default function Section3({ arr }) {
               name={"source"}
               setImage={setImage}
               image={image}
+              val={imageSource}
+              set={setImageSource}
             />
           </Grid2>
         </Grid2>

@@ -22,17 +22,17 @@ import { getWord } from "./redux/userSlice";
 function App() {
   const [value, setValue] = useState(-1);
 
-  useEffect(() => {
-    console.log("helllllllllo");
-  });
   const handlePrint = () => {
     window.print();
   };
   const auth = useSelector((state) => state.user.auth);
-  const semantic_info_arr = useSelector(
-    (state) => state.user.form?.semantic_info
+  const semantic_info = useSelector((state) => state.user.semantic_info);
+  const [semantic_info_arr, setSemantic_info_arr] = useState(
+    semantic_info || {}
   );
-  console.log(semantic_info_arr);
+  useEffect(() => {
+    setSemantic_info_arr(semantic_info);
+  }, [semantic_info]);
   const [word, setWord] = useState("المدخل");
   const theme = (outerTheme) =>
     createTheme({
@@ -94,7 +94,7 @@ function App() {
                                 <div style={{ padding: 24 }}>
                                   {" "}
                                   <Section3 />
-                                  <Section4 />
+                                  <Section4 setValue={setValue} />
                                 </div>
                               </>
                             ) : (
@@ -107,7 +107,7 @@ function App() {
                           ) : (
                             <>
                               <Section3 />
-                              <Section4 />
+                              <Section4 setValue={setValue} />
                             </>
                           )}
                           <div className="no-print">

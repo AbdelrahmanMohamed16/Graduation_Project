@@ -9,6 +9,7 @@ import {
   getWord,
   updateCollocates_obj,
   updateForm,
+  updateImage_obj,
   updateMeaning,
   updateMorphologicalInfo,
   updateSemantic_info_obj,
@@ -97,7 +98,7 @@ function InputField({
       dispatch(updateMeaning({ name, value: event.target.value }));
     }
     if (setImage) {
-      setImage({ ...image, [name]: event.target.value });
+      dispatch(updateImage_obj({ name, value: event.target.value }));
     }
   };
 

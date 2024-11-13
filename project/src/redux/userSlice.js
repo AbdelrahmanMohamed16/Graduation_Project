@@ -14,6 +14,7 @@ const initialState = {
   collocates: [],
   collocates_obj: {},
   meaning: {},
+  image_obj: {},
 };
 
 export const loginUser = createAsyncThunk(
@@ -79,6 +80,19 @@ export const getWord = createAsyncThunk(
   }
 );
 
+export const updateMeaningAsync = createAsyncThunk(
+  "yourSlice/updateMeaning",
+  async (payload, { dispatch, getState }) => {
+    // Synchronous update
+    dispatch(updateMeaning(payload));
+
+    // Logging after update for debug
+    console.log("Updated meaning:", getState().yourSlice.meaning);
+
+    return Promise.resolve(); // Resolve the promise
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -121,6 +135,16 @@ export const userSlice = createSlice({
       state.meaning[action.payload.name] = action.payload.value;
       console.log(JSON.parse(JSON.stringify(state.meaning)));
     },
+    updateImage_obj: (state, action) => {
+      state.image_obj[action.payload.name] = action.payload.value;
+      console.log(state.image_obj);
+      updateMeaning({ name: "image", value: state.image_obj });
+      console.log(JSON.parse(JSON.stringify(state.image_obj)));
+    },
+    updateSemantic_info: (state, action) => {
+      state.semantic_info = [...state.semantic_info, action.payload];
+      console.log(JSON.parse(JSON.stringify(state.semantic_info)));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -150,7 +174,6 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getWord.fulfilled, (state, action) => {
-        console.log("helllllllllllllllllllllllllllllllllo");
         console.log(action.payload);
         console.log(action.payload.data);
         state.loading = false;
@@ -177,6 +200,7 @@ export const {
   updateCollocates_obj,
   updateSemantic_info_obj,
   updateMeaning,
+  updateImage_obj,
 } = userSlice.actions;
 
 export default userSlice.reducer;
