@@ -1,14 +1,29 @@
 import { Grid2, Typography, Button } from "@mui/material";
-import React, { useState, useRef, useCallback, Fragment } from "react";
+import React, { useState } from "react";
 import InputField from "../../components/Input/InputField";
 import Voice from "../../components/Voice/Voice";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 
-// Phonetic Keyboard Component
-const PhoneticKeyboard = ({ onKeyPress }) => {
+const PhoneticKeyboard = () => {
   const ipaCharacters = [
     "ʌ", "æ", "θ", "ð", "ʃ", "ʒ", "ŋ", "ʧ", "ʤ", "ɪ", "ɛ", "ɔ", "ʊ", "ʌ", "ɛ", "ɑ", "ɔ", "ɒ", "ʍ", "ɾ", "ɹ", "j", "w", "p", "b", "t", "d", "k", "g"
   ];
+
+  // Inject character into focused input field
+  const handleKeyPress = (char) => {
+    const activeElement = document.activeElement; // Get the currently focused element
+
+    if (activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA")) {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+
+      // Insert the character at the current caret position
+      const newValue = activeElement.value.slice(0, start) + char + activeElement.value.slice(end);
+      activeElement.value = newValue; // Set the new value
+      activeElement.setSelectionRange(start + 1, start + 1); // Move caret
+      activeElement.focus(); // Keep focus on the input
+    }
+  };
 
   return (
     <Grid2 container spacing={1} justifyContent="center" mt={2}>
@@ -17,7 +32,10 @@ const PhoneticKeyboard = ({ onKeyPress }) => {
           <Button
             variant="outlined"
             sx={{ padding: "10px", fontSize: "18px", fontFamily: "El Messiri" }}
-            onClick={() => onKeyPress(char)}
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent focus loss
+              handleKeyPress(char);
+            }}
           >
             {char}
           </Button>
@@ -29,31 +47,15 @@ const PhoneticKeyboard = ({ onKeyPress }) => {
 
 // DataInputs Component
 const DataInputs = () => {
-  const [inputValue, setInputValue] = useState(""); // Local state for input value
-  const inputRef = useRef(null); // Ref for managing input focus
-
-  const handleKeyPress = useCallback((key) => {
-    setInputValue((prevValue) => prevValue + key); // Update the input value
-  }, []);
-
-  // Ensure input stays focused after each key press
-  React.useEffect(() => {
-    inputRef.current?.focus();
-  }, [inputValue]);
-
   return (
     <Grid2 container size={12} rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 5 }}>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
         <InputField label="الضبط التام بالشكل" text={true} />
       </Grid2>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        {/* The input field where phonetic characters will be typed */}
         <InputField
           label="الكتابة الصوتية"
           text={true}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)} // Updates input field text
-          inputRef={inputRef} // Reference for keeping focus
           multiline
           rows={4}
         />
@@ -61,17 +63,18 @@ const DataInputs = () => {
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
         <Voice />
       </Grid2>
-      {/* Phonetic Keyboard */}
-      <Grid2 size={12}>
-        <PhoneticKeyboard onKeyPress={handleKeyPress} />
-      </Grid2>
     </Grid2>
   );
 };
 
-// Section1 Component
+// Main Component
 export default function Section1({ word = "المدخل" }) {
-  const [examples, setExamples] = useState([<DataInputs />]);
+  const [examples, setExamples] = useState([<DataInputs key={0} />]);
+
+  // Add a new DataInputs component
+  const addNewExample = () => {
+    setExamples((prev) => [...prev, <DataInputs key={prev.length} />]);
+  };
 
   return (
     <div id="section1">
@@ -98,17 +101,17 @@ export default function Section1({ word = "المدخل" }) {
             المعلومات الصوتية:
           </Typography>
         </Grid2>
-        {examples.map((example, i) => (
-          <Fragment key={i}>{example}</Fragment>
-        ))}
+        {examples}
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <ButtonCompnent
             text="اضف مثال جديد"
             icon={true}
-            onclick={() =>
-              setExamples((prevFields) => [...prevFields, <DataInputs />])
-            }
+            onclick={addNewExample}
           />
+        </Grid2>
+        {/* Single Phonetic Keyboard rendered once and shared */}
+        <Grid2 size={12}>
+          <PhoneticKeyboard />
         </Grid2>
       </Grid2>
     </div>
