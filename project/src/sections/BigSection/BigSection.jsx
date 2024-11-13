@@ -5,6 +5,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Section3 from "../Section3";
 import Section4 from "../Section4/Section4";
+import TabSection from "../TabSection/TabSection";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,10 +36,18 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ arr, value, setValue, word }) {
+export default function BasicTabs({
+  arr,
+  value,
+  setValue,
+  word,
+  value2,
+  setValue2,
+}) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  console.log(value2);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -61,7 +70,11 @@ export default function BasicTabs({ arr, value, setValue, word }) {
                 Semantic_fields={item.Semantic_fields}
                 word={word}
               />
-              <Section4 arr={item.collocates} setValue={setValue} />
+              <TabSection
+                arr={item.collocates}
+                value={value2}
+                setValue={setValue2}
+              />
             </>
           </CustomTabPanel>
         );

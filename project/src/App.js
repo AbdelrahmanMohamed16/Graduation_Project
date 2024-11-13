@@ -12,6 +12,7 @@ import LastSection from "./sections/lastSection/LastSection";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
 import BigSection from "./sections/BigSection/BigSection";
+import TabSection from "./sections/TabSection/TabSection";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
 
@@ -36,6 +37,7 @@ function App() {
     console.log("files: ", files);
     console.log("records: ", records);
   }, [files, records]);
+  const [value2, setValue2] = useState(-1);
 
   const handlePrint = () => {
     window.print();
@@ -101,16 +103,21 @@ function App() {
                           {semantic_info_arr?.length > 0 ? (
                             value === -1 ? (
                               <>
+                                {console.log(semantic_info_arr)}{" "}
                                 <BigSection
                                   arr={semantic_info_arr}
                                   value={value}
                                   setValue={setValue}
-                                  addFile={addFile}
+                                  value2={value2}
+                                  setValue2={setValue2}
                                 />
                                 <div style={{ padding: 24 }}>
                                   {" "}
                                   <Section3 addFile={addFile} />
-                                  <Section4 setValue={setValue} />
+                                  <TabSection
+                                    value={value2}
+                                    setValue={setValue2}
+                                  />
                                 </div>
                               </>
                             ) : (
@@ -119,12 +126,18 @@ function App() {
                                 value={value}
                                 setValue={setValue}
                                 addFile={addFile}
+                                value2={value2}
+                                setValue2={setValue2}
                               />
                             )
                           ) : (
                             <>
                               <Section3 addFile={addFile} />
-                              <Section4 setValue={setValue} />
+                              <TabSection
+                                value={value2}
+                                value1={value}
+                                setValue={setValue2}
+                              />
                             </>
                           )}
                           <div className="no-print">

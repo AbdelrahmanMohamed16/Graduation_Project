@@ -75,7 +75,6 @@ function Section4({ data, setValue }) {
           display: "flex",
           flexDirection: "column",
           gap: "30px",
-          mt: 15,
         }}
       >
         <Grid container spacing={2}>
