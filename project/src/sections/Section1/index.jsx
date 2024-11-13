@@ -6,7 +6,7 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
 
-function DataInputs({ data, onChange }) {
+function DataInputs({ data, onChange, addRecord }) {
   const { word_with_diacritics, phonetic_writing } = data;
 
   return (
@@ -33,13 +33,18 @@ function DataInputs({ data, onChange }) {
         />
       </Grid2>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-        <Voice setVoice={(value) => onChange("pronounciation", value)} />
+        <Voice
+          setVoice={(value) => {
+            onChange("pronounciation", value);
+          }}
+          addRecord={addRecord}
+        />
       </Grid2>
     </Grid2>
   );
 }
 
-export default function Section1({ word = "المدخل" }) {
+export default function Section1({ word = "المدخل", addRecord }) {
   const [examples, setExamples] = useState(
     useSelector((state) => state.user?.form?.diacritics) || [
       { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
@@ -100,6 +105,7 @@ export default function Section1({ word = "المدخل" }) {
             key={index}
             data={example}
             onChange={(field, value) => handleChange(index, field, value)}
+            addRecord={addRecord}
           />
         ))}
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>

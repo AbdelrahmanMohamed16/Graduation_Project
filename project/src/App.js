@@ -6,9 +6,9 @@ import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import Login from "./pages/Login";
-import Section2 from "./sections/Section2/Section2";
+import Section2 from "./sections/section2/Section2";
 import Section4 from "./sections/Section4/Section4";
-import LastSection from "./sections/LastSection/LastSection";
+import LastSection from "./sections/lastSection/LastSection";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
 import BigSection from "./sections/BigSection/BigSection";
@@ -21,6 +21,21 @@ import { getWord } from "./redux/userSlice";
 
 function App() {
   const [value, setValue] = useState(-1);
+  const [files, setFiles] = useState([]);
+  const [records, setRecords] = useState([]);
+
+  const addFile = (file) => {
+    setFiles([...files, file]);
+  };
+
+  const addRecord = (record) => {
+    setRecords([...records, record]);
+  };
+
+  useEffect(() => {
+    console.log("files: ", files);
+    console.log("records: ", records);
+  }, [files, records]);
 
   const handlePrint = () => {
     window.print();
@@ -73,7 +88,7 @@ function App() {
                       </Navbar>
                       <Grid2 container>
                         <Grid2 mx={4} my={3} width={"100%"}>
-                          <Section1 word={word} />
+                          <Section1 word={word} addRecord={addRecord} />
                           <div className="no-print">
                             {" "}
                             <DividerComponent />
@@ -90,10 +105,11 @@ function App() {
                                   arr={semantic_info_arr}
                                   value={value}
                                   setValue={setValue}
+                                  addFile={addFile}
                                 />
                                 <div style={{ padding: 24 }}>
                                   {" "}
-                                  <Section3 />
+                                  <Section3 addFile={addFile} />
                                   <Section4 setValue={setValue} />
                                 </div>
                               </>
@@ -102,11 +118,12 @@ function App() {
                                 arr={semantic_info_arr}
                                 value={value}
                                 setValue={setValue}
+                                addFile={addFile}
                               />
                             )
                           ) : (
                             <>
-                              <Section3 />
+                              <Section3 addFile={addFile} />
                               <Section4 setValue={setValue} />
                             </>
                           )}
@@ -114,7 +131,7 @@ function App() {
                             {" "}
                             <DividerComponent />
                           </div>
-                          <LastSection />
+                          <LastSection files={files} records={records} />
                           <button onClick={handlePrint}>Print as PDF</button>
                         </Grid2>
                       </Grid2>

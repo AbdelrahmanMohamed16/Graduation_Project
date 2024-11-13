@@ -3,11 +3,12 @@ import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useState } from "react";
-import { Grid2, Stack, Typography } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearSemantic_info_obj,
   updateCollocates_obj,
-  updateMeaning,
+  updateSemantic_info,
   updateSemantic_info_obj,
 } from "../../redux/userSlice";
 function Example({ data, onChange }) {
@@ -45,14 +46,14 @@ function Section4({ data, setValue }) {
   );
   const collocates_obj = useSelector((state) => state.user.collocates_obj);
   const meaning_obj = useSelector((state) => state.user.meaning);
-  const image_obj = useSelector((state) => state.user.image_obj);
   const dispatch = useDispatch();
-  const handleNewSemantic = async () => {
-    await dispatch(updateMeaning({ name: "image", value: image_obj }));
+  const handleNewSemantic = () => {
     dispatch(
       updateSemantic_info_obj({ name: "collocates", value: collocates_obj })
     );
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
+    dispatch(updateSemantic_info());
+    dispatch(clearSemantic_info_obj());
     setValue(-1);
   };
   const handleChange = (index, field, value) => {
@@ -168,17 +169,25 @@ function Section4({ data, setValue }) {
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a href="https://falak.ksaa.gov.sa/" target="_blank">
+              <a
+                href="https://falak.ksaa.gov.sa/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <ButtonCompnent text="فلك" />
               </a>
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a href="https://www.sketchengine.eu/" target="_blank">
+              <a
+                href="https://www.sketchengine.eu/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <ButtonCompnent text="Sketch" />
               </a>
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a href="https://chat.com/" target="_blank">
+              <a href="https://chat.com/" target="_blank" rel="noreferrer">
                 <ButtonCompnent text="AI" />
               </a>
             </Grid>

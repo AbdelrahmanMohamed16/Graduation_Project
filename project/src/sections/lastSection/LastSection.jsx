@@ -43,7 +43,7 @@ MyFormControlLabel.propTypes = {
   value: PropTypes.any,
 };
 
-function LastSection() {
+function LastSection({ files, records }) {
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>

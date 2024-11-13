@@ -35,7 +35,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ arr, value, setValue }) {
+export default function BasicTabs({ arr, value, setValue, word }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -59,6 +59,7 @@ export default function BasicTabs({ arr, value, setValue }) {
               <Section3
                 arr={item.meaning}
                 Semantic_fields={item.Semantic_fields}
+                word={word}
               />
               <Section4 arr={item.collocates} setValue={setValue} />
             </>

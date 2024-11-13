@@ -41,6 +41,7 @@ function InputField({
 }) {
   const [option, setOption] = useState("");
   const styled = option ? "none" : "block";
+  const image_obj = useSelector((state) => state.user.image_obj);
   const [selectedOption, setSelectedOption] = useState(defaultOption || "");
   useEffect(() => {
     setSelectedOption(defaultOption);
@@ -98,7 +99,12 @@ function InputField({
       dispatch(updateMeaning({ name, value: event.target.value }));
     }
     if (setImage) {
-      dispatch(updateImage_obj({ name, value: event.target.value }));
+      console.log("image: ", image);
+      console.log("name: ", name);
+      console.log("value: ", event.target.value);
+      setImage({ ...image, [name]: event.target.value });
+      // dispatch(updateImage_obj({ name, value: event.target.value }));
+      // console.log(image_obj);
     }
   };
 

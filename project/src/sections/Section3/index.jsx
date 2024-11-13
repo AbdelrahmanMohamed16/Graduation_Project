@@ -1,10 +1,10 @@
-import { Box, Button, Grid, Grid2, styled, Typography } from "@mui/material";
-import React, { Fragment, useState } from "react";
+import { Button, Grid2, styled, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateMeaning } from "../../redux/userSlice";
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
@@ -44,8 +44,9 @@ function ExampleData({ data, onChange }) {
     </Grid2>
   );
 }
-export default function Section3({ arr, Semantic_fields }) {
-  console.log(arr);
+export default function Section3({ arr, Semantic_fields, addFile }) {
+  console.log("arr in section 3: ", arr);
+  console.log("Semantic_fields in section 3: ", arr);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",
@@ -57,9 +58,12 @@ export default function Section3({ arr, Semantic_fields }) {
   const [text, setText] = useState(arr?.text);
   const [imageText, setImageText] = useState(arr?.image.description);
   const [imageSource, setImageSource] = useState(arr?.image.source);
-  const [file, setFile] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+  const semanticFields = useSelector(
+    (state) => state.user.semantic_info_obj?.Semantic_fields
+  );
   const [example, setExamples] = useState(
-    arr?.example || [{ text: "", source: "" }]
+    arr?.example || [{ file: "", text: "", source: "" }]
   );
   const [image, setImage] = useState({});
   const dispatch = useDispatch();
@@ -71,9 +75,35 @@ export default function Section3({ arr, Semantic_fields }) {
     );
     dispatch(updateMeaning({ name: "example", value: example }));
   };
+
+  useEffect(() => {
+    dispatch(updateMeaning({ name: "image", value: image }));
+  }, [dispatch, image]);
+
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
+  // const handleSubmitImage = async () => {
+  //   if (word && file && (Semantic_fields || semanticFields)) {
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+  //     formData.append("word", word);
+  //     formData.append("Semantic_fields", Semantic_fields || semanticFields);
+
+  //     try {
+  //       const response = await fetch("http://localhost:3000/upload", {
+  //         method: "POST",
+  //         body: formData,
+  //       });
+
+  //       const data = await response.json();
+  //       setImage({ ...image, file: data.url });
+  //       alert("File uploaded successfully!");
+  //     } catch (error) {
+  //       console.error("Error uploading file:", error);
+  //     }
+  //   }
+  // };
   return (
     <div id="section3">
       <Grid2
@@ -145,8 +175,6 @@ export default function Section3({ arr, Semantic_fields }) {
               data={data}
               onChange={(field, value) => {
                 handleChange(index, field, value);
-                console.log(example);
-                console.log(image);
               }}
             />
           ))}
@@ -173,6 +201,7 @@ export default function Section3({ arr, Semantic_fields }) {
               variant="contained"
               tabIndex={-1}
               endIcon={<CloudUploadIcon />}
+              style={{ width: "100%" }}
               sx={{
                 background: "linear-gradient(to right, #0F2D4D, #2369B3)",
               }}
@@ -182,20 +211,25 @@ export default function Section3({ arr, Semantic_fields }) {
                 type="file"
                 onChange={(event) => {
                   if (event.target.files[0]) {
-                    const imageURL = URL.createObjectURL(event.target.files[0]); // Generate a temporary URL for the file
-                    setFile(imageURL);
+                    addFile(event.target.files[0]);
+                    setImageURL(URL.createObjectURL(event.target.files[0]));
                   }
                 }}
               />
             </Button>
           </Grid2>
-          <Grid2 size={{ xs: 6, sm: 4 }}>
-            <img
-              width={"100%"}
-              style={{ maxHeight: "300px" }}
-              src={file ? file : PlaceholderImage}
-              alt={file ? file : PlaceholderImage}
-            ></img>
+          <Grid2 container size={{ xs: 6, sm: 4 }} justifyContent={"center"}>
+            <Grid2 size={12}>
+              <img
+                width={"100%"}
+                style={{ maxHeight: "300px" }}
+                src={imageURL ? imageURL : PlaceholderImage}
+                alt={imageURL ? imageURL : PlaceholderImage}
+              ></img>
+            </Grid2>
+            {/* <Grid2 size={8}>
+              <ButtonCompnent text="اعتماد" onclick={handleSubmitImage} />
+            </Grid2> */}
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 4 }}>
             <InputField

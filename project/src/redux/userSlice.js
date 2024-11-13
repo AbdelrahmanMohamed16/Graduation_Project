@@ -113,7 +113,7 @@ export const userSlice = createSlice({
       console.log(action.payload.value);
 
       state.form[action.payload.name] = action.payload.value;
-      console.log(JSON.parse(JSON.stringify(state.form)));
+      console.log("form: ", JSON.parse(JSON.stringify(state.form)));
     },
     updateDiacritics: (state, action) => {
       state.diacritics = action.payload;
@@ -121,29 +121,51 @@ export const userSlice = createSlice({
     updateMorphologicalInfo: (state, action) => {
       console.log(action.payload);
       state.morphological_info[action.payload.name] = action.payload.value;
-      console.log(JSON.parse(JSON.stringify(state.morphological_info)));
+      console.log(
+        "morphological_info: ",
+        JSON.parse(JSON.stringify(state.morphological_info))
+      );
     },
     updateCollocates_obj: (state, action) => {
       state.collocates_obj[action.payload.name] = action.payload.value;
-      console.log(JSON.parse(JSON.stringify(state.collocates_obj)));
+      console.log(
+        "collocates_obj: ",
+        JSON.parse(JSON.stringify(state.collocates_obj))
+      );
     },
     updateSemantic_info_obj: (state, action) => {
       state.semantic_info_obj[action.payload.name] = action.payload.value;
-      console.log(JSON.parse(JSON.stringify(state.semantic_info_obj)));
+      console.log(
+        "semantic_info_obj: ",
+        JSON.parse(JSON.stringify(state.semantic_info_obj))
+      );
+    },
+    clearSemantic_info_obj: (state) => {
+      state.semantic_info_obj = {};
+      console.log(
+        "semantic_info_obj: ",
+        JSON.parse(JSON.stringify(state.semantic_info_obj))
+      );
     },
     updateMeaning: (state, action) => {
       state.meaning[action.payload.name] = action.payload.value;
-      console.log(JSON.parse(JSON.stringify(state.meaning)));
+      console.log("meaning: ", JSON.parse(JSON.stringify(state.meaning)));
     },
     updateImage_obj: (state, action) => {
       state.image_obj[action.payload.name] = action.payload.value;
       console.log(state.image_obj);
       updateMeaning({ name: "image", value: state.image_obj });
-      console.log(JSON.parse(JSON.stringify(state.image_obj)));
+      console.log("image_obj: ", JSON.parse(JSON.stringify(state.image_obj)));
+      console.log("meaning: ", JSON.stringify(state.meaning));
     },
-    updateSemantic_info: (state, action) => {
-      state.semantic_info = [...state.semantic_info, action.payload];
-      console.log(JSON.parse(JSON.stringify(state.semantic_info)));
+    updateSemantic_info: (state) => {
+      console.log("-------------------------------------------");
+      state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
+      console.log("-------------------------------------------");
+      console.log(
+        "semantic_info: ",
+        JSON.parse(JSON.stringify(state.semantic_info))
+      );
     },
   },
   extraReducers: (builder) => {
@@ -199,6 +221,8 @@ export const {
   updateDiacritics,
   updateCollocates_obj,
   updateSemantic_info_obj,
+  clearSemantic_info_obj,
+  updateSemantic_info,
   updateMeaning,
   updateImage_obj,
 } = userSlice.actions;
