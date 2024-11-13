@@ -24,11 +24,12 @@ export default function Login() {
     const logined = await dispatch(loginUser({ code: name, password }));
     console.log(logined.payload);
     if (logined.payload.data) {
-      navigate(`/words`);
+      navigate("/words");  // Corrected navigate function
     }
     setName("");
     setPassword("");
   };
+
   return (
     <Grid2
       container
@@ -39,7 +40,7 @@ export default function Login() {
       height={"100vh"}
       sx={{
         background: {
-          lg: `url(${login_background}) no-repeat`,
+          lg: `url(${login_background}) no-repeat`,  // Corrected background URL
         },
         backgroundSize: { lg: "contain" },
         backgroundPositionY: { lg: "100%" },
