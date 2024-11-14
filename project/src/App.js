@@ -86,7 +86,7 @@ function App() {
               element={
                 <>
                   {" "}
-                  <Navbar></Navbar>
+                  <Navbar first={true}></Navbar>
                   <AccordionWithWords />
                 </>
               }
