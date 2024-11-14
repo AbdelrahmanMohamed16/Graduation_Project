@@ -80,19 +80,6 @@ export const getWord = createAsyncThunk(
   }
 );
 
-export const updateMeaningAsync = createAsyncThunk(
-  "yourSlice/updateMeaning",
-  async (payload, { dispatch, getState }) => {
-    // Synchronous update
-    dispatch(updateMeaning(payload));
-
-    // Logging after update for debug
-    console.log("Updated meaning:", getState().yourSlice.meaning);
-
-    return Promise.resolve(); // Resolve the promise
-  }
-);
-
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -152,8 +139,13 @@ export const userSlice = createSlice({
       );
     },
     updateMeaning: (state, action) => {
-      state.meaning[action.payload.name] = action.payload.value;
-      console.log("meaning: ", JSON.parse(JSON.stringify(state.meaning)));
+      if (action.payload.arr !== null) {
+        console.log("here");
+        state.meaning = action.payload.arr;
+      } else {
+        state.meaning[action.payload.name] = action.payload.value;
+        console.log("meaning: ", JSON.parse(JSON.stringify(state.meaning)));
+      }
     },
     updateImage_obj: (state, action) => {
       state.image_obj[action.payload.name] = action.payload.value;
@@ -162,24 +154,46 @@ export const userSlice = createSlice({
       console.log("image_obj: ", JSON.parse(JSON.stringify(state.image_obj)));
       console.log("meaning: ", JSON.stringify(state.meaning));
     },
-    updateSemantic_info: (state) => {
+    updateSemantic_info: (state, action) => {
       console.log("-------------------------------------------");
-      state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
+      if (action.payload.index !== null) {
+        state.semantic_info[action.payload.index] = state.semantic_info_obj;
+      } else {
+        state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
+      }
       console.log("-------------------------------------------");
       console.log(
         "semantic_info: ",
         JSON.parse(JSON.stringify(state.semantic_info))
       );
     },
-    updateCollocates: (state) => {
+    updateCollocates: (state, action) => {
       console.log("-------------------------------------------");
-      state.collocates = [...state.collocates, state.collocates_obj];
+      if (action.payload.collocatesIndex) {
+        console.log(
+          "action.payload.collocatesIndex: ",
+          action.payload.collocatesIndex
+        );
+        state.collocates[action.payload.collocatesIndex] = state.collocates_obj;
+      }
+      if (action.payload.arr) {
+        state.collocates = action.payload.arr;
+      } else {
+        state.collocates = [...state.collocates, state.collocates_obj];
+      }
       console.log("-------------------------------------------");
       console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
     },
     clearCollocates: (state) => {
       state.collocates = [];
       console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
+    },
+    clearCollocates_Obj: (state) => {
+      state.collocates_obj = {};
+      console.log(
+        "collocates: ",
+        JSON.parse(JSON.stringify(state.collocates_obj))
+      );
     },
   },
   extraReducers: (builder) => {
@@ -241,6 +255,7 @@ export const {
   updateImage_obj,
   updateCollocates,
   clearCollocates,
+  clearCollocates_Obj,
 } = userSlice.actions;
 
 export default userSlice.reducer;

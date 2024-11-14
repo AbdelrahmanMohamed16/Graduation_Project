@@ -96,7 +96,7 @@ function InputField({
       dispatch(updateCollocates_obj({ name, value: event.target.value }));
     }
     if (meaning) {
-      dispatch(updateMeaning({ name, value: event.target.value }));
+      dispatch(updateMeaning({ name, value: event.target.value, arr: null }));
     }
     if (setImage) {
       console.log("image: ", image);
@@ -117,7 +117,7 @@ function InputField({
         type={type}
         disabled={disabled ? disabled : null}
         onChange={handleInputChange}
-        value={val}
+        value={val ? val : ""}
         sx={{
           width: "100%",
           fontSize: "2px", // Adjust the label font size here
@@ -185,7 +185,7 @@ function InputField({
         rows={6}
         variant={variant}
         onChange={handleInputChange}
-        value={val}
+        value={val ? val : ""}
         sx={{
           width: "100%",
           "& label": {

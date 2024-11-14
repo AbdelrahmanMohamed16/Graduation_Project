@@ -7,6 +7,7 @@ import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCollocates,
+  clearCollocates_Obj,
   clearSemantic_info_obj,
   updateCollocates,
   updateCollocates_obj,
@@ -46,6 +47,8 @@ function Section4({
   setValue2,
   arrCollocates,
   setArrCollocates,
+  index,
+  collocatesIndex,
 }) {
   console.log(
     "-------------------arrCollocates--------------------------------",
@@ -60,10 +63,20 @@ function Section4({
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
-    dispatch(updateCollocates());
-    dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
+    console.log("index: ", index);
+    console.log("collocatesIndex: ", collocatesIndex);
+    if (collocates_obj) {
+      dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
+    }
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
-    dispatch(updateSemantic_info());
+    if (index !== undefined) {
+      // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
+      dispatch(updateSemantic_info({ index: index }));
+    } else {
+      console.log("girnnnnnnnnn");
+      dispatch(updateSemantic_info({ index: null }));
+    }
     dispatch(clearSemantic_info_obj());
     dispatch(clearCollocates());
     setValue(-1);
@@ -78,17 +91,23 @@ function Section4({
     dispatch(updateCollocates_obj({ name: "example", value: example }));
   };
   const handleAddNewCollocates = () => {
-    dispatch(updateCollocates());
+    if (collocatesIndex) {
+      dispatch(
+        updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+      );
+    } else {
+      dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+    }
     if (!arrCollocates) {
       setArrCollocates([collocates_obj]);
       console.log("from collocates--------------------------------");
     } else {
       setArrCollocates([...arrCollocates, collocates_obj]);
     }
-
+    dispatch(clearCollocates_Obj());
     setCollocate_text("");
     Setmeaning("");
-    setExamples([]);
+    setExamples([{}]);
     setValue2(-1);
   };
   const addExample = () => {

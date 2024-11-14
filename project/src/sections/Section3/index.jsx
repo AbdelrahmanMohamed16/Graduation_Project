@@ -46,7 +46,7 @@ function ExampleData({ data, onChange }) {
 }
 export default function Section3({ arr, Semantic_fields, addFile, index }) {
   console.log("arr in section 3: ", arr);
-  console.log("Semantic_fields in section 3: ", arr);
+  console.log("Semantic_fields in section 3: ", Semantic_fields);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",
@@ -63,7 +63,7 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
   const [example, setExamples] = useState(
     arr?.example || [{ file: "", text: "", source: "" }]
   );
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState(arr?.image || {});
   const dispatch = useDispatch();
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
@@ -71,11 +71,12 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
         i === index ? { ...example, [field]: value } : example
       )
     );
-    dispatch(updateMeaning({ name: "example", value: example }));
+    dispatch(updateMeaning({ name: "example", value: example, arr: null }));
   };
 
   useEffect(() => {
-    dispatch(updateMeaning({ name: "image", value: image }));
+    if (image)
+      dispatch(updateMeaning({ name: "image", value: image, arr: null }));
   }, [dispatch, image]);
 
   const addExample = () => {
@@ -209,8 +210,12 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
                 type="file"
                 onChange={(event) => {
                   if (event.target.files[0]) {
-                    addFile(event.target.files[0], index);
+                    addFile && addFile(event.target.files[0], index);
                     setImageURL(URL.createObjectURL(event.target.files[0]));
+                    setImage({
+                      ...image,
+                      url: URL.createObjectURL(event.target.files[0]),
+                    });
                   }
                 }}
               />
@@ -221,8 +226,20 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
               <img
                 width={"100%"}
                 style={{ maxHeight: "300px" }}
-                src={imageURL ? imageURL : PlaceholderImage}
-                alt={imageURL ? imageURL : PlaceholderImage}
+                src={
+                  image?.url
+                    ? image?.url
+                    : imageURL
+                    ? imageURL
+                    : PlaceholderImage
+                }
+                alt={
+                  image?.url
+                    ? image?.url
+                    : imageURL
+                    ? imageURL
+                    : PlaceholderImage
+                }
               ></img>
             </Grid2>
             {/* <Grid2 size={8}>

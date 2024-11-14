@@ -6,6 +6,13 @@ import Box from "@mui/material/Box";
 import Section3 from "../Section3";
 import Section4 from "../Section4/Section4";
 import TabSection from "../TabSection/TabSection";
+import { useDispatch } from "react-redux";
+import {
+  updateCollocates,
+  updateMeaning,
+  updateSemantic_info,
+  updateSemantic_info_obj,
+} from "../../redux/userSlice";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,8 +51,25 @@ export default function BasicTabs({
   value2,
   setValue2,
 }) {
+  const dispach = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (arr && arr[newValue]) {
+      console.log("############", arr[newValue]);
+      dispach(
+        updateCollocates({
+          arr: arr[newValue].collocates,
+          collocatesIndex: null,
+        })
+      );
+      dispach(updateMeaning({ arr: arr[newValue].meaning }));
+      dispach(
+        updateSemantic_info_obj({
+          name: "Semantic_fields",
+          value: arr[newValue].Semantic_fields,
+        })
+      );
+    }
   };
   console.log("----------= simintic array =--------------", arr);
   return (
@@ -57,13 +81,13 @@ export default function BasicTabs({
           aria-label="basic tabs example"
         >
           {arr?.map((item, index) => (
-            <Tab label={item.meaning.text} key={index} {...a11yProps(index)} />
+            <Tab label={item.meaning?.text} key={index} {...a11yProps(index)} />
           ))}
         </Tabs>
       </Box>
       {arr?.map((item, index) => {
         return (
-          <CustomTabPanel value={value} index={index}>
+          <CustomTabPanel value={value} index={index} key={index}>
             <>
               <Section3
                 arr={item.meaning}
@@ -76,6 +100,7 @@ export default function BasicTabs({
                 value={value2}
                 setValue={setValue2}
                 setValue2={setValue}
+                i={index}
               />
             </>
           </CustomTabPanel>

@@ -34,7 +34,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ arr, value, setValue, setValue2 }) {
+export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
   const [arrCollocates, setArrCollocates] = React.useState([]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -79,6 +79,7 @@ export default function BasicTabs({ arr, value, setValue, setValue2 }) {
             setValue2={setValue}
             setArrCollocates={setArrCollocates}
             arrCollocates={arrCollocates}
+            index={i}
           />
         </div>
       )}
@@ -92,6 +93,8 @@ export default function BasicTabs({ arr, value, setValue, setValue2 }) {
                 setValue2={setValue}
                 setArrCollocates={setArrCollocates}
                 arrCollocates={arrCollocates}
+                collocatesIndex={index}
+                index={i}
               />
             </>
           </CustomTabPanel>
