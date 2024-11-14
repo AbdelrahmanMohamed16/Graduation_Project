@@ -9,7 +9,15 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
 import { Box, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataWithState, updateForm } from "../../redux/userSlice";
+import {
+  fetchDataWithState,
+  updateDiacritics,
+  updateDiacriticswithRecord,
+  updateForm,
+  updateMeaning,
+  updateSemantic_info,
+  updateSemantic_infowithImage,
+} from "../../redux/userSlice";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -49,49 +57,78 @@ function LastSection({ files, records }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
+
   const diacritic = useSelector((state) => state.user.diacritics);
   const morphological = useSelector((state) => state.user.morphological_info);
   const semantic = useSelector((state) => state.user.semantic_info);
-  const sendImages = async () => {
-    imageFormData.append("img", files[0]);
+  const sendImages = async (file) => {
+    imageFormData.append("image", file);
     try {
-      const imageURL = await fetch(
-        "http://156.196.36.161:5001/api/v1/upload/image",
+      await fetch(
+        "https://arabic-data-collector.onrender.com/api/v1/upload/image",
         {
           method: "POST",
           body: imageFormData,
         }
-      );
-      console.log(imageURL);
-      imageFormData = new FormData();
+      ).then(async (res) => {
+        imageFormData = new FormData();
+        const response = await res.json();
+        const imageURL = `https://arabic-data-collector.onrender.com${encodeURI(
+          response.filePath
+        )}`;
+        return imageURL;
+      });
     } catch (e) {
       console.log(e);
     }
   };
-  const sendRecord = async () => {
+  const sendRecord = async (record) => {
     try {
-      recordFormData.append("record", records[0]);
-      const recordURL = await fetch(
-        "http://156.196.36.161:5001/api/v1/upload/record",
+      recordFormData.append("record", record);
+      await fetch(
+        "https://arabic-data-collector.onrender.com/api/v1/upload/record",
         {
           method: "POST",
           body: recordFormData,
         }
-      );
-      console.log(recordURL);
-      recordFormData = new FormData();
+      ).then(async (res) => {
+        recordFormData = new FormData();
+        const response = await res.json();
+        const recordURL = `https://arabic-data-collector.onrender.com${encodeURI(
+          response.filePath
+        )}`;
+        return recordURL;
+      });
     } catch (e) {
       console.log(e);
     }
   };
-  const submitPublics = () => {
-    // sendImages();
-    // sendRecord();
-    dispatch(updateForm({ name: "diacritics", value: diacritic }));
-    dispatch(updateForm({ name: "semantic_info", value: semantic }));
-    dispatch(updateForm({ name: "morphological_info", value: morphological }));
+  const submitPublics = async () => {
+    for (let index = 0; index < files.length; index++) {
+      const imageURL = await sendImages(files[index]);
+      dispatch(
+        updateSemantic_infowithImage({
+          index: files[index].index,
+          imageURL: imageURL,
+        })
+      );
+    }
+    for (let index = 0; index < records.length; index++) {
+      const recordURL = await sendImages(records[index]);
+      dispatch(
+        updateDiacriticswithRecord({ index: index, recordURL: recordURL })
+      );
+    }
+    // sendImages(files[0].image);
+    // sendRecord(records[0]);
+    console.log("##diacritic: ", diacritic);
+    console.log("##semantic_info: ", semantic);
+    console.log("##morphological_info: ", morphological);
+    // dispatch(updateForm({ name: "diacritics", value: diacritic }));
+    // dispatch(updateForm({ name: "semantic_info", value: semantic }));
+    // dispatch(updateForm({ name: "morphological_info", value: morphological }));
 
-    dispatch(fetchDataWithState());
+    // dispatch(fetchDataWithState());
   };
   return (
     <Grid2 container spacing={2}>
