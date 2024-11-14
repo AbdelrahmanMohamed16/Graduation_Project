@@ -7,6 +7,7 @@ const initialState = {
   message: "",
   auth: localStorage.getItem("authToken") || false,
   form: localStorage.getItem("form") || {},
+  wordData: localStorage.getItem("wordData") || [],
   diacritics: [],
   morphological_info: {},
   semantic_info: [],
@@ -51,6 +52,33 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+export const assignedWords = createAsyncThunk(
+  "user/assignedWords",
+  async ({ _ }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `https://arabic-data-collector.onrender.com/api/v1/Word`,
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status !== 200 || !response.ok) {
+        return rejectWithValue(data);
+      } else {
+        return { data };
+      }
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
@@ -61,7 +89,7 @@ export const getWord = createAsyncThunk(
         {
           method: "get",
           headers: {
-            Authorization: localStorage.getItem("authToken"),
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
           },
         }
@@ -218,11 +246,19 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         console.log(action.payload);
-        state.loading = false;
-        state.data = action.payload.data;
+        // state.loading = false;
+        // state.data = action.payload.data;
+        let data = action.payload.data.assigned_words.map((item) => ({
+          word: item.text,
+          status: item.state,
+          meanings: item.semantic_info.map((info) => info.meaning.text),
+        }));
+        console.log("data", data);
+        state.wordData = data;
         state.auth = true;
         localStorage.setItem("authToken", action.payload.data.token);
-        localStorage.setItem("data", JSON.stringify(action.payload.data));
+        localStorage.setItem("wordData", data);
+        localStorage.getItem("wordData");
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -253,6 +289,21 @@ export const userSlice = createSlice({
         // state.token = null;
         // state.user = null;
         // state.message = action.payload.message;
+        console.log(action.payload);
+      });
+    builder
+      .addCase(assignedWords.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(assignedWords.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.data = action.payload.data;
+        localStorage.setItem("data", JSON.stringify(action.payload.data));
+      })
+      .addCase(assignedWords.rejected, (state, action) => {
+        console.log(assignedWords.rejected);
         console.log(action.payload);
       });
   },

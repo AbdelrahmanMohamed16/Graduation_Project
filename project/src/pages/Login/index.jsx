@@ -24,7 +24,7 @@ export default function Login() {
     const logined = await dispatch(loginUser({ code: name, password }));
     console.log(logined.payload);
     if (logined.payload.data) {
-      navigate(`/words`);
+      navigate(`/firstPage`);
     }
     setName("");
     setPassword("");

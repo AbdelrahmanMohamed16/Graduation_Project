@@ -9,24 +9,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { assignedWords } from "../../redux/userSlice";
 
 export default function AccordionWithWords() {
   const [expanded, setExpanded] = React.useState(false);
-
-  const [wordData, setWordData] = React.useState([
-    { word: "هدف", status: "مكتملة", meanings: ["طلب", "رغب", "جول"] },
-    { word: "شريحة", status: "ناقصة", meanings: ["معنى 1", "معنى 2"] },
-    {
-      word: "عين",
-      status: "ناقصة",
-      meanings: ["معنى 1", "معنى 2", "معنى 3", "معنى 4"],
-    },
-    { word: "يد", status: "مكتملة", meanings: ["معنى 1", "معنى 2", "معنى 3"] },
-    { word: "قلب", status: "ناقصة", meanings: ["معنى 1", "معنى 2"] },
-    { word: "كلمة 6", status: "ناقصة", meanings: ["معنى 1", "معنى 2"] },
-    { word: "كلمة 7", status: "مكتملة", meanings: ["معنى 1", "معنى 2"] },
-    { word: "كلمة 8", status: "مكتملة", meanings: ["معنى 1", "معنى 2"] },
-  ]);
+  const words = useSelector((state) => state.user.wordData);
+  // const [wordData, setWordData] = React.useState(words || []);
+  const [wordData, setWordData] = React.useState([...words] || []);
+  const dispatch = useDispatch();
 
   const handleExpansion = (panel) => {
     setExpanded(expanded === panel ? false : panel);
@@ -35,26 +26,44 @@ export default function AccordionWithWords() {
   // Move meaning up
   const moveMeaningUp = (wordIndex, meaningIndex) => {
     if (meaningIndex === 0) return; // Prevent moving the first meaning up
-    const newWordData = [...wordData];
-    const temp = newWordData[wordIndex].meanings[meaningIndex];
+
+    // Deep copy the array and nested objects to avoid mutating the original
+    let newWordData = wordData.map((word) => ({
+      ...word,
+      meanings: [...word.meanings],
+    }));
+
+    // Swap the meanings
+    let temp = newWordData[wordIndex].meanings[meaningIndex];
     newWordData[wordIndex].meanings[meaningIndex] =
       newWordData[wordIndex].meanings[meaningIndex - 1];
     newWordData[wordIndex].meanings[meaningIndex - 1] = temp;
+
     setWordData(newWordData);
   };
 
   // Move meaning down
   const moveMeaningDown = (wordIndex, meaningIndex) => {
     if (meaningIndex === wordData[wordIndex].meanings.length - 1) return; // Prevent moving the last meaning down
-    const newWordData = [...wordData];
+
+    // Deep copy the wordData to avoid modifying the original state
+    const newWordData = wordData.map((word) => ({
+      ...word,
+      meanings: [...word.meanings],
+    }));
+
+    // Swap the meanings
     const temp = newWordData[wordIndex].meanings[meaningIndex];
     newWordData[wordIndex].meanings[meaningIndex] =
       newWordData[wordIndex].meanings[meaningIndex + 1];
     newWordData[wordIndex].meanings[meaningIndex + 1] = temp;
+
     setWordData(newWordData);
   };
+
   const navigate = useNavigate();
   const handleAddWord = () => {
+    dispatch(assignedWords({}));
     navigate("/words");
   };
   return (
