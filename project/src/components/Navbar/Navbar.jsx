@@ -23,7 +23,7 @@ function Navbar(props) {
   const options = data.assigned_words.map((word) => word.text);
   const dataOptions = data.assigned_words;
 
-  const { window, navItems, setWord, word } = props;
+  const { window, navItems, setWord, word, first } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -61,7 +61,7 @@ function Navbar(props) {
             </Typography>
           </ListItemText>
         </ListItem>
-        {navItems.map((item, index) => (
+        {navItems?.map((item, index) => (
           <a
             href={`#${item.id}`}
             style={{ textDecoration: "none", color: "#0F2D4D" }}
@@ -111,7 +111,7 @@ function Navbar(props) {
                 width: "100%",
               }}
             >
-              {navItems.map((item, index) => (
+              {navItems?.map((item, index) => (
                 <a href={`#${item.id}`} key={index}>
                   <Button
                     key={index}
@@ -127,13 +127,22 @@ function Navbar(props) {
                 </a>
               ))}
               <div
-                style={{
-                  marginRight: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                  width: "45%",
-                  justifyContent: "space-between",
-                }}
+                style={
+                  first
+                    ? {
+                        display: "flex",
+                        alignItems: "center",
+                        width: "45%",
+                        justifyContent: "space-between",
+                      }
+                    : {
+                        marginRight: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        width: "45%",
+                        justifyContent: "space-between",
+                      }
+                }
               >
                 <Typography
                   noWrap
@@ -156,15 +165,17 @@ function Navbar(props) {
                   لجنة: {data?.committee}
                 </Typography>
                 <Typography noWrap component="div" sx={{ width: "50%" }}>
-                  <InputField
-                    select={true}
-                    label="قائمة المداخل المطلوب تحريرها"
-                    options={options}
-                    set={setWord}
-                    dataOptions={dataOptions}
-                    val={word}
-                    name={"text"}
-                  />
+                  {word && (
+                    <InputField
+                      select={true}
+                      label="قائمة المداخل المطلوب تحريرها"
+                      options={options}
+                      set={setWord}
+                      dataOptions={dataOptions}
+                      val={word}
+                      name={"text"}
+                    />
+                  )}
                 </Typography>
               </div>
             </Box>
@@ -174,15 +185,17 @@ function Navbar(props) {
               sx={{ width: "40%", display: { lg: "none" } }}
               ml={"auto"}
             >
-              <InputField
-                select={true}
-                label="قائمة المداخل المطلوب تحريرها"
-                options={options}
-                set={setWord}
-                val={word}
-                dataOptions={dataOptions}
-                name={"text"}
-              />
+              {word && (
+                <InputField
+                  select={true}
+                  label="قائمة المداخل المطلوب تحريرها"
+                  options={options}
+                  set={setWord}
+                  dataOptions={dataOptions}
+                  val={word}
+                  name={"text"}
+                />
+              )}
             </Typography>
           </Toolbar>
         </AppBar>
