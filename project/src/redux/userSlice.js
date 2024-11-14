@@ -169,17 +169,18 @@ export const userSlice = createSlice({
     },
     updateCollocates: (state, action) => {
       console.log("-------------------------------------------");
-      if (action.payload.collocatesIndex) {
+      if (action.payload.collocatesIndex !== null) {
         console.log(
           "action.payload.collocatesIndex: ",
           action.payload.collocatesIndex
         );
         state.collocates[action.payload.collocatesIndex] = state.collocates_obj;
-      }
-      if (action.payload.arr) {
-        state.collocates = action.payload.arr;
       } else {
-        state.collocates = [...state.collocates, state.collocates_obj];
+        if (action.payload.arr) {
+          state.collocates = action.payload.arr;
+        } else {
+          state.collocates = [...state.collocates, state.collocates_obj];
+        }
       }
       console.log("-------------------------------------------");
       console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));

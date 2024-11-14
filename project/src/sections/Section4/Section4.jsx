@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid2";
 import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -66,7 +66,13 @@ function Section4({
     console.log("index: ", index);
     console.log("collocatesIndex: ", collocatesIndex);
     if (collocates_obj) {
-      dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      if (collocatesIndex || collocatesIndex === 0) {
+        dispatch(
+          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+        );
+      } else {
+        dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      }
       dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
     }
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
@@ -91,7 +97,7 @@ function Section4({
     dispatch(updateCollocates_obj({ name: "example", value: example }));
   };
   const handleAddNewCollocates = () => {
-    if (collocatesIndex) {
+    if (collocatesIndex || collocatesIndex === 0) {
       dispatch(
         updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
       );
@@ -113,6 +119,17 @@ function Section4({
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
+  useEffect(() => {
+    console.log("#$$$#data: ", data);
+    dispatch(
+      updateCollocates_obj({
+        name: "collocate_text",
+        value: data?.collocate_text,
+      })
+    );
+    dispatch(updateCollocates_obj({ name: "example", value: data?.example }));
+    dispatch(updateCollocates_obj({ name: "meaning", value: data?.meaning }));
+  }, [data, dispatch]);
   return (
     <div id="section4">
       <Box

@@ -4,6 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Section4 from "../Section4/Section4";
+import { useSelector } from "react-redux";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,7 +36,8 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
-  const [arrCollocates, setArrCollocates] = React.useState([]);
+  const coll = useSelector((state) => state.user.collocates);
+  const [arrCollocates, setArrCollocates] = React.useState(coll || []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -52,6 +54,10 @@ export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
     }
   }, [arrCollocates]);
   console.log(length);
+  React.useEffect(() => {
+    setArrCollocates(coll);
+    setLength(coll?.length);
+  }, [coll]);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
