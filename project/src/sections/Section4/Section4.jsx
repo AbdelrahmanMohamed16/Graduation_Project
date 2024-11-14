@@ -1,13 +1,16 @@
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@mui/material/Grid2";
 import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
-import { useEffect, useState } from "react";
-import { Grid2, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
 import MyFormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import ExampleData from "../Section3";
 import {
   clearCollocates,
   clearCollocates_Obj,
@@ -17,6 +20,7 @@ import {
   updateSemantic_info,
   updateSemantic_info_obj,
 } from "../../redux/userSlice";
+
 function Example({ data, onChange }) {
   const { text, source } = data;
 
@@ -35,9 +39,7 @@ function Example({ data, onChange }) {
           text={true}
           label="المصدر"
           val={source}
-          set={(value) => {
-            onChange("source", value);
-          }}
+          set={(value) => onChange("source", value)}
         />
       </Grid>
     </Grid>
@@ -53,42 +55,34 @@ function Section4({
   index,
   collocatesIndex,
 }) {
-  console.log(
-    "-------------------arrCollocates--------------------------------",
-    arrCollocates
-  );
   const [collocate_text, setCollocate_text] = useState(data?.collocate_text);
   const [meaning, Setmeaning] = useState(data?.meaning);
-  const [example, setExamples] = useState(
-    data?.example || [{ text: "", source: "" }]
-  );
-  const complet = useSelector(
-    (state) => state.user.semantic_info_obj.completed
-  );
-  const [completed, setCompleted] = useState(complet || false);
+  const [example, setExamples] = useState(data?.example || [{ text: "", source: "" }]);
+  const [completed, setCompleted] = useState(useSelector((state) => state.user.semantic_info_obj.completed) || false);
   const collocates_obj = useSelector((state) => state.user.collocates_obj);
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
+  const [isRichTextEnabled, setIsRichTextEnabled] = useState(false);
+  const [examplesText, setExamplesText] = useState("");
+  const quillRef = useRef(null);
+
+  const stripHtml = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  };
+
+  const toggleRichText = () => {
+    if (isRichTextEnabled && quillRef.current) {
+      setExamplesText(stripHtml(examplesText));
+    }
+    setIsRichTextEnabled(!isRichTextEnabled);
+  };
+
   const handleNewSemantic = () => {
-    console.log("index: ", index);
-    console.log("collocatesIndex: ", collocatesIndex);
-
-    console.log(collocates_obj);
-
     if (collocates_obj.collocate_text !== undefined) {
-      console.log(
-        "**********************************************************************"
-      );
-
-      console.log("we are here");
-      console.log(
-        "**********************************************************************"
-      );
-
       if (collocatesIndex || collocatesIndex === 0) {
-        dispatch(
-          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-        );
+        dispatch(updateCollocates({ arr: null, collocatesIndex: collocatesIndex }));
       } else {
         dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
       }
@@ -97,10 +91,8 @@ function Section4({
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
     dispatch(updateSemantic_info_obj({ name: "completed", value: completed }));
     if (index !== undefined) {
-      // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       dispatch(updateSemantic_info({ index: index }));
     } else {
-      console.log("girnnnnnnnnn");
       dispatch(updateSemantic_info({ index: null }));
     }
     dispatch(clearSemantic_info_obj());
@@ -108,25 +100,22 @@ function Section4({
     setValue(-1);
     setValue2(-1);
   };
+
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
-      prev.map((example, i) =>
-        i === index ? { ...example, [field]: value } : example
-      )
+      prev.map((example, i) => (i === index ? { ...example, [field]: value } : example))
     );
     dispatch(updateCollocates_obj({ name: "example", value: example }));
   };
+
   const handleAddNewCollocates = () => {
     if (collocatesIndex || collocatesIndex === 0) {
-      dispatch(
-        updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-      );
+      dispatch(updateCollocates({ arr: null, collocatesIndex: collocatesIndex }));
     } else {
       dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
     }
     if (!arrCollocates) {
       setArrCollocates([collocates_obj]);
-      console.log("from collocates--------------------------------");
     } else {
       setArrCollocates([...arrCollocates, collocates_obj]);
     }
@@ -136,41 +125,26 @@ function Section4({
     setExamples([{}]);
     setValue2(-1);
   };
+
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
+
   useEffect(() => {
-    console.log("#$$$#data: ", data);
-    dispatch(
-      updateCollocates_obj({
-        name: "collocate_text",
-        value: data?.collocate_text,
-      })
-    );
+    dispatch(updateCollocates_obj({ name: "collocate_text", value: data?.collocate_text }));
     dispatch(updateCollocates_obj({ name: "example", value: data?.example }));
     dispatch(updateCollocates_obj({ name: "meaning", value: data?.meaning }));
   }, [data, dispatch]);
+
   return (
-    <div id="section4">
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: "30px",
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid2 size={12}>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              fontFamily={"El Messiri"}
-              color="#0F2D4D"
-            >
-              المتصاحبات اللفظية:
-            </Typography>
-          </Grid2>
+    <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", gap: "30px", mt: 15 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h6" fontWeight="bold" fontFamily="El Messiri" color="#0F2D4D">
+            المتصاحبات اللفظية:
+          </Typography>
+        </Grid>
+        <Grid container item xs={12} spacing={2}>
           <Grid size={{ xs: 12, md: 3 }}>
             <InputField
               text={true}
@@ -191,138 +165,67 @@ function Section4({
               set={Setmeaning}
             />
           </Grid>
-          <Grid
-            size={{ xs: 12, md: 2 }}
-            sx={{
-              margin: "auto",
-            }}
-          >
-            <ButtonCompnent
-              text="أضف متصاحبة جديدة"
-              rounded={true}
-              icon={true}
-              onclick={handleAddNewCollocates}
-            ></ButtonCompnent>
+          <Grid size={{ xs: 12, md: 2 }} sx={{ margin: "auto" }}>
+            <ButtonCompnent text="أضف متصاحبة جديدة" rounded={true} icon={true} onclick={handleAddNewCollocates} />
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
-          <Grid
-            size={12}
-            sx={{
-              margin: "auto",
-            }}
-          >
-            {example.map((data, index) => (
-              <Example
-                key={index}
-                data={data}
-                onChange={(field, value) => {
-                  handleChange(index, field, value);
-                  console.log(example);
-                }}
-              />
-            ))}
+
+        {example.map((data, index) => (
+          <Example key={index} data={data} onChange={(field, value) => handleChange(index, field, value)} />
+        ))}
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <ButtonCompnent text="أضف مثال آخر" rounded={true} icon={true} onclick={addExample} />
+        </Grid>
+
+        <Grid container size={12} sx={{ mt: 10, justifyContent: "start" }}>
+          <Grid size={{ xs: 12, sm: 6, md: 1 }}>
+            <Typography variant="h5" fontWeight="bold" fontFamily="El Messiri" color="#0F2D4D">
+              مواقع للبحث:
+            </Typography>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <div style={{ width: "100%" }} onClick={addExample}>
-              {" "}
-              <ButtonCompnent
-                text="أضف مثال آخر"
-                rounded={true}
-                icon={true}
-              ></ButtonCompnent>
-            </div>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <a href="https://falak.ksaa.gov.sa/" target="_blank" rel="noreferrer">
+              <ButtonCompnent text="فلك" />
+            </a>
           </Grid>
-          <Grid
-            container
-            size={12}
-            sx={{
-              mt: 10,
-              justifyContent: "start",
-            }}
-          >
-            <Grid size={{ xs: 12, sm: 6, md: 1 }}>
-              <Typography
-                variant="h5"
-                fontWeight={"bold"}
-                fontFamily={"El Messiri"}
-                color="#0F2D4D"
-              >
-                مواقع للبحث:
-              </Typography>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a
-                href="https://falak.ksaa.gov.sa/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <ButtonCompnent text="فلك" />
-              </a>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a
-                href="https://www.sketchengine.eu/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <ButtonCompnent text="Sketch" />
-              </a>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-              <a href="https://chat.com/" target="_blank" rel="noreferrer">
-                <ButtonCompnent text="AI" />
-              </a>
-            </Grid>
-            <Grid2 size={12} mt={10}>
-              <Typography
-                variant="h6"
-                fontWeight={"bold"}
-                fontFamily={"El Messiri"}
-                color="#0F2D4D"
-              >
-                حالة البطاقة:
-              </Typography>
-            </Grid2>
-            <Grid2 size={12} ml={2}>
-              <RadioGroup
-                name="use-radio-group"
-                defaultValue="first"
-                value={completed ? "second" : "first"}
-                sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
-                onChange={(e) => {
-                  if (e.target.value === "first") {
-                    setCompleted(false);
-                  } else {
-                    setCompleted(true);
-                  }
-                }}
-              >
-                <MyFormControlLabel
-                  value="first"
-                  label="ناقص"
-                  control={<Radio />}
-                />
-                <MyFormControlLabel
-                  value="second"
-                  label="مكتمل"
-                  control={<Radio />}
-                />
-              </RadioGroup>
-            </Grid2>
-            <Grid container justifyContent={"center"} size={12} mt={5}>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                <ButtonCompnent
-                  text="اضف معلومة دلالية جديدة"
-                  icon={true}
-                  onclick={handleNewSemantic}
-                />
-              </Grid>
-            </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <a href="https://www.sketchengine.eu/" target="_blank" rel="noreferrer">
+              <ButtonCompnent text="Sketch" />
+            </a>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <a href="https://chat.com/" target="_blank" rel="noreferrer">
+              <ButtonCompnent text="AI" />
+            </a>
           </Grid>
         </Grid>
-      </Box>
-    </div>
+
+        <Grid size={12} mt={10}>
+          <Typography variant="h6" fontWeight="bold" fontFamily="El Messiri" color="#0F2D4D">
+            حالة البطاقة:
+          </Typography>
+        </Grid>
+        <Grid size={12} ml={2}>
+          <RadioGroup
+            name="use-radio-group"
+            defaultValue="first"
+            value={completed ? "second" : "first"}
+            sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
+            onChange={(e) => setCompleted(e.target.value === "second")}
+          >
+            <MyFormControlLabel value="first" control={<Radio />} label="غير مكتملة" />
+            <MyFormControlLabel value="second" control={<Radio />} label="مكتملة" />
+          </RadioGroup>
+        </Grid>
+
+        <Grid container spacing={2} sx={{ marginTop: "30px" }}>
+          <Grid item xs={12} md={3}>
+            <ButtonCompnent text="تحديث" icon={true} rounded={true} onclick={handleNewSemantic} />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 

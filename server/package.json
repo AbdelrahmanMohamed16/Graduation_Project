@@ -16,6 +16,7 @@
     "gp_arabic_data_collector": "file:",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.13.20",
+    "react-quill": "^2.0.0",
     "nodemon": "^3.1.7"
   }
 }

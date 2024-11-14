@@ -6,18 +6,17 @@ import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import Login from "./pages/Login";
-import Section2 from "./sections/Section2/Section2";
+import Section2 from "./sections/Section2/Section2.jsx";
 // import Section4 from "./sections/Section4/Section4";
-import LastSection from "./sections/LastSection/LastSection";
+import LastSection from "./sections/LastSection/LastSection.jsx";
 import Section1 from "./sections/Section1";
 import DividerComponent from "./components/Divider/DividerComponent";
 import BigSection from "./sections/BigSection/BigSection";
 import TabSection from "./sections/TabSection/TabSection";
 import Section3 from "./sections/Section3";
 import Navbar from "./components/Navbar/Navbar";
-
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AccordionWithWords from "./pages/FirstPage/FirstPage";
 // import { getWord } from "./redux/userSlice";
 
@@ -26,7 +25,22 @@ function App() {
   const [value2, setValue2] = useState(-1);
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
+  const timeSpentRef = useRef(0); // Store the time spent without triggering re-renders
 
+  const [totalTimeSpent, setTotalTimeSpent] = useState(0); // Display time in UI
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      timeSpentRef.current += 1; // Increment time spent
+      // Update state every 1 minute to reduce re-renders
+      if (timeSpentRef.current % 60 === 0) {
+        setTotalTimeSpent(timeSpentRef.current); // Update state every 60 seconds
+      }
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []); 
   const addFile = (file, index) => {
     console.log(index);
     if (index !== undefined && index < files.length) {
@@ -166,7 +180,7 @@ function App() {
                           {" "}
                           <DividerComponent />
                         </div>
-                        <LastSection files={files} records={records} />
+                        <LastSection files={files} records={records} totalTimeSpent={totalTimeSpent} />
                         <button onClick={handlePrint}>Print as PDF</button>
                         <img src="public/uploads/images/1731522171393-logo 2.png"></img>
                       </Grid2>

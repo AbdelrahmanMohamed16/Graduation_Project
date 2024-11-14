@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material";
+import { Grid2, Typography, Button } from "@mui/material";
 import React, { useState } from "react";
 import InputField from "../../components/Input/InputField";
 import Voice from "../../components/Voice/Voice";
@@ -6,7 +6,48 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
 
-function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
+const PhoneticKeyboard = () => {
+  const ipaCharacters = [
+    "ʌ", "æ", "θ", "ð", "ʃ", "ʒ", "ŋ", "ʧ", "ʤ", "ɪ", "ɛ", "ɔ", "ʊ", "ʌ", "ɛ", "ɑ", "ɔ", "ɒ", "ʍ", "ɾ", "ɹ", "j", "w", "p", "b", "t", "d", "k", "g"
+  ];
+
+  // Inject character into focused input field
+  const handleKeyPress = (char) => {
+    const activeElement = document.activeElement; // Get the currently focused element
+
+    if (activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA")) {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+
+      // Insert the character at the current caret position
+      const newValue = activeElement.value.slice(0, start) + char + activeElement.value.slice(end);
+      activeElement.value = newValue; // Set the new value
+      activeElement.setSelectionRange(start + 1, start + 1); // Move caret
+      activeElement.focus(); // Keep focus on the input
+    }
+  };
+
+  return (
+    <Grid2 container spacing={1} justifyContent="center" mt={2}>
+      {ipaCharacters.map((char, index) => (
+        <Grid2 item key={index}>
+          <Button
+            variant="outlined"
+            sx={{ padding: "10px", fontSize: "18px", fontFamily: "El Messiri" }}
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent focus loss
+              handleKeyPress(char);
+            }}
+          >
+            {char}
+          </Button>
+        </Grid2>
+      ))}
+    </Grid2>
+  );
+};
+
+const DataInputs = ({ data, onChange, index, setRecorded }) => {
   const { word_with_diacritics, phonetic_writing } = data;
   return (
     <Grid2
@@ -17,7 +58,7 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
     >
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
         <InputField
-          label="الضبط التام بالشكل "
+          label="الضبط التام بالشكل"
           text={true}
           val={word_with_diacritics}
           set={(value) => onChange("word_with_diacritics", value)}
@@ -37,13 +78,11 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
             onChange("pronounciation", value);
             setRecorded(true);
           }}
-          addRecord={addRecord}
-          index={index}
         />
       </Grid2>
     </Grid2>
   );
-}
+};
 
 export default function Section1({ word = "المدخل", addRecord }) {
   const [recorded, setRecorded] = useState(false);
@@ -52,8 +91,7 @@ export default function Section1({ word = "المدخل", addRecord }) {
       { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
     ]
   );
-  console.log(useSelector((state) => state.user?.form?.diacritics));
-  console.log(examples);
+
   const dispatch = useDispatch();
 
   const handleChange = (index, field, value) => {
@@ -114,7 +152,6 @@ export default function Section1({ word = "المدخل", addRecord }) {
             key={index}
             data={example}
             onChange={(field, value) => handleChange(index, field, value)}
-            addRecord={addRecord}
             index={index}
             setRecorded={setRecorded}
           />
@@ -125,6 +162,10 @@ export default function Section1({ word = "المدخل", addRecord }) {
             icon={true}
             onclick={addExample}
           />
+        </Grid2>
+        {/* Single Phonetic Keyboard rendered once and shared */}
+        <Grid2 size={12}>
+          <PhoneticKeyboard />
         </Grid2>
       </Grid2>
     </div>
