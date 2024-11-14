@@ -5,6 +5,9 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useEffect, useState } from "react";
 import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
+import MyFormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 import {
   clearCollocates,
   clearCollocates_Obj,
@@ -59,13 +62,29 @@ function Section4({
   const [example, setExamples] = useState(
     data?.example || [{ text: "", source: "" }]
   );
+  const complet = useSelector(
+    (state) => state.user.semantic_info_obj.completed
+  );
+  const [completed, setCompleted] = useState(complet || false);
   const collocates_obj = useSelector((state) => state.user.collocates_obj);
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
     console.log("index: ", index);
     console.log("collocatesIndex: ", collocatesIndex);
-    if (collocates_obj) {
+
+    console.log(collocates_obj);
+
+    if (collocates_obj.collocate_text !== undefined) {
+      console.log(
+        "**********************************************************************"
+      );
+
+      console.log("we are here");
+      console.log(
+        "**********************************************************************"
+      );
+
       if (collocatesIndex || collocatesIndex === 0) {
         dispatch(
           updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
@@ -76,6 +95,7 @@ function Section4({
       dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
     }
     dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
+    dispatch(updateSemantic_info_obj({ name: "completed", value: completed }));
     if (index !== undefined) {
       // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       dispatch(updateSemantic_info({ index: index }));
@@ -254,7 +274,43 @@ function Section4({
                 <ButtonCompnent text="AI" />
               </a>
             </Grid>
-            <Grid container justifyContent={"center"} size={12} mt={10}>
+            <Grid2 size={12} mt={10}>
+              <Typography
+                variant="h6"
+                fontWeight={"bold"}
+                fontFamily={"El Messiri"}
+                color="#0F2D4D"
+              >
+                حالة البطاقة:
+              </Typography>
+            </Grid2>
+            <Grid2 size={12} ml={2}>
+              <RadioGroup
+                name="use-radio-group"
+                defaultValue="first"
+                value={completed ? "second" : "first"}
+                sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
+                onChange={(e) => {
+                  if (e.target.value === "first") {
+                    setCompleted(false);
+                  } else {
+                    setCompleted(true);
+                  }
+                }}
+              >
+                <MyFormControlLabel
+                  value="first"
+                  label="ناقص"
+                  control={<Radio />}
+                />
+                <MyFormControlLabel
+                  value="second"
+                  label="مكتمل"
+                  control={<Radio />}
+                />
+              </RadioGroup>
+            </Grid2>
+            <Grid container justifyContent={"center"} size={12} mt={5}>
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ButtonCompnent
                   text="اضف معلومة دلالية جديدة"

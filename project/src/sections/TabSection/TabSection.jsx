@@ -37,6 +37,7 @@ function a11yProps(index) {
 
 export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
   const coll = useSelector((state) => state.user.collocates);
+  console.log(coll);
   const [arrCollocates, setArrCollocates] = React.useState(coll || []);
   const handleChange = (event, newValue) => {
     setValue(newValue);

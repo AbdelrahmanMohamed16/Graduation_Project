@@ -6,7 +6,7 @@ const initialState = {
   loading: false,
   message: "",
   auth: localStorage.getItem("authToken") || false,
-  form: JSON.parse(localStorage.getItem("form")) || {},
+  form: localStorage.getItem("form") || {},
   diacritics: [],
   morphological_info: {},
   semantic_info: [],
@@ -79,7 +79,24 @@ export const getWord = createAsyncThunk(
     }
   }
 );
+export const fetchDataWithState = createAsyncThunk(
+  "someSlice/fetchDataWithState",
+  async (payload, { getState }) => {
+    const state = getState();
+    // state.user.form = {};
+    const someState = state.user.form; // Access the Redux state here
+    console.log(someState);
+    const response = await fetch("your-api-endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ someState }), // Pass state in the request body
+    });
 
+    return await response.json();
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -95,10 +112,6 @@ export const userSlice = createSlice({
       localStorage.clear();
     },
     updateForm: (state, action) => {
-      console.log(action.payload);
-      console.log(action.payload.name);
-      console.log(action.payload.value);
-
       state.form[action.payload.name] = action.payload.value;
       console.log("form: ", JSON.parse(JSON.stringify(state.form)));
     },
@@ -230,6 +243,8 @@ export const userSlice = createSlice({
         state.loading = false;
         state.form = action.payload.data.data;
         state.semantic_info = state.form.semantic_info;
+        state.morphological_info = state.form.morphological_info;
+        state.diacritics = state.form.diacritics;
         localStorage.setItem("form", JSON.stringify(action.payload.data.data));
       })
       .addCase(getWord.rejected, (state, action) => {

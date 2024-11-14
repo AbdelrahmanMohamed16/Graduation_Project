@@ -20,7 +20,7 @@ const drawerWidth = 240;
 
 function Navbar(props) {
   const data = useSelector((state) => state.user.data);
-  const options = data.assigned_words.map((word) => word.text);
+  const options = data?.assigned_words?.map((word) => word.text);
   const dataOptions = data.assigned_words;
 
   const { window, navItems, setWord, word, first } = props;

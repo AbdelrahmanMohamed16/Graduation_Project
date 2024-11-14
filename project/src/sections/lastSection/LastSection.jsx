@@ -8,6 +8,8 @@ import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
 import { Box, Grid2, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDataWithState, updateForm } from "../../redux/userSlice";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -46,6 +48,10 @@ MyFormControlLabel.propTypes = {
 function LastSection({ files, records }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
+  const dispatch = useDispatch();
+  const diacritic = useSelector((state) => state.user.diacritics);
+  const morphological = useSelector((state) => state.user.morphological_info);
+  const semantic = useSelector((state) => state.user.semantic_info);
   const sendImages = async () => {
     imageFormData.append("img", files[0]);
     try {
@@ -79,36 +85,16 @@ function LastSection({ files, records }) {
     }
   };
   const submitPublics = () => {
-    sendImages();
-    sendRecord();
+    // sendImages();
+    // sendRecord();
+    dispatch(updateForm({ name: "diacritics", value: diacritic }));
+    dispatch(updateForm({ name: "semantic_info", value: semantic }));
+    dispatch(updateForm({ name: "morphological_info", value: morphological }));
+
+    dispatch(fetchDataWithState());
   };
   return (
     <Grid2 container spacing={2}>
-      <Grid2 size={12}>
-        <Typography
-          variant="h6"
-          fontWeight={"bold"}
-          fontFamily={"El Messiri"}
-          color="#0F2D4D"
-        >
-          حالة البطاقة:
-        </Typography>
-      </Grid2>
-      <Grid2 size={12} ml={2}>
-        <RadioGroup
-          name="use-radio-group"
-          defaultValue="first"
-          sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
-        >
-          <MyFormControlLabel value="first" label="ناقص" control={<Radio />} />
-          <MyFormControlLabel
-            value="second"
-            label="مكتمل"
-            control={<Radio />}
-          />
-        </RadioGroup>
-      </Grid2>
-
       <Grid2 size={12}>
         <Typography
           variant="h6"

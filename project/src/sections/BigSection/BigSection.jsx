@@ -56,13 +56,23 @@ export default function BasicTabs({
     setValue(newValue);
     if (arr && arr[newValue]) {
       console.log("############", arr[newValue]);
+      console.log("############");
+      if (arr[newValue].collocates !== undefined) {
+        console.log("**//////*****************///////");
+        dispach(
+          updateCollocates({
+            arr: arr[newValue].collocates,
+            collocatesIndex: null,
+          })
+        );
+      }
+      dispach(updateMeaning({ arr: arr[newValue].meaning }));
       dispach(
-        updateCollocates({
-          arr: arr[newValue].collocates,
-          collocatesIndex: null,
+        updateSemantic_info_obj({
+          name: "completed",
+          value: arr[newValue].completed,
         })
       );
-      dispach(updateMeaning({ arr: arr[newValue].meaning }));
       dispach(
         updateSemantic_info_obj({
           name: "Semantic_fields",
