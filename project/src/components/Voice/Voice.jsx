@@ -1,14 +1,20 @@
-import React, { useState, useRef } from "react";
-import { Button, IconButton, Stack } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { Button, Stack } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-const Voice = ({ setVoice, addRecord, index }) => {
+const Voice = ({ setVoice, addRecord, index, initialURL }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioURL, setAudioURL] = useState(null);
+  const [audioURL, setAudioURL] = useState(initialURL || null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+
+  useEffect(() => {
+    if (initialURL) {
+      setAudioURL(initialURL);
+    }
+  }, [initialURL]);
 
   const handleStartRecording = async () => {
     setIsRecording(true);
@@ -26,12 +32,13 @@ const Voice = ({ setVoice, addRecord, index }) => {
       const audioFile = new File([audioBlob], `recording_${Date.now()}.wav`, {
         type: "audio/wav",
       });
-      console.log("index: ", index);
+
       if (index !== undefined) addRecord(audioFile, index);
       else addRecord(audioFile);
-      const audioURL = URL.createObjectURL(audioBlob);
-      setAudioURL(audioURL);
-      setVoice(audioURL);
+
+      const newAudioURL = URL.createObjectURL(audioBlob);
+      setAudioURL(newAudioURL);
+      setVoice(newAudioURL);
     };
 
     mediaRecorderRef.current.start();
@@ -44,52 +51,39 @@ const Voice = ({ setVoice, addRecord, index }) => {
 
   return (
     <Stack flexDirection={"row"}>
-      <div className="no-print">
-        {" "}
-        <Button
-          variant="contained"
-          sx={{
-            background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-            borderRadius: "5px",
-            // padding: "1rem",
-            width: "130px",
-            marginRight: "10px",
-            color: "#FFFFFF",
-            fontSize: "20px",
-            fontFamily: "El Messiri",
-          }}
-          size="large"
-          onClick={isRecording ? handleStopRecording : handleStartRecording}
-          endIcon={
-            isRecording ? (
-              <StopIcon sx={{ color: "#E72929" }} />
-            ) : (
-              <MicIcon sx={{ color: "white" }} />
-            )
-          }
-        >
-          {isRecording ? (
-            <span style={{ fontSize: "20px" }}>انهاء</span>
+      <Button
+        variant="contained"
+        sx={{
+          background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+          borderRadius: "5px",
+          width: "130px",
+          marginRight: "10px",
+          color: "#FFFFFF",
+          fontSize: "20px",
+          fontFamily: "El Messiri",
+        }}
+        size="large"
+        onClick={isRecording ? handleStopRecording : handleStartRecording}
+        endIcon={
+          isRecording ? (
+            <StopIcon sx={{ color: "#E72929" }} />
           ) : (
-            <span style={{ fontSize: "20px" }}>النطق</span>
-          )}
-          {/* {isRecording ? (
-          <StopIcon sx={{ color: "#E72929", fontSize: "30px" }} />
-        ) : (
-          <MicIcon sx={{ color: "white", fontSize: "30px" }} />
-        )} */}
-        </Button>
-      </div>
+            <MicIcon sx={{ color: "white" }} />
+          )
+        }
+      >
+        {isRecording ? "انهاء" : "النطق"}
+      </Button>
 
       {audioURL && (
         <Button
           variant="outlined"
           sx={{
             borderRadius: "5px",
-            color: "white", // Text color
+            color: "black",
             fontSize: "16px",
             fontFamily: "El Messiri",
-            borderColor: "#2369B3", // Border color
+            borderColor: "#2369B3",
             borderWidth: "2px",
           }}
           onClick={() => new Audio(audioURL).play()}
