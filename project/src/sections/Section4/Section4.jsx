@@ -53,10 +53,6 @@ function Section4({
   index,
   collocatesIndex,
 }) {
-  console.log(
-    "-------------------arrCollocates--------------------------------",
-    arrCollocates
-  );
   const [collocate_text, setCollocate_text] = useState(data?.collocate_text);
   const [meaning, Setmeaning] = useState(data?.meaning);
   const [example, setExamples] = useState(
@@ -70,21 +66,7 @@ function Section4({
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
-    console.log("index: ", index);
-    console.log("collocatesIndex: ", collocatesIndex);
-
-    console.log(collocates_obj);
-
     if (collocates_obj.collocate_text !== undefined) {
-      console.log(
-        "**********************************************************************"
-      );
-
-      console.log("we are here");
-      console.log(
-        "**********************************************************************"
-      );
-
       if (collocatesIndex || collocatesIndex === 0) {
         dispatch(
           updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
@@ -100,7 +82,6 @@ function Section4({
       // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       dispatch(updateSemantic_info({ index: index }));
     } else {
-      console.log("girnnnnnnnnn");
       dispatch(updateSemantic_info({ index: null }));
     }
     dispatch(clearSemantic_info_obj());
@@ -126,7 +107,6 @@ function Section4({
     }
     if (!arrCollocates) {
       setArrCollocates([collocates_obj]);
-      console.log("from collocates--------------------------------");
     } else {
       setArrCollocates([...arrCollocates, collocates_obj]);
     }
@@ -140,7 +120,6 @@ function Section4({
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
   useEffect(() => {
-    console.log("#$$$#data: ", data);
     dispatch(
       updateCollocates_obj({
         name: "collocate_text",
@@ -220,7 +199,6 @@ function Section4({
                 data={data}
                 onChange={(field, value) => {
                   handleChange(index, field, value);
-                  console.log(example);
                 }}
               />
             ))}

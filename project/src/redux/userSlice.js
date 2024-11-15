@@ -21,12 +21,6 @@ const initialState = {
 export const loginUser = createAsyncThunk(
   "user/login",
   async ({ code, password }, { rejectWithValue }) => {
-    console.log(
-      JSON.stringify({
-        code,
-        password,
-      })
-    );
     try {
       const response = await fetch(
         "https://arabic-data-collector.onrender.com/api/v1/Auth/login",
@@ -83,7 +77,6 @@ export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
     try {
-      console.log(wordId);
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Word/${wordId}`,
         {
@@ -114,9 +107,6 @@ export const fetchDataWithState = createAsyncThunk(
       const state = getState();
       const someState = { ...state.user.form }; // Clone the state to avoid mutation
       delete someState._id;
-
-      console.log(JSON.stringify(someState));
-
       const response = await fetch(
         "https://arabic-data-collector.onrender.com/api/v1/Word",
         {
@@ -159,25 +149,15 @@ export const userSlice = createSlice({
     },
     updateForm: (state, action) => {
       state.form[action.payload.name] = action.payload.value;
-      console.log("form: ", JSON.parse(JSON.stringify(state.form)));
     },
     updateDiacritics: (state, action) => {
       state.diacritics = action.payload;
     },
     updateMorphologicalInfo: (state, action) => {
-      console.log(action.payload);
       state.morphological_info[action.payload.name] = action.payload.value;
-      console.log(
-        "morphological_info: ",
-        JSON.parse(JSON.stringify(state.morphological_info))
-      );
     },
     updateCollocates_obj: (state, action) => {
       state.collocates_obj[action.payload.name] = action.payload.value;
-      console.log(
-        "collocates_obj: ",
-        JSON.parse(JSON.stringify(state.collocates_obj))
-      );
     },
     updateSemantic_info_obj: (state, action) => {
       if (action.payload.name === "collocates") {
@@ -185,77 +165,30 @@ export const userSlice = createSlice({
       } else {
         state.semantic_info_obj[action.payload.name] = action.payload.value;
       }
-      console.log(
-        "semantic_info_obj: ",
-        JSON.parse(JSON.stringify(state.semantic_info_obj))
-      );
     },
     clearSemantic_info_obj: (state) => {
       state.semantic_info_obj = {};
-      console.log(
-        "semantic_info_obj: ",
-        JSON.parse(JSON.stringify(state.semantic_info_obj))
-      );
     },
     updateMeaning: (state, action) => {
       if (action.payload.arr !== null) {
-        console.log("here");
         state.meaning = action.payload.arr;
       } else {
         state.meaning[action.payload.name] = action.payload.value;
-        console.log("meaning: ", JSON.parse(JSON.stringify(state.meaning)));
       }
     },
     updateImage_obj: (state, action) => {
       state.image_obj[action.payload.name] = action.payload.value;
-      console.log(state.image_obj);
       updateMeaning({ name: "image", value: state.image_obj });
-      console.log("image_obj: ", JSON.parse(JSON.stringify(state.image_obj)));
-      console.log("meaning: ", JSON.stringify(state.meaning));
     },
     updateSemantic_info: (state, action) => {
-      console.log("-------------------------------------------");
       if (action.payload.index !== null) {
         state.semantic_info[action.payload.index] = state.semantic_info_obj;
       } else {
         state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
       }
-      console.log("-------------------------------------------");
-      console.log(
-        "semantic_info: ",
-        JSON.parse(JSON.stringify(state.semantic_info))
-      );
-    },
-    updateSemantic_infowithImage: (state, action) => {
-      if (action.payload.index !== null || action.payload.index === 0) {
-        state.semantic_info[action.payload.index].meaning.image.url =
-          action.payload.imageURL;
-      }
-      console.log(
-        "semantic_info: ",
-        JSON.parse(JSON.stringify(state.semantic_info))
-      );
-    },
-    updateDiacriticswithRecord: (state, action) => {
-      if (action.payload.index !== null || action.payload.index === 0) {
-        console.log(
-          "state.diacritics[action.payload.index]: ",
-          state.diacritics[action.payload.index]
-        );
-        console.log("action.payload.recordURL: ", action.payload.recordURL);
-        state.diacritics[action.payload.index].pronounciation =
-          action.payload.recordURL;
-      }
-      console.log("diacritics: ", JSON.parse(JSON.stringify(state.diacritics)));
-      return JSON.parse(JSON.stringify(state.diacritics));
     },
     updateCollocates: (state, action) => {
-      console.log("-------------------------------------------");
       if (action.payload.collocatesIndex !== null) {
-        console.log(
-          "action.payload.collocatesIndex: ",
-          action.payload.collocatesIndex
-        );
         state.collocates[action.payload.collocatesIndex] = state.collocates_obj;
       } else {
         if (action.payload.arr) {
@@ -264,23 +197,15 @@ export const userSlice = createSlice({
           state.collocates = [...state.collocates, state.collocates_obj];
         }
       }
-      console.log("-------------------------------------------");
-      console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
     },
     clearCollocates: (state) => {
       state.collocates = [];
-      console.log("collocates: ", JSON.parse(JSON.stringify(state.collocates)));
     },
     clearCollocates_Obj: (state) => {
       state.collocates_obj = {};
-      console.log(
-        "collocates: ",
-        JSON.parse(JSON.stringify(state.collocates_obj))
-      );
     },
     clearForm: (state) => {
       state.form = {};
-      console.log("form: ", JSON.parse(JSON.stringify(state.form)));
     },
     clearSemantic_info: (state) => {
       state.semantic_info = [];
@@ -293,7 +218,6 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action.payload);
         // state.loading = false;
         // state.data = action.payload.data;
         let data = action.payload.data.assigned_words.map((item) => ({
@@ -301,7 +225,6 @@ export const userSlice = createSlice({
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
-        console.log("data", data);
         state.wordData = data;
         state.auth = true;
         state.data = action.payload.data;
@@ -315,7 +238,6 @@ export const userSlice = createSlice({
         state.token = null;
         state.user = null;
         state.message = action.payload.message;
-        console.log(action.payload);
       });
     builder
       .addCase(getWord.pending, (state) => {
@@ -323,8 +245,6 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getWord.fulfilled, (state, action) => {
-        console.log(action.payload);
-        console.log(action.payload.data);
         state.loading = false;
         state.form = action.payload.data.data;
         state.semantic_info = state.form.semantic_info;

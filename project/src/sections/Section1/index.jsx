@@ -58,8 +58,6 @@ export default function Section1({ word = "المدخل", addRecord }) {
     setExamples(examplesInfo);
   }, [examplesInfo]);
 
-  console.log(useSelector((state) => state.user?.form?.diacritics));
-  console.log("##$#$: ", examples);
   const dispatch = useDispatch();
 
   const handleChange = (index, field, value) => {

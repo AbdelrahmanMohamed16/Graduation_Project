@@ -56,10 +56,7 @@ export default function BasicTabs({
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (arr && arr[newValue]) {
-      console.log("############", arr[newValue]);
-      console.log("############");
       if (arr[newValue].collocates !== undefined) {
-        console.log("**//////*****************///////");
         dispach(
           updateCollocates({
             arr: arr[newValue].collocates,
@@ -82,7 +79,6 @@ export default function BasicTabs({
       );
     }
   };
-  console.log("----------= simintic array =--------------", arr);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

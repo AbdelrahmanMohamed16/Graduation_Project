@@ -118,16 +118,12 @@ function LastSection({ files, records }) {
 
   const submitPublics = async () => {
     try {
-      console.log("$$semantic$$: ", semantic);
       let updatedSemantic = await structuredClone(semantic);
-      console.log("$$updatedSemantic$$: ", updatedSemantic);
 
       for (let index = 0; index < files.length; index++) {
         const imageURL = await sendImages(files[index].image);
-        console.log(imageURL);
 
         const semanticObject = updatedSemantic[files[index].index];
-        console.log(semanticObject);
 
         if (
           semanticObject &&
@@ -138,18 +134,12 @@ function LastSection({ files, records }) {
         }
       }
 
-      console.log("$$diacritic$$: ", diacritic);
       let updatedDiacritic = await structuredClone(diacritic);
-      console.log("$$updatedDiacritic$$: ", updatedDiacritic);
       for (let index = 0; index < records.length; index++) {
         const recordURL = await sendRecord(records[index]);
-        console.log(recordURL);
 
         updatedDiacritic[index].pronounciation = recordURL; // Update specific field
       }
-
-      console.log("$$$ Updated Semantic $$$: ", updatedSemantic);
-      console.log("$$$ Updated Diacritic $$$: ", updatedDiacritic);
 
       setDiacritic(updatedDiacritic);
       setSemantic(updatedSemantic);

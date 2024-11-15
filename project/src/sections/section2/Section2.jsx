@@ -13,7 +13,6 @@ function Section2() {
   const [form_morphological_info, setForm_morphological_info] = useState(
     morphologicalInfo || {}
   );
-  console.log(form_morphological_info);
   useEffect(() => {
     setForm_morphological_info(morphologicalInfo);
     setTex(morphologicalInfo?.root);

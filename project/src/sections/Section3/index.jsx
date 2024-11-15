@@ -45,8 +45,6 @@ function ExampleData({ data, onChange }) {
   );
 }
 export default function Section3({ arr, Semantic_fields, addFile, index }) {
-  console.log("arr in section 3: ", arr);
-  console.log("Semantic_fields in section 3: ", Semantic_fields);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",
