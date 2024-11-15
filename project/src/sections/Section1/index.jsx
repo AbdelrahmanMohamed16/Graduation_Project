@@ -113,7 +113,7 @@ export default function Section1({ word = "المدخل", addRecord }) {
             المعلومات الصوتية:
           </Typography>
         </Grid2>
-        {examples.map((example, index) => (
+        {examples?.map((example, index) => (
           <DataInputs
             key={index}
             data={example}
