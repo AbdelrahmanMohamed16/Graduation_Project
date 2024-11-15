@@ -31,10 +31,14 @@ function App() {
     console.log(index);
     if (index !== undefined && index < files.length) {
       const updatedFiles = [...files];
-      updatedFiles[index].image = file.image;
+      if (file.image) {
+        updatedFiles[index].image = file.image;
+      } else {
+        updatedFiles[index].image = file;
+      }
       setFiles(updatedFiles);
     } else {
-      setFiles([{ image: file, index: 0 }]);
+      setFiles([...files, { image: file, index: files.length }]);
     }
   };
 
@@ -127,6 +131,7 @@ function App() {
                                 setValue={setValue}
                                 value2={value2}
                                 setValue2={setValue2}
+                                addFile={addFile}
                               />
                               <div style={{ padding: 24 }}>
                                 {" "}
