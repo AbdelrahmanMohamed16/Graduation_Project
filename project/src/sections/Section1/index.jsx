@@ -39,6 +39,7 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
           }}
           addRecord={addRecord}
           index={index}
+          initialURL={data.pronounciation}
         />
       </Grid2>
     </Grid2>
