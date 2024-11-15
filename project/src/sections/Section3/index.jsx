@@ -194,32 +194,35 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
           columnSpacing={{ xs: 1, sm: 2, md: 5 }}
         >
           <Grid2 size={{ xs: 4, sm: 2 }}>
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              endIcon={<CloudUploadIcon />}
-              style={{ width: "100%" }}
-              sx={{
-                background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-              }}
-            >
-              صورة شارحة
-              <VisuallyHiddenInput
-                type="file"
-                onChange={(event) => {
-                  if (event.target.files[0]) {
-                    addFile && addFile(event.target.files[0], index);
-                    setImageURL(URL.createObjectURL(event.target.files[0]));
-                    setImage({
-                      ...image,
-                      url: URL.createObjectURL(event.target.files[0]),
-                    });
-                  }
+            <div className="no-print">
+              {" "}
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                endIcon={<CloudUploadIcon />}
+                style={{ width: "100%" }}
+                sx={{
+                  background: "linear-gradient(to right, #0F2D4D, #2369B3)",
                 }}
-              />
-            </Button>
+              >
+                صورة شارحة
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(event) => {
+                    if (event.target.files[0]) {
+                      addFile && addFile(event.target.files[0], index);
+                      setImageURL(URL.createObjectURL(event.target.files[0]));
+                      setImage({
+                        ...image,
+                        url: URL.createObjectURL(event.target.files[0]),
+                      });
+                    }
+                  }}
+                />
+              </Button>
+            </div>
           </Grid2>
           <Grid2 container size={{ xs: 6, sm: 4 }} justifyContent={"center"}>
             <Grid2 size={12}>

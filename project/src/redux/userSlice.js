@@ -108,23 +108,41 @@ export const getWord = createAsyncThunk(
   }
 );
 export const fetchDataWithState = createAsyncThunk(
-  "someSlice/fetchDataWithState",
-  async (payload, { getState }) => {
-    const state = getState();
-    // state.user.form = {};
-    const someState = state.user.form; // Access the Redux state here
-    console.log(someState);
-    const response = await fetch("your-api-endpoint", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ someState }), // Pass state in the request body
-    });
+  "user/fetchDataWithState",
+  async (payload, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const someState = { ...state.user.form }; // Clone the state to avoid mutation
+      delete someState._id;
 
-    return await response.json();
+      console.log(JSON.stringify(someState));
+
+      const response = await fetch(
+        "https://arabic-data-collector.onrender.com/api/v1/Word",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(someState),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data || { message: "Failed to fetch data" });
+      }
+
+      return data; // Only return the data directly, not as an object { data }
+    } catch (error) {
+      // Return a custom error if something goes wrong
+      return rejectWithValue({ message: error.message || "An error occurred" });
+    }
   }
 );
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -237,6 +255,13 @@ export const userSlice = createSlice({
         JSON.parse(JSON.stringify(state.collocates_obj))
       );
     },
+    clearForm: (state) => {
+      state.form = {};
+      console.log("form: ", JSON.parse(JSON.stringify(state.form)));
+    },
+    clearSemantic_info: (state) => {
+      state.semantic_info = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -256,6 +281,7 @@ export const userSlice = createSlice({
         console.log("data", data);
         state.wordData = data;
         state.auth = true;
+        state.data = action.payload.data;
         localStorage.setItem("authToken", action.payload.data.token);
         localStorage.setItem("wordData", data);
         localStorage.getItem("wordData");
@@ -284,6 +310,29 @@ export const userSlice = createSlice({
         localStorage.setItem("form", JSON.stringify(action.payload.data.data));
       })
       .addCase(getWord.rejected, (state, action) => {
+        // state.loading = false;
+        // state.error = true;
+        // state.token = null;
+        // state.user = null;
+        // state.message = action.payload.message;
+        console.log(action.payload);
+      });
+    builder
+      .addCase(fetchDataWithState.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDataWithState.fulfilled, (state, action) => {
+        console.log(action.payload);
+        // console.log(action.payload.data);
+        // state.loading = false;
+        // state.form = action.payload.data.data;
+        // state.semantic_info = state.form.semantic_info;
+        // state.morphological_info = state.form.morphological_info;
+        // state.diacritics = state.form.diacritics;
+        // localStorage.setItem("form", JSON.stringify(action.payload.data.data));
+      })
+      .addCase(fetchDataWithState.rejected, (state, action) => {
         // state.loading = false;
         // state.error = true;
         // state.token = null;
@@ -323,6 +372,8 @@ export const {
   updateCollocates,
   clearCollocates,
   clearCollocates_Obj,
+  clearForm,
+  clearSemantic_info,
 } = userSlice.actions;
 
 export default userSlice.reducer;

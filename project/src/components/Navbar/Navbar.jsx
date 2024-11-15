@@ -165,7 +165,7 @@ function Navbar(props) {
                   لجنة: {data?.committee}
                 </Typography>
                 <Typography noWrap component="div" sx={{ width: "50%" }}>
-                  {word && (
+                  {setWord && (
                     <InputField
                       select={true}
                       label="قائمة المداخل المطلوب تحريرها"
@@ -185,7 +185,7 @@ function Navbar(props) {
               sx={{ width: "40%", display: { lg: "none" } }}
               ml={"auto"}
             >
-              {word && (
+              {setWord && (
                 <InputField
                   select={true}
                   label="قائمة المداخل المطلوب تحريرها"

@@ -9,7 +9,13 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
 import { Box, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataWithState, updateForm } from "../../redux/userSlice";
+import {
+  clearForm,
+  clearSemantic_info,
+  clearSemantic_info_obj,
+  fetchDataWithState,
+  updateForm,
+} from "../../redux/userSlice";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -90,8 +96,12 @@ function LastSection({ files, records }) {
     dispatch(updateForm({ name: "diacritics", value: diacritic }));
     dispatch(updateForm({ name: "semantic_info", value: semantic }));
     dispatch(updateForm({ name: "morphological_info", value: morphological }));
-
     dispatch(fetchDataWithState());
+    // dispatch(clearForm());
+    // dispatch(clearSemantic_info());
+  };
+  const handlePrint = () => {
+    window.print();
   };
   return (
     <Grid2 container spacing={2}>
@@ -134,12 +144,15 @@ function LastSection({ files, records }) {
           width: "100%",
         }}
       >
-        <Grid container spacing={2} width={{ xs: "30%", sm: "20%" }} mt={2}>
+        <Grid container spacing={2} width={{ xs: "30%", sm: "50%" }} mt={2}>
           <Grid size={{ xs: 12, md: 4 }}>
             <ButtonCompnent text="حفظ" onclick={submitPublics}></ButtonCompnent>
           </Grid>
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <ButtonCompnent text="ارسل للمدقق"></ButtonCompnent>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <ButtonCompnent onclick={handlePrint} text="اطبع"></ButtonCompnent>
           </Grid>
         </Grid>
       </Box>

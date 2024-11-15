@@ -53,9 +53,6 @@ function App() {
     console.log("records: ", records);
   }, [files, records]);
 
-  const handlePrint = () => {
-    window.print();
-  };
   const auth = useSelector((state) => state.user.auth);
   const semantic_info = useSelector((state) => state.user.semantic_info);
   const [semantic_info_arr, setSemantic_info_arr] = useState(
@@ -167,8 +164,6 @@ function App() {
                           <DividerComponent />
                         </div>
                         <LastSection files={files} records={records} />
-                        <button onClick={handlePrint}>Print as PDF</button>
-                        <img src="public/uploads/images/1731522171393-logo 2.png"></img>
                       </Grid2>
                     </Grid2>
                   </>
