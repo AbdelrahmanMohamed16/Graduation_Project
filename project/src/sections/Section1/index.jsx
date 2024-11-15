@@ -1,5 +1,5 @@
 import { Grid2, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../../components/Input/InputField";
 import Voice from "../../components/Voice/Voice";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
@@ -47,13 +47,18 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
 
 export default function Section1({ word = "المدخل", addRecord }) {
   const [recorded, setRecorded] = useState(false);
+  const examplesInfo = useSelector((state) => state.user.form.diacritics);
   const [examples, setExamples] = useState(
-    useSelector((state) => state.user?.form?.diacritics) || [
+    useSelector((state) => state.user.form.diacritics) || [
       { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
     ]
   );
+  useEffect(() => {
+    setExamples(examplesInfo);
+  }, [examplesInfo]);
+
   console.log(useSelector((state) => state.user?.form?.diacritics));
-  console.log(examples);
+  console.log("##$#$: ", examples);
   const dispatch = useDispatch();
 
   const handleChange = (index, field, value) => {

@@ -9,15 +9,7 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
 import { Box, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchDataWithState,
-  updateDiacritics,
-  updateDiacriticswithRecord,
-  updateForm,
-  updateMeaning,
-  updateSemantic_info,
-  updateSemantic_infowithImage,
-} from "../../redux/userSlice";
+import { fetchDataWithState, updateForm } from "../../redux/userSlice";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -47,9 +39,6 @@ function MyFormControlLabel(props) {
 }
 
 MyFormControlLabel.propTypes = {
-  /**
-   * The value of the component.
-   */
   value: PropTypes.any,
 };
 
@@ -57,11 +46,23 @@ function LastSection({ files, records }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
-
-  const diacritic = useSelector((state) => state.user.diacritics);
+  const diacriticFromStore = useSelector((state) => state.user.diacritics);
+  const [diacritic, setDiacritic] = React.useState(diacriticFromStore);
+  React.useEffect(() => {
+    if (diacriticFromStore.length > 0) {
+      setDiacritic(diacriticFromStore);
+    }
+  }, [diacriticFromStore]);
   const morphological = useSelector((state) => state.user.morphological_info);
-  const semantic = useSelector((state) => state.user.semantic_info);
+  const semanticFromStore = useSelector((state) => state.user.semantic_info);
+  const [semantic, setSemantic] = React.useState(semanticFromStore);
+  React.useEffect(() => {
+    if (semanticFromStore.length > 0) {
+      setSemantic(semanticFromStore);
+    }
+  }, [semanticFromStore]);
   const sendImages = async (file) => {
+    let imageURL = "";
     imageFormData.append("image", file);
     try {
       await fetch(
@@ -73,16 +74,17 @@ function LastSection({ files, records }) {
       ).then(async (res) => {
         imageFormData = new FormData();
         const response = await res.json();
-        const imageURL = `https://arabic-data-collector.onrender.com${encodeURI(
+        imageURL = `https://arabic-data-collector.onrender.com${encodeURI(
           response.filePath
         )}`;
-        return imageURL;
       });
     } catch (e) {
       console.log(e);
     }
+    return imageURL;
   };
   const sendRecord = async (record) => {
+    let recordURL = "";
     try {
       recordFormData.append("record", record);
       await fetch(
@@ -94,42 +96,65 @@ function LastSection({ files, records }) {
       ).then(async (res) => {
         recordFormData = new FormData();
         const response = await res.json();
-        const recordURL = `https://arabic-data-collector.onrender.com${encodeURI(
+        recordURL = `https://arabic-data-collector.onrender.com${encodeURI(
           response.filePath
         )}`;
-        return recordURL;
       });
     } catch (e) {
       console.log(e);
     }
+    return recordURL;
   };
-  const submitPublics = async () => {
-    for (let index = 0; index < files.length; index++) {
-      const imageURL = await sendImages(files[index]);
-      dispatch(
-        updateSemantic_infowithImage({
-          index: files[index].index,
-          imageURL: imageURL,
-        })
-      );
-    }
-    for (let index = 0; index < records.length; index++) {
-      const recordURL = await sendImages(records[index]);
-      dispatch(
-        updateDiacriticswithRecord({ index: index, recordURL: recordURL })
-      );
-    }
-    // sendImages(files[0].image);
-    // sendRecord(records[0]);
-    console.log("##diacritic: ", diacritic);
-    console.log("##semantic_info: ", semantic);
-    console.log("##morphological_info: ", morphological);
-    // dispatch(updateForm({ name: "diacritics", value: diacritic }));
-    // dispatch(updateForm({ name: "semantic_info", value: semantic }));
-    // dispatch(updateForm({ name: "morphological_info", value: morphological }));
 
-    // dispatch(fetchDataWithState());
+  const submitPublics = async () => {
+    try {
+      console.log("$$semantic$$: ", semantic);
+      let updatedSemantic = await structuredClone(semantic);
+      console.log("$$updatedSemantic$$: ", updatedSemantic);
+
+      for (let index = 0; index < files.length; index++) {
+        const imageURL = await sendImages(files[index].image);
+        console.log(imageURL);
+
+        const semanticObject = updatedSemantic[files[index].index];
+        console.log(semanticObject);
+
+        if (
+          semanticObject &&
+          semanticObject.meaning &&
+          semanticObject.meaning.image
+        ) {
+          semanticObject.meaning.image.url = imageURL;
+        }
+      }
+
+      console.log("$$diacritic$$: ", diacritic);
+      let updatedDiacritic = await structuredClone(diacritic);
+      console.log("$$updatedDiacritic$$: ", updatedDiacritic);
+      for (let index = 0; index < records.length; index++) {
+        const recordURL = await sendRecord(records[index]);
+        console.log(recordURL);
+
+        updatedDiacritic[index].pronounciation = recordURL; // Update specific field
+      }
+
+      console.log("$$$ Updated Semantic $$$: ", updatedSemantic);
+      console.log("$$$ Updated Diacritic $$$: ", updatedDiacritic);
+
+      setDiacritic(updatedDiacritic);
+      setSemantic(updatedSemantic);
+      dispatch(updateForm({ name: "diacritics", value: updatedDiacritic }));
+      dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
+      dispatch(
+        updateForm({ name: "morphological_info", value: morphological })
+      );
+
+      dispatch(fetchDataWithState());
+    } catch (error) {
+      console.error("Error in submitPublics: ", error);
+    }
   };
+
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>
