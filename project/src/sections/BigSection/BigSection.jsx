@@ -92,7 +92,12 @@ export default function BasicTabs({
           aria-label="basic tabs example"
         >
           {arr?.map((item, index) => (
-            <Tab label={item.meaning?.text} key={index} {...a11yProps(index)} />
+            <Tab
+              label={item.meaning?.text}
+              key={index}
+              {...a11yProps(index)}
+              sx={{ fontSize: 25 }}
+            />
           ))}
         </Tabs>
       </Box>

@@ -74,6 +74,7 @@ export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
                 label={item.collocate_text}
                 key={index}
                 {...a11yProps(index)}
+                sx={{ fontSize: 25 }}
               />
             ))}
           </Tabs>

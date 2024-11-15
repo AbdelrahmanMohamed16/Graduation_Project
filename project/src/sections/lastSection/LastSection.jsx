@@ -48,12 +48,16 @@ MyFormControlLabel.propTypes = {
   value: PropTypes.any,
 };
 
-function LastSection({ files, records, handlePrint }) {
+function LastSection({ files, records }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
   const diacriticFromStore = useSelector((state) => state.user.diacritics);
   const [diacritic, setDiacritic] = React.useState(diacriticFromStore);
+  const handlePrint = () => {
+    window.print();
+  };
+
   React.useEffect(() => {
     if (diacriticFromStore.length > 0) {
       setDiacritic(diacriticFromStore);

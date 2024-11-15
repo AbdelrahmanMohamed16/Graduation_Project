@@ -50,53 +50,56 @@ const Voice = ({ setVoice, addRecord, index, initialURL }) => {
   };
 
   return (
-    <Stack flexDirection={"row"}>
-      <Button
-        variant="contained"
-        sx={{
-          background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-          borderRadius: "5px",
-          width: "130px",
-          marginRight: "10px",
-          color: "#FFFFFF",
-          fontSize: "20px",
-          fontFamily: "El Messiri",
-        }}
-        size="large"
-        onClick={isRecording ? handleStopRecording : handleStartRecording}
-        endIcon={
-          isRecording ? (
-            <StopIcon sx={{ color: "#E72929" }} />
-          ) : (
-            <MicIcon sx={{ color: "white" }} />
-          )
-        }
-      >
-        {isRecording ? "انهاء" : "النطق"}
-      </Button>
-
-      {audioURL && (
+    <div className="no-print">
+      {" "}
+      <Stack flexDirection={"row"}>
         <Button
-          variant="outlined"
+          variant="contained"
           sx={{
+            background: "linear-gradient(to right, #0F2D4D, #2369B3)",
             borderRadius: "5px",
-            color: "black",
-            fontSize: "16px",
+            width: "130px",
+            marginRight: "10px",
+            color: "#FFFFFF",
+            fontSize: "20px",
             fontFamily: "El Messiri",
-            borderColor: "#2369B3",
-            borderWidth: "2px",
           }}
-          onClick={() => new Audio(audioURL).play()}
+          size="large"
+          onClick={isRecording ? handleStopRecording : handleStartRecording}
+          endIcon={
+            isRecording ? (
+              <StopIcon sx={{ color: "#E72929" }} />
+            ) : (
+              <MicIcon sx={{ color: "white" }} />
+            )
+          }
         >
-          <span
-            style={{ color: "black", fontSize: "20px", marginLeft: "15px" }}
-          >
-            استمع
-          </span>
-          <PlayArrowIcon sx={{ color: "black", fontSize: "30px" }} />
+          {isRecording ? "انهاء" : "النطق"}
         </Button>
-      )}
-    </Stack>
+
+        {audioURL && (
+          <Button
+            variant="outlined"
+            sx={{
+              borderRadius: "5px",
+              color: "black",
+              fontSize: "16px",
+              fontFamily: "El Messiri",
+              borderColor: "#2369B3",
+              borderWidth: "2px",
+            }}
+            onClick={() => new Audio(audioURL).play()}
+          >
+            <span
+              style={{ color: "black", fontSize: "20px", marginLeft: "15px" }}
+            >
+              استمع
+            </span>
+            <PlayArrowIcon sx={{ color: "black", fontSize: "30px" }} />
+          </Button>
+        )}
+      </Stack>
+    </div>
   );
 };
 
