@@ -54,6 +54,12 @@ export default function Section1({ word = "المدخل", addRecord }) {
       { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
     ]
   );
+  if (examples.length === 0)
+    examples.push({
+      word_with_diacritics: "",
+      phonetic_writing: "",
+      pronounciation: null,
+    });
   useEffect(() => {
     setExamples(examplesInfo);
   }, [examplesInfo]);
