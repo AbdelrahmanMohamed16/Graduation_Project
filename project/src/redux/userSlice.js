@@ -6,7 +6,7 @@ const initialState = {
   loading: false,
   message: "",
   auth: localStorage.getItem("authToken") || false,
-  form: localStorage.getItem("form") || {},
+  form: JSON.parse(localStorage.getItem("form")) || {},
   wordData: localStorage.getItem("wordData") || [],
   diacritics: [],
   morphological_info: {},
@@ -226,6 +226,29 @@ export const userSlice = createSlice({
         JSON.parse(JSON.stringify(state.semantic_info))
       );
     },
+    updateSemantic_infowithImage: (state, action) => {
+      if (action.payload.index !== null || action.payload.index === 0) {
+        state.semantic_info[action.payload.index].meaning.image.url =
+          action.payload.imageURL;
+      }
+      console.log(
+        "semantic_info: ",
+        JSON.parse(JSON.stringify(state.semantic_info))
+      );
+    },
+    updateDiacriticswithRecord: (state, action) => {
+      if (action.payload.index !== null || action.payload.index === 0) {
+        console.log(
+          "state.diacritics[action.payload.index]: ",
+          state.diacritics[action.payload.index]
+        );
+        console.log("action.payload.recordURL: ", action.payload.recordURL);
+        state.diacritics[action.payload.index].pronounciation =
+          action.payload.recordURL;
+      }
+      console.log("diacritics: ", JSON.parse(JSON.stringify(state.diacritics)));
+      return JSON.parse(JSON.stringify(state.diacritics));
+    },
     updateCollocates: (state, action) => {
       console.log("-------------------------------------------");
       if (action.payload.collocatesIndex !== null) {
@@ -363,8 +386,10 @@ export const {
   updateForm,
   updateMorphologicalInfo,
   updateDiacritics,
+  updateDiacriticswithRecord,
   updateCollocates_obj,
   updateSemantic_info_obj,
+  updateSemantic_infowithImage,
   clearSemantic_info_obj,
   updateSemantic_info,
   updateMeaning,

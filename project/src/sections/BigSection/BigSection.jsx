@@ -50,6 +50,7 @@ export default function BasicTabs({
   word,
   value2,
   setValue2,
+  addFile,
 }) {
   const dispach = useDispatch();
   const handleChange = (event, newValue) => {
@@ -104,6 +105,7 @@ export default function BasicTabs({
                 Semantic_fields={item.Semantic_fields}
                 word={word}
                 index={index}
+                addFile={addFile}
               />
               <TabSection
                 arr={item.collocates}
