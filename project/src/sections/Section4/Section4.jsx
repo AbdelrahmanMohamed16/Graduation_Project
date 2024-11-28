@@ -176,6 +176,55 @@ function Section4({
 
         <Grid size={{ xs: 12, md: 6 }}>
           <ButtonCompnent text="أضف مثال آخر" rounded={true} icon={true} onclick={addExample} />
+          <Grid item xs={12} md={8}>
+            <Box
+              sx={{
+                backgroundColor: "#f5f5f5",
+                borderRadius: "4px",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              {isRichTextEnabled ? (
+                <ReactQuill
+                  ref={quillRef}
+                  value={examplesText}
+                  onChange={setExamplesText}
+                  modules={{ toolbar: [["bold"], [{ color: [] }]] }}
+                  style={{ height: "200px" }}
+                />
+              ) : (
+                <InputField
+                  text={true}
+                  label="أمثلة إستعمالية"
+                  val={examplesText}
+                  set={setExamplesText}
+                />
+              )}
+            </Box>
+
+            {/* Toggle button positioned below the editor */}
+            <Typography
+              onClick={toggleRichText}
+              sx={{
+                fontSize: "14px",
+                color: "#1a73e8",
+                cursor: "pointer",
+                mt: 1,
+                padding: "8px 12px",
+                borderRadius: "4px",
+                transition: "background-color 0.3s, color 0.3s",
+                display: "inline-block",
+                "&:hover": {
+                  backgroundColor: "#e0f3ff",
+                  color: "#1a73e8",
+                },
+                position: "relative",
+                zIndex: 10,
+              }}
+            >
+              {isRichTextEnabled ? "التبديل إلى نص عادي" : "تمكين التنسيق"}
+            </Typography>
+          </Grid>
         </Grid>
 
         <Grid container size={12} sx={{ mt: 10, justifyContent: "start" }}>

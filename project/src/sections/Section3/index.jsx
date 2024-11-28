@@ -19,19 +19,87 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+
 function ExampleData({ data, onChange, index }) {
   const { text, source } = data;
+  const [isRichTextEnabled, setIsRichTextEnabled] = useState(false);
+  const [examplesText, setExamplesText] = useState(text || "");
+
+  const toggleRichText = () => {
+    setIsRichTextEnabled((prev) => !prev);
+  };
+
+  const handleTextChange = (value) => {
+    setExamplesText(value);
+    onChange(index, "text", value);
+  };
 
   return (
-    <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
-      <Grid2 size={{ xs: 12, md: 8 }}>
-        <InputField
-          text={true}
-          label="أمثلة"
-          val={text}
-          set={(value) => onChange(index, "text", value)}
-        />
-      </Grid2>
+    <Grid2 container spacing={2} sx={{ my: "10px" }}>
+      <Grid item xs={12} md={8}>
+        <Box
+          sx={{
+            backgroundColor: "#f5f5f5",
+            borderRadius: "4px",
+            border: "1px solid #e0e0e0",
+            minHeight: "200px", // Ensures consistent height
+            width: "100%", // Ensures it takes full width of the container
+            display: "flex",
+            flexDirection: "column",
+            boxSizing: "border-box", // Ensures padding is included in the width
+            overflow: "hidden", // Prevents overflow issues
+          }}
+        >
+          {isRichTextEnabled ? (
+            <ReactQuill
+              value={examplesText}
+              onChange={handleTextChange}
+              modules={{
+                toolbar: [["bold"], [{ color: [] }]],
+              }}
+              style={{
+                width: "100%", // Keeps the original width you wanted
+                minHeight: "150px", // Matches the box height
+                marginLeft: "-65%", // Offsets the content to align correctly
+              }}
+            />
+          ) : (
+            <InputField
+              text={true}
+              label="أمثلة إستعمالية"
+              val={examplesText}
+              set={handleTextChange}
+              style={{
+                width: "100%", // Ensures it uses the full available width
+                height: "150px", // Matches the box height
+              }}
+            />
+          )}
+        </Box>
+
+        <Typography
+          onClick={toggleRichText}
+          sx={{
+            fontSize: "14px",
+            color: "#1a73e8",
+            cursor: "pointer",
+            mt: 1,
+            padding: "8px 12px",
+            borderRadius: "4px",
+            transition: "background-color 0.3s, color 0.3s",
+            display: "inline-block",
+            "&:hover": {
+              backgroundColor: "#e0f3ff",
+              color: "#1a73e8",
+            },
+            position: "relative",
+            zIndex: 10,
+          }}
+        >
+          {isRichTextEnabled ? "التبديل إلى نص عادي" : "تمكين التنسيق"}
+        </Typography>
+      </Grid>
+
       <Grid2 size={{ xs: 12, md: 2 }}>
         <InputField
           text={true}
@@ -43,6 +111,9 @@ function ExampleData({ data, onChange, index }) {
     </Grid2>
   );
 }
+
+
+
 
 export default function Section3({ arr, Semantic_fields, addFile, index }) {
   const [options, setOptions] = useState([
