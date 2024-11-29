@@ -172,6 +172,7 @@ function Navbar(props) {
                       options={options}
                       set={setWord}
                       dataOptions={dataOptions}
+                      defaultOption={word}
                       val={word}
                       name={"text"}
                     />
@@ -192,6 +193,7 @@ function Navbar(props) {
                   options={options}
                   set={setWord}
                   dataOptions={dataOptions}
+                  defaultOption={word}
                   val={word}
                   name={"text"}
                 />

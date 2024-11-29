@@ -4,7 +4,7 @@ import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateMeaning } from "../../redux/userSlice";
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
@@ -45,6 +45,7 @@ function ExampleData({ data, onChange }) {
   );
 }
 export default function Section3({ arr, Semantic_fields, addFile, index }) {
+  console.log("semf======>", Semantic_fields);
   const [options, setOptions] = useState([
     "العلوم",
     "الفنون",

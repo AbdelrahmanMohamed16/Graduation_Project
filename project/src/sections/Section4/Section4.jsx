@@ -5,17 +5,17 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useEffect, useState } from "react";
 import { Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
+import RadioGroup from "@mui/material/RadioGroup";
 import MyFormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import {
   clearCollocates,
-  clearCollocates_Obj,
-  clearSemantic_info_obj,
+  clearCollocatesObj,
+  clearSemanticInfoObj,
   updateCollocates,
-  updateCollocates_obj,
-  updateSemantic_info,
-  updateSemantic_info_obj,
+  updateCollocatesObj,
+  updateSemanticInfo,
+  updateSemanticInfoObj,
 } from "../../redux/userSlice";
 function Example({ data, onChange }) {
   const { text, source } = data;
@@ -74,17 +74,17 @@ function Section4({
       } else {
         dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
       }
-      dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
+      dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
     }
-    dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
-    dispatch(updateSemantic_info_obj({ name: "completed", value: completed }));
+    dispatch(updateSemanticInfoObj({ name: "meaning", value: meaning_obj }));
+    dispatch(updateSemanticInfoObj({ name: "completed", value: completed }));
     if (index !== undefined) {
-      // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
-      dispatch(updateSemantic_info({ index: index }));
+      // dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
+      dispatch(updateSemanticInfo({ index: index }));
     } else {
-      dispatch(updateSemantic_info({ index: null }));
+      dispatch(updateSemanticInfo({ index: null }));
     }
-    dispatch(clearSemantic_info_obj());
+    dispatch(clearSemanticInfoObj());
     dispatch(clearCollocates());
     setValue(-1);
     setValue2(-1);
@@ -95,7 +95,7 @@ function Section4({
         i === index ? { ...example, [field]: value } : example
       )
     );
-    dispatch(updateCollocates_obj({ name: "example", value: example }));
+    dispatch(updateCollocatesObj({ name: "example", value: example }));
   };
   const handleAddNewCollocates = () => {
     if (collocatesIndex || collocatesIndex === 0) {
@@ -110,7 +110,7 @@ function Section4({
     } else {
       setArrCollocates([...arrCollocates, collocates_obj]);
     }
-    dispatch(clearCollocates_Obj());
+    dispatch(clearCollocatesObj());
     setCollocate_text("");
     Setmeaning("");
     setExamples([{}]);
@@ -121,13 +121,13 @@ function Section4({
   };
   useEffect(() => {
     dispatch(
-      updateCollocates_obj({
+      updateCollocatesObj({
         name: "collocate_text",
         value: data?.collocate_text,
       })
     );
-    dispatch(updateCollocates_obj({ name: "example", value: data?.example }));
-    dispatch(updateCollocates_obj({ name: "meaning", value: data?.meaning }));
+    dispatch(updateCollocatesObj({ name: "example", value: data?.example }));
+    dispatch(updateCollocatesObj({ name: "meaning", value: data?.meaning }));
   }, [data, dispatch]);
   return (
     <div id="section4">

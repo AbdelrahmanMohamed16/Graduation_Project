@@ -58,7 +58,6 @@ const Voice = ({ setVoice, addRecord, index, initialURL }) => {
           sx={{
             background: "linear-gradient(to right, #0F2D4D, #2369B3)",
             borderRadius: "5px",
-            width: "130px",
             marginRight: "10px",
             color: "#FFFFFF",
             fontSize: "20px",
@@ -74,7 +73,7 @@ const Voice = ({ setVoice, addRecord, index, initialURL }) => {
             )
           }
         >
-          {isRecording ? "انهاء" : "النطق"}
+          {isRecording ? "انهاء" : audioURL ? "اعادة التسجيل" : "النطق"}
         </Button>
 
         {audioURL && (

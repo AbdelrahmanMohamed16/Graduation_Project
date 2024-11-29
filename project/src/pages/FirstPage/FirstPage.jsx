@@ -64,7 +64,7 @@ export default function AccordionWithWords() {
   const navigate = useNavigate();
   const handleAddWord = () => {
     dispatch(assignedWords({}));
-    navigate("/words");
+    navigate("/nounpage");
   };
   return (
     <div style={{ direction: "rtl" }}>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+// Initial State
 const initialState = {
   error: false,
   data: JSON.parse(localStorage.getItem("data")) || null,
@@ -7,7 +8,7 @@ const initialState = {
   message: "",
   auth: localStorage.getItem("authToken") || false,
   form: JSON.parse(localStorage.getItem("form")) || {},
-  wordData: localStorage.getItem("wordData") || [],
+  wordData: JSON.parse(localStorage.getItem("wordData")) || [],
   diacritics: [],
   morphological_info: {},
   semantic_info: [],
@@ -18,6 +19,7 @@ const initialState = {
   image_obj: {},
 };
 
+// Async Thunks
 export const loginUser = createAsyncThunk(
   "user/login",
   async ({ code, password }, { rejectWithValue }) => {
@@ -25,35 +27,33 @@ export const loginUser = createAsyncThunk(
       const response = await fetch(
         "https://arabic-data-collector.onrender.com/api/v1/Auth/login",
         {
-          method: "post",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            code,
-            password,
-          }),
+          body: JSON.stringify({ code, password }),
         }
       );
 
       const data = await response.json();
 
-      if (response.status !== 200 || !response.ok) {
+      if (!response.ok) {
         return rejectWithValue(data);
-      } else {
-        return { data };
       }
+
+      return { data };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue({ message: error.message });
     }
   }
 );
+
 export const assignedWords = createAsyncThunk(
   "user/assignedWords",
-  async ({ _ }, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `https://arabic-data-collector.onrender.com/api/v1/Word`,
+        "https://arabic-data-collector.onrender.com/api/v1/Word",
         {
-          method: "get",
+          method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
@@ -63,16 +63,17 @@ export const assignedWords = createAsyncThunk(
 
       const data = await response.json();
 
-      if (response.status !== 200 || !response.ok) {
+      if (!response.ok) {
         return rejectWithValue(data);
-      } else {
-        return { data };
       }
+
+      return { data };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue({ message: error.message });
     }
   }
 );
+
 export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
@@ -80,7 +81,7 @@ export const getWord = createAsyncThunk(
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Word/${wordId}`,
         {
-          method: "get",
+          method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
@@ -90,23 +91,25 @@ export const getWord = createAsyncThunk(
 
       const data = await response.json();
 
-      if (response.status !== 200 || !response.ok) {
+      if (!response.ok) {
         return rejectWithValue(data);
-      } else {
-        return { data };
       }
+
+      return { data };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue({ message: error.message });
     }
   }
 );
+
 export const fetchDataWithState = createAsyncThunk(
   "user/fetchDataWithState",
-  async (payload, { getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
-      const state = getState();
-      const someState = { ...state.user.form }; // Clone the state to avoid mutation
-      delete someState._id;
+      const { user } = getState();
+      const payload = { ...user.form };
+      delete payload._id;
+
       const response = await fetch(
         "https://arabic-data-collector.onrender.com/api/v1/Word",
         {
@@ -115,30 +118,29 @@ export const fetchDataWithState = createAsyncThunk(
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(someState),
+          body: JSON.stringify(payload),
         }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data || { message: "Failed to fetch data" });
+        return rejectWithValue(data);
       }
 
-      return data; // Only return the data directly, not as an object { data }
+      return data;
     } catch (error) {
-      // Return a custom error if something goes wrong
-      return rejectWithValue({ message: error.message || "An error occurred" });
+      return rejectWithValue({ message: error.message });
     }
   }
 );
 
+// Slice
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     logout: (state) => {
-      console.log("---------from logged out--------------");
       state.token = null;
       state.error = false;
       state.data = null;
@@ -156,36 +158,22 @@ export const userSlice = createSlice({
     updateMorphologicalInfo: (state, action) => {
       state.morphological_info[action.payload.name] = action.payload.value;
     },
-    updateCollocates_obj: (state, action) => {
-      state.collocates_obj[action.payload.name] = action.payload.value;
+    updateSemanticInfo: (state, action) => {
+      if (action.payload.index !== null) {
+        state.semantic_info[action.payload.index] = state.semantic_info_obj;
+      } else {
+        state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
+      }
     },
-    updateSemantic_info_obj: (state, action) => {
+    updateSemanticInfoObj: (state, action) => {
       if (action.payload.name === "collocates") {
         state.semantic_info_obj[action.payload.name] = state.collocates;
       } else {
         state.semantic_info_obj[action.payload.name] = action.payload.value;
       }
     },
-    clearSemantic_info_obj: (state) => {
-      state.semantic_info_obj = {};
-    },
-    updateMeaning: (state, action) => {
-      if (action.payload.arr !== null) {
-        state.meaning = action.payload.arr;
-      } else {
-        state.meaning[action.payload.name] = action.payload.value;
-      }
-    },
-    updateImage_obj: (state, action) => {
-      state.image_obj[action.payload.name] = action.payload.value;
-      updateMeaning({ name: "image", value: state.image_obj });
-    },
-    updateSemantic_info: (state, action) => {
-      if (action.payload.index !== null) {
-        state.semantic_info[action.payload.index] = state.semantic_info_obj;
-      } else {
-        state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
-      }
+    updateCollocatesObj: (state, action) => {
+      state.collocates_obj[action.payload.name] = action.payload.value;
     },
     updateCollocates: (state, action) => {
       if (action.payload.collocatesIndex !== null) {
@@ -201,13 +189,24 @@ export const userSlice = createSlice({
     clearCollocates: (state) => {
       state.collocates = [];
     },
-    clearCollocates_Obj: (state) => {
+    clearCollocatesObj: (state) => {
       state.collocates_obj = {};
+    },
+    clearSemanticInfoObj: (state) => {
+      state.semantic_info_obj = {};
+    },
+    updateMeaning: (state, action) => {
+      state.meaning = action.payload.arr || {
+        ...state.meaning,
+        [action.payload.name]: action.payload.value,
+      };
     },
     clearForm: (state) => {
       state.form = {};
+      state.collocates = [];
+      localStorage.removeItem("form");
     },
-    clearSemantic_info: (state) => {
+    clearSemanticInfo: (state) => {
       state.semantic_info = [];
     },
   },
@@ -215,110 +214,101 @@ export const userSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        // state.loading = false;
-        // state.data = action.payload.data;
-        let data = action.payload.data.assigned_words.map((item) => ({
+        const { data } = action.payload;
+        state.loading = false;
+        state.auth = true;
+        state.data = data;
+
+        const wordData = data.assigned_words.map((item) => ({
           word: item.text,
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
-        state.wordData = data;
-        state.auth = true;
-        state.data = action.payload.data;
-        localStorage.setItem("authToken", action.payload.data.token);
-        localStorage.setItem("wordData", data);
-        localStorage.getItem("wordData");
+
+        state.wordData = wordData;
+
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("wordData", JSON.stringify(wordData));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.token = null;
-        state.user = null;
         state.message = action.payload.message;
       });
-    builder
-      .addCase(getWord.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getWord.fulfilled, (state, action) => {
-        state.loading = false;
-        state.form = action.payload.data.data;
-        state.semantic_info = state.form.semantic_info;
-        state.morphological_info = state.form.morphological_info;
-        state.diacritics = state.form.diacritics;
-        localStorage.setItem("form", JSON.stringify(action.payload.data.data));
-      })
-      .addCase(getWord.rejected, (state, action) => {
-        // state.loading = false;
-        // state.error = true;
-        // state.token = null;
-        // state.user = null;
-        // state.message = action.payload.message;
-        console.log(action.payload);
-      });
-    builder
-      .addCase(fetchDataWithState.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchDataWithState.fulfilled, (state, action) => {
-        console.log(action.payload);
-        // console.log(action.payload.data);
-        // state.loading = false;
-        // state.form = action.payload.data.data;
-        // state.semantic_info = state.form.semantic_info;
-        // state.morphological_info = state.form.morphological_info;
-        // state.diacritics = state.form.diacritics;
-        // localStorage.setItem("form", JSON.stringify(action.payload.data.data));
-      })
-      .addCase(fetchDataWithState.rejected, (state, action) => {
-        // state.loading = false;
-        // state.error = true;
-        // state.token = null;
-        // state.user = null;
-        // state.message = action.payload.message;
-        console.log(action.payload);
-      });
+
     builder
       .addCase(assignedWords.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = false;
       })
       .addCase(assignedWords.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.loading = false;
         state.data = action.payload.data;
         localStorage.setItem("data", JSON.stringify(action.payload.data));
       })
       .addCase(assignedWords.rejected, (state, action) => {
-        console.log(assignedWords.rejected);
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
+
+    builder
+      .addCase(getWord.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(getWord.fulfilled, (state, action) => {
+        const { data } = action.payload.data;
+        state.loading = false;
+        state.form = data;
+        state.semantic_info = data.semantic_info;
+        state.morphological_info = data.morphological_info;
+        state.diacritics = data.diacritics;
+        localStorage.setItem("form", JSON.stringify(data));
+      })
+      .addCase(getWord.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
+
+    builder
+      .addCase(fetchDataWithState.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(fetchDataWithState.fulfilled, (state, action) => {
+        state.loading = false;
+        // Handle the response here if needed
         console.log(action.payload);
+      })
+      .addCase(fetchDataWithState.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload.message;
       });
   },
 });
 
+// Export Actions and Reducer
 export const {
-  login,
+  logout,
   updateForm,
-  updateMorphologicalInfo,
   updateDiacritics,
-  updateDiacriticswithRecord,
-  updateCollocates_obj,
-  updateSemantic_info_obj,
-  updateSemantic_infowithImage,
-  clearSemantic_info_obj,
-  updateSemantic_info,
-  updateMeaning,
-  updateImage_obj,
+  updateMorphologicalInfo,
+  updateSemanticInfo,
+  updateSemanticInfoObj,
   updateCollocates,
+  updateCollocatesObj,
   clearCollocates,
-  clearCollocates_Obj,
+  clearCollocatesObj,
+  clearSemanticInfoObj,
+  updateMeaning,
   clearForm,
-  clearSemantic_info,
+  clearSemanticInfo,
 } = userSlice.actions;
 
 export default userSlice.reducer;

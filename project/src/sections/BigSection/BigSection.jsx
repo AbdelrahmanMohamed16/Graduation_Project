@@ -4,14 +4,12 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Section3 from "../Section3";
-import Section4 from "../Section4/Section4";
 import TabSection from "../TabSection/TabSection";
 import { useDispatch } from "react-redux";
 import {
   updateCollocates,
   updateMeaning,
-  updateSemantic_info,
-  updateSemantic_info_obj,
+  clearSemanticInfoObj,
 } from "../../redux/userSlice";
 
 function CustomTabPanel(props) {
@@ -66,13 +64,13 @@ export default function BasicTabs({
       }
       dispach(updateMeaning({ arr: arr[newValue].meaning }));
       dispach(
-        updateSemantic_info_obj({
+        clearSemanticInfoObj({
           name: "completed",
           value: arr[newValue].completed,
         })
       );
       dispach(
-        updateSemantic_info_obj({
+        clearSemanticInfoObj({
           name: "Semantic_fields",
           value: arr[newValue].Semantic_fields,
         })
@@ -98,12 +96,13 @@ export default function BasicTabs({
         </Tabs>
       </Box>
       {arr?.map((item, index) => {
+        console.log("item=======>", item);
         return (
           <CustomTabPanel value={value} index={index} key={index}>
             <>
               <Section3
                 arr={item.meaning}
-                Semantic_fields={item.Semantic_fields}
+                Semantic_fields={item.semantic_fields[0]}
                 word={word}
                 index={index}
                 addFile={addFile}

@@ -49,19 +49,23 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
 export default function Section1({ word = "المدخل", addRecord }) {
   const [recorded, setRecorded] = useState(false);
   const examplesInfo = useSelector((state) => state.user.form.diacritics);
-  const [examples, setExamples] = useState(
-    useSelector((state) => state.user.form.diacritics) || [
-      { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
-    ]
-  );
-  if (examples?.length === 0)
-    examples.push({
+  const [examples, setExamples] = useState([
+    {
       word_with_diacritics: "",
       phonetic_writing: "",
       pronounciation: null,
-    });
+    },
+  ]);
   useEffect(() => {
-    setExamples(examplesInfo);
+    if (examplesInfo !== undefined) setExamples(examplesInfo);
+    else
+      setExamples([
+        {
+          word_with_diacritics: "",
+          phonetic_writing: "",
+          pronounciation: null,
+        },
+      ]);
   }, [examplesInfo]);
 
   const dispatch = useDispatch();

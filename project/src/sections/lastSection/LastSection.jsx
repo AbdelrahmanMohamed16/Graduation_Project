@@ -9,13 +9,7 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
 import { Box, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearForm,
-  clearSemantic_info,
-  clearSemantic_info_obj,
-  fetchDataWithState,
-  updateForm,
-} from "../../redux/userSlice";
+import { fetchDataWithState, updateForm } from "../../redux/userSlice";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
