@@ -37,6 +37,7 @@ function InputField({
   dataOptions,
   setImage,
   image,
+  onFocus,
 }) {
   const [selectedOption, setSelectedOption] = useState(defaultOption || "");
   const dispatch = useDispatch();
@@ -96,6 +97,7 @@ function InputField({
         disabled={disabled}
         onChange={handleTextChange}
         value={val || ""}
+        onFocus={onFocus && onFocus}
         sx={{
           ...commonStyles,
           ...(variant === "filled" && {

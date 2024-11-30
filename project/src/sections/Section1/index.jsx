@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
 import Swal from "sweetalert2";
 
-const PhoneticKeyboard = () => {
+const PhoneticKeyboard = ({ index, field, examples, setExamples }) => {
   const ipaCharacters = [
     "ʌ",
     "æ",
@@ -39,6 +39,7 @@ const PhoneticKeyboard = () => {
     "k",
     "g",
   ];
+  const dispatch = useDispatch();
 
   // Inject character into focused input field
   const handleKeyPress = (char) => {
@@ -51,12 +52,24 @@ const PhoneticKeyboard = () => {
       const start = activeElement.selectionStart;
       const end = activeElement.selectionEnd;
 
+      console.log("field = ", field);
+      console.log("index = ", index);
+      console.log("examples = ", examples);
+
       const newValue =
         activeElement.value.slice(0, start) +
         char +
         activeElement.value.slice(end);
-      activeElement.value = newValue; // Set the new value
-      activeElement.setSelectionRange(start + 1, start + 1); // Move caret
+      setExamples((prev) =>
+        prev.map((example, i) =>
+          i === index ? { ...example, [field]: newValue } : example
+        )
+      );
+      console.log("examples = ", examples);
+      dispatch(updateDiacritics(examples));
+      // activeElement.value = newValue; // Set the new value
+      // activeElement.setSelectionRange(start + 1, start + 1); // Move caret
+
       activeElement.focus(); // Keep focus on the input
     }
   };
@@ -80,7 +93,16 @@ const PhoneticKeyboard = () => {
     </Grid2>
   );
 };
-function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
+
+function DataInputs({
+  data,
+  onChange,
+  addRecord,
+  index,
+  setRecorded,
+  setIndex,
+  setField,
+}) {
   const { word_with_diacritics, phonetic_writing } = data;
   return (
     <Grid2
@@ -95,6 +117,10 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
           text={true}
           val={word_with_diacritics}
           set={(value) => onChange("word_with_diacritics", value)}
+          onFocus={() => {
+            setIndex(index);
+            setField("word_with_diacritics");
+          }}
         />
       </Grid2>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -103,6 +129,10 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
           text={true}
           val={phonetic_writing}
           set={(value) => onChange("phonetic_writing", value)}
+          onFocus={() => {
+            setIndex(index);
+            setField("phonetic_writing");
+          }}
         />
       </Grid2>
       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -123,6 +153,8 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
 export default function Section1({ word = "المدخل", addRecord }) {
   const [recorded, setRecorded] = useState(false);
   const examplesInfo = useSelector((state) => state.user.form.diacritics);
+  const [index, setIndex] = useState();
+  const [field, setField] = useState();
   const [examples, setExamples] = useState([
     {
       word_with_diacritics: "",
@@ -145,7 +177,6 @@ export default function Section1({ word = "المدخل", addRecord }) {
   const dispatch = useDispatch();
 
   const handleChange = (index, field, value) => {
-    console.log(value);
     setExamples((prev) =>
       prev.map((example, i) =>
         i === index ? { ...example, [field]: value } : example
@@ -211,6 +242,8 @@ export default function Section1({ word = "المدخل", addRecord }) {
             addRecord={addRecord}
             index={index}
             setRecorded={setRecorded}
+            setField={setField}
+            setIndex={setIndex}
           />
         ))}
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
@@ -221,7 +254,12 @@ export default function Section1({ word = "المدخل", addRecord }) {
           />
         </Grid2>
         <Grid2 size={12}>
-          <PhoneticKeyboard />
+          <PhoneticKeyboard
+            index={index}
+            field={field}
+            examples={examples}
+            setExamples={setExamples}
+          />
         </Grid2>
       </Grid2>
     </div>
