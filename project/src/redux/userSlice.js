@@ -108,6 +108,7 @@ export const fetchDataWithState = createAsyncThunk(
     try {
       const { user } = getState();
       const payload = { ...user.form };
+      console.log(payload);
       delete payload._id;
 
       const response = await fetch(

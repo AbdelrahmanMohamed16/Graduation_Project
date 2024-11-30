@@ -1,11 +1,85 @@
-import { Grid2, Typography } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import InputField from "../../components/Input/InputField";
 import Voice from "../../components/Voice/Voice";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
+import Swal from "sweetalert2";
 
+const PhoneticKeyboard = () => {
+  const ipaCharacters = [
+    "ʌ",
+    "æ",
+    "θ",
+    "ð",
+    "ʃ",
+    "ʒ",
+    "ŋ",
+    "ʧ",
+    "ʤ",
+    "ɪ",
+    "ɛ",
+    "ɔ",
+    "ʊ",
+    "ʌ",
+    "ɛ",
+    "ɑ",
+    "ɔ",
+    "ɒ",
+    "ʍ",
+    "ɾ",
+    "ɹ",
+    "j",
+    "w",
+    "p",
+    "b",
+    "t",
+    "d",
+    "k",
+    "g",
+  ];
+
+  // Inject character into focused input field
+  const handleKeyPress = (char) => {
+    const activeElement = document.activeElement; // Get the currently focused element
+    if (
+      activeElement &&
+      (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA")
+    ) {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+
+      const newValue =
+        activeElement.value.slice(0, start) +
+        char +
+        activeElement.value.slice(end);
+      activeElement.value = newValue; // Set the new value
+      activeElement.setSelectionRange(start + 1, start + 1); // Move caret
+      activeElement.focus(); // Keep focus on the input
+    }
+  };
+
+  return (
+    <Grid2 container spacing={1} justifyContent="center" mt={2}>
+      {ipaCharacters.map((char, index) => (
+        <Grid2 item key={index}>
+          <Button
+            variant="outlined"
+            sx={{ padding: "10px", fontSize: "18px", fontFamily: "El Messiri" }}
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent focus loss
+              handleKeyPress(char);
+            }}
+          >
+            {char}
+          </Button>
+        </Grid2>
+      ))}
+    </Grid2>
+  );
+};
 function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
   const { word_with_diacritics, phonetic_writing } = data;
   return (
@@ -71,6 +145,7 @@ export default function Section1({ word = "المدخل", addRecord }) {
   const dispatch = useDispatch();
 
   const handleChange = (index, field, value) => {
+    console.log(value);
     setExamples((prev) =>
       prev.map((example, i) =>
         i === index ? { ...example, [field]: value } : example
@@ -90,6 +165,11 @@ export default function Section1({ word = "المدخل", addRecord }) {
         },
       ]);
       setRecorded(false);
+    } else {
+      Swal.fire({
+        title: "يرجي تسجيل نطق الكلمة",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
   };
 
@@ -139,6 +219,9 @@ export default function Section1({ word = "المدخل", addRecord }) {
             icon={true}
             onclick={addExample}
           />
+        </Grid2>
+        <Grid2 size={12}>
+          <PhoneticKeyboard />
         </Grid2>
       </Grid2>
     </div>

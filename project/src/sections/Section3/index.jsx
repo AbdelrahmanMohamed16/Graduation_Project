@@ -6,6 +6,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
 import { useDispatch } from "react-redux";
 import { updateMeaning } from "../../redux/userSlice";
+import Swal from "sweetalert2";
+
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
   //   clipPath: "inset(50%)",
@@ -146,7 +148,15 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
               text="اضف"
               icon={true}
               onclick={() => {
-                setOptions((prevFields) => [...prevFields, option]);
+                if (option.length) {
+                  setOptions((prevFields) => [...prevFields, option]);
+                  setOption("");
+                } else {
+                  Swal.fire({
+                    title: "يرجي كتابة مجال دلالي للاضافه للاختيارات",
+                    confirmButtonText: "موافق", // Change the button text here
+                  });
+                }
               }}
             />
           </Grid2>

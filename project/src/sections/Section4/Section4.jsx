@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import RadioGroup from "@mui/material/RadioGroup";
 import MyFormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import Swal from "sweetalert2";
+
 import {
   clearCollocates,
   clearCollocatesObj,
@@ -80,8 +82,12 @@ function Section4({
     dispatch(updateSemanticInfoObj({ name: "completed", value: completed }));
     if (index !== undefined) {
       // dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
+      console.log("ssssssssssssssssss");
+
       dispatch(updateSemanticInfo({ index: index }));
     } else {
+      console.log("ssssssssssssssssss");
+
       dispatch(updateSemanticInfo({ index: null }));
     }
     dispatch(clearSemanticInfoObj());
@@ -98,23 +104,30 @@ function Section4({
     dispatch(updateCollocatesObj({ name: "example", value: example }));
   };
   const handleAddNewCollocates = () => {
-    if (collocatesIndex || collocatesIndex === 0) {
-      dispatch(
-        updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-      );
+    if (collocate_text !== undefined) {
+      if (collocatesIndex || collocatesIndex === 0) {
+        dispatch(
+          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+        );
+      } else {
+        dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      }
+      if (!arrCollocates) {
+        setArrCollocates([collocates_obj]);
+      } else {
+        setArrCollocates([...arrCollocates, collocates_obj]);
+      }
+      dispatch(clearCollocatesObj());
+      setCollocate_text("");
+      Setmeaning("");
+      setExamples([{}]);
+      setValue2(-1);
     } else {
-      dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      Swal.fire({
+        title: "يرجى كتابة تركيب تصاحبي",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
-    if (!arrCollocates) {
-      setArrCollocates([collocates_obj]);
-    } else {
-      setArrCollocates([...arrCollocates, collocates_obj]);
-    }
-    dispatch(clearCollocatesObj());
-    setCollocate_text("");
-    Setmeaning("");
-    setExamples([{}]);
-    setValue2(-1);
   };
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);

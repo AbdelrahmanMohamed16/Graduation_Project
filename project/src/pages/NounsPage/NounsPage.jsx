@@ -45,7 +45,7 @@ export default function NounsPage(props) {
     console.log("records: ", records);
   }, [files, records]);
 
-  const semantic_info = useSelector((state) => state.user.form.semantic_info);
+  const semantic_info = useSelector((state) => state.user.semantic_info);
   const [semantic_info_arr, setSemantic_info_arr] = useState(
     semantic_info || {}
   );

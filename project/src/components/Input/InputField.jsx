@@ -5,6 +5,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+
 import {
   getWord,
   updateCollocatesObj,
@@ -45,7 +47,15 @@ function InputField({
 
   const handleTextChange = (event) => {
     const value = event.target.value;
-    set?.(value);
+    if (value.length > 0) {
+      console.log("يلاااااااااااااااهوي");
+      set?.(value);
+    } else {
+      Swal.fire({
+        title: "يرجي تسجيل نطق الكلمة",
+        confirmButtonText: "موافق", // Change the button text here
+      });
+    }
 
     if (MorphologicalInfo) dispatch(updateMorphologicalInfo({ name, value }));
     if (semantic_info) dispatch(clearSemanticInfoObj({ name, value }));

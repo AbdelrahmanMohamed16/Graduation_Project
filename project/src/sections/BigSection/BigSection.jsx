@@ -102,7 +102,7 @@ export default function BasicTabs({
             <>
               <Section3
                 arr={item.meaning}
-                Semantic_fields={item.semantic_fields[0]}
+                Semantic_fields={item.semantic_fields}
                 word={word}
                 index={index}
                 addFile={addFile}
