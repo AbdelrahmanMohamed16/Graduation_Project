@@ -19,9 +19,10 @@ import {
   updateSemanticInfo,
   updateSemanticInfoObj,
 } from "../../redux/userSlice";
+import ReactQuill from "react-quill";
 function Example({ data, onChange }) {
   const { text, source } = data;
-
+  const [editingTextFormat, seteditingTextFormat] = useState(false);
   return (
     <Grid container spacing={2} size={12} sx={{ my: "10px" }}>
       <Grid size={{ xs: 12, md: 8 }}>
@@ -31,6 +32,36 @@ function Example({ data, onChange }) {
           val={text}
           set={(value) => onChange("text", value)}
         />
+        {editingTextFormat && (
+          <ReactQuill
+            value={text}
+            onChange={(value) => onChange("text", value)}
+            modules={{
+              toolbar: [["bold"], [{ color: [] }]],
+            }}
+            style={{
+              width: "100%", // Keeps the original width you wanted
+              // minHeight: "150px", // Matches the box height
+              marginLeft: "-65%", // Offsets the content to align correctly
+            }}
+          />
+        )}
+        <Typography
+          variant="p"
+          color="red"
+          component={"button"}
+          fontSize={"15px"}
+          border={"none"}
+          bgcolor={"transparent"}
+          mt={1}
+          onClick={() => seteditingTextFormat(!editingTextFormat)}
+        >
+          {editingTextFormat
+            ? " اخفاء التنسيق"
+            : !text.includes("<")
+            ? "تنسيق المثال"
+            : "عرض التنسيق"}
+        </Typography>
       </Grid>
       <Grid size={{ xs: 12, md: 2 }}>
         <InputField
@@ -68,32 +99,36 @@ function Section4({
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
-    if (collocates_obj.collocate_text !== undefined) {
-      if (collocatesIndex || collocatesIndex === 0) {
-        dispatch(
-          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-        );
-      } else {
-        dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+    if (meaning_obj?.text) {
+      if (collocates_obj.collocate_text !== undefined) {
+        if (collocatesIndex || collocatesIndex === 0) {
+          dispatch(
+            updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+          );
+        } else {
+          dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+        }
+        dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
       }
-      dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
-    }
-    dispatch(updateSemanticInfoObj({ name: "meaning", value: meaning_obj }));
-    dispatch(updateSemanticInfoObj({ name: "completed", value: completed }));
-    if (index !== undefined) {
-      // dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
-      console.log("ssssssssssssssssss");
+      dispatch(updateSemanticInfoObj({ name: "meaning", value: meaning_obj }));
+      dispatch(updateSemanticInfoObj({ name: "completed", value: completed }));
+      if (index !== undefined) {
+        // dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
 
-      dispatch(updateSemanticInfo({ index: index }));
+        dispatch(updateSemanticInfo({ index: index }));
+      } else {
+        dispatch(updateSemanticInfo({ index: null }));
+      }
+      dispatch(clearSemanticInfoObj());
+      dispatch(clearCollocates());
+      setValue(-1);
+      setValue2(-1);
     } else {
-      console.log("ssssssssssssssssss");
-
-      dispatch(updateSemanticInfo({ index: null }));
+      Swal.fire({
+        title: "يرجي كتابة المعنى الدلالي ",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
-    dispatch(clearSemanticInfoObj());
-    dispatch(clearCollocates());
-    setValue(-1);
-    setValue2(-1);
   };
   const handleChange = (index, field, value) => {
     setExamples((prev) =>

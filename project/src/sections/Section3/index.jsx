@@ -7,6 +7,8 @@ import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-
 import { useDispatch } from "react-redux";
 import { updateMeaning } from "../../redux/userSlice";
 import Swal from "sweetalert2";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
@@ -22,6 +24,7 @@ const VisuallyHiddenInput = styled("input")({
 
 function ExampleData({ data, onChange }) {
   const { text, source } = data;
+  const [editingTextFormat, seteditingTextFormat] = useState(false);
 
   return (
     <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
@@ -32,6 +35,36 @@ function ExampleData({ data, onChange }) {
           val={text}
           set={(value) => onChange("text", value)}
         />
+        {editingTextFormat && (
+          <ReactQuill
+            value={text}
+            onChange={(value) => onChange("text", value)}
+            modules={{
+              toolbar: [["bold"], [{ color: [] }]],
+            }}
+            style={{
+              width: "100%", // Keeps the original width you wanted
+              // minHeight: "150px", // Matches the box height
+              marginLeft: "-65%", // Offsets the content to align correctly
+            }}
+          />
+        )}
+        <Typography
+          variant="p"
+          color="red"
+          component={"button"}
+          fontSize={"15px"}
+          border={"none"}
+          mt={1}
+          bgcolor={"transparent"}
+          onClick={() => seteditingTextFormat(!editingTextFormat)}
+        >
+          {editingTextFormat
+            ? " اخفاء التنسيق"
+            : !text.includes("<")
+            ? "تنسيق المثال"
+            : "عرض التنسيق"}
+        </Typography>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 2 }}>
         <InputField

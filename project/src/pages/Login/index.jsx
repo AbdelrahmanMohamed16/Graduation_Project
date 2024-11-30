@@ -54,7 +54,7 @@ export default function Login() {
           borderRadius: { sm: "5px" },
           textAlign: "center",
         }}
-        height={{ xs: "50%", sm: "40%", lg: "40%" }}
+        height={"200px"}
         width={{ xs: "70%", sm: "60%", lg: "25%" }}
       >
         <Typography variant="h2" fontFamily={"El Messiri"}>

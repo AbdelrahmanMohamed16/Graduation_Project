@@ -48,15 +48,7 @@ function InputField({
 
   const handleTextChange = (event) => {
     const value = event.target.value;
-    if (value.length > 0) {
-      console.log("يلاااااااااااااااهوي");
-      set?.(value);
-    } else {
-      Swal.fire({
-        title: "يرجي تسجيل نطق الكلمة",
-        confirmButtonText: "موافق", // Change the button text here
-      });
-    }
+    set?.(value);
 
     if (MorphologicalInfo) dispatch(updateMorphologicalInfo({ name, value }));
     if (semantic_info) dispatch(clearSemanticInfoObj({ name, value }));

@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import InputField from "../Input/InputField";
 import { useSelector } from "react-redux";
+import { Stack } from "@mui/material";
+import SiteLogo from "../../assets/images/GPLogo.png";
 
 const drawerWidth = 240;
 
@@ -82,9 +83,8 @@ function Navbar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <div className="no-print">
-      {" "}
-      <Box sx={{ display: "flex" }}>
+    <Box className="no-print" sx={{ p: 12 }}>
+      <Box sx={{ width: "100%" }}>
         <CssBaseline />
         <AppBar
           component="nav"
@@ -93,78 +93,32 @@ function Navbar(props) {
             paddingY: "10px",
           }}
         >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { lg: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Box
-              sx={{
-                display: { xs: "none", lg: "flex" },
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              {navItems?.map((item, index) => (
-                <a href={`#${item.id}`} key={index}>
-                  <Button
-                    key={index}
-                    sx={{
-                      color: "#fff",
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      marginInline: "10px",
-                    }}
-                  >
-                    {item.text}
-                  </Button>
-                </a>
-              ))}
-              <div
-                style={
-                  first
-                    ? {
-                        display: "flex",
-                        alignItems: "center",
-                        width: "45%",
-                        justifyContent: "space-between",
-                      }
-                    : {
-                        marginRight: "auto",
-                        display: "flex",
-                        alignItems: "center",
-                        width: "45%",
-                        justifyContent: "space-between",
-                      }
-                }
+          <Stack>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { lg: "none" } }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: 3,
+                }}
               >
                 <Typography
                   noWrap
                   component="div"
-                  sx={{
-                    fontSize: "18px",
-                    fontWeight: "700",
-                  }}
+                  sx={{ width: "60%", display: { lg: "none" } }}
+                  mr={"auto"}
                 >
-                  كود المحرر: {data?.code}
-                </Typography>
-                <Typography
-                  noWrap
-                  component="div"
-                  sx={{
-                    fontSize: "18px",
-                    fontWeight: "700",
-                  }}
-                >
-                  لجنة: {data?.committee}
-                </Typography>
-                <Typography noWrap component="div" sx={{ width: "50%" }}>
                   {setWord && (
                     <InputField
                       select={true}
@@ -178,28 +132,62 @@ function Navbar(props) {
                     />
                   )}
                 </Typography>
-              </div>
-            </Box>
-            <Typography
-              noWrap
-              component="div"
-              sx={{ width: "40%", display: { lg: "none" } }}
-              ml={"auto"}
-            >
-              {setWord && (
-                <InputField
-                  select={true}
-                  label="قائمة المداخل المطلوب تحريرها"
-                  options={options}
-                  set={setWord}
-                  dataOptions={dataOptions}
-                  defaultOption={word}
-                  val={word}
-                  name={"text"}
-                />
-              )}
-            </Typography>
-          </Toolbar>
+                <Stack
+                  direction={"row"}
+                  gap={3}
+                  flexGrow={1}
+                  alignItems={"center"}
+                >
+                  <Stack direction={"row"} display={{ xs: "none", lg: "flex" }}>
+                    {navItems?.map((item, index) => (
+                      <a href={`#${item.id}`} key={index}>
+                        <Button
+                          key={index}
+                          sx={{
+                            color: "#fff",
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            marginInline: "10px",
+                          }}
+                        >
+                          {item.text}
+                        </Button>
+                      </a>
+                    ))}
+                  </Stack>
+                  <Box
+                    sx={{ width: "30%" }}
+                    display={{ xs: "none", lg: "flex" }}
+                  >
+                    {setWord && (
+                      <InputField
+                        select={true}
+                        label="قائمة المداخل المطلوب تحريرها"
+                        options={options}
+                        set={setWord}
+                        dataOptions={dataOptions}
+                        defaultOption={word}
+                        val={word}
+                        name={"text"}
+                      />
+                    )}
+                  </Box>
+                </Stack>
+                <Box
+                  sx={{
+                    width: { xs: "80px", lg: "100px" },
+                    height: { xs: "80px", lg: "100px" },
+                  }}
+                >
+                  <img
+                    style={{ width: "100%" }}
+                    src={SiteLogo}
+                    alt="Site-Logo"
+                  />
+                </Box>
+              </Stack>
+            </Toolbar>
+          </Stack>
         </AppBar>
         <nav>
           <Drawer
@@ -221,20 +209,9 @@ function Navbar(props) {
             {drawer}
           </Drawer>
         </nav>
-        <Box component="main" sx={{ p: 3 }}>
-          <Toolbar />
-        </Box>
       </Box>
-    </div>
+    </Box>
   );
 }
-
-Navbar.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
 
 export default Navbar;
