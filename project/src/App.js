@@ -11,6 +11,7 @@ import AccordionWithWords from "./pages/FirstPage/FirstPage";
 import NounsPage from "./pages/NounsPage/NounsPage";
 import { useDispatch, useSelector } from "react-redux";
 import { clearForm } from "./redux/userSlice";
+import VervPage from "./pages/VerbPage/VerbPage";
 
 function App() {
   const [word, setWord] = useState("المدخل");
@@ -67,68 +68,29 @@ function App() {
                           setWord={setWord}
                           word={word}
                         ></Navbar>
-                        {/* <Grid2 container>
-                        <Grid2 mx={4} my={3} width={"100%"}>
-                          <Section1 word={word} addRecord={addRecord} />
-                          <div className="no-print">
-                            {" "}
-                            <DividerComponent />
-                          </div>
-                          <Section2 />
-                          <div className="no-print">
-                            <DividerComponent />
-                          </div>
-                          {semantic_info_arr?.length > 0 ? (
-                            value === -1 ? (
-                              <>
-                                {console.log(semantic_info_arr)}
-                                <BigSection
-                                  arr={semantic_info_arr}
-                                  value={value}
-                                  setValue={setValue}
-                                  value2={value2}
-                                  setValue2={setValue2}
-                                  addFile={addFile}
-                                />
-                                <div style={{ padding: 24 }}>
-                                  {" "}
-                                  <Section3 addFile={addFile} />
-                                  <TabSection
-                                    value={value2}
-                                    setValue={setValue2}
-                                    setValue2={setValue}
-                                  />
-                                </div>
-                              </>
-                            ) : (
-                              <BigSection
-                                arr={semantic_info_arr}
-                                value={value}
-                                setValue={setValue}
-                                addFile={addFile}
-                                value2={value2}
-                                setValue2={setValue2}
-                              />
-                            )
-                          ) : (
-                            <>
-                              <Section3 addFile={addFile} />
-                              <TabSection
-                                value={value2}
-                                value1={value}
-                                setValue={setValue2}
-                                setValue2={setValue}
-                              />
-                            </>
-                          )}
-                          <div className="no-print">
-                            {" "}
-                            <DividerComponent />
-                          </div>
-                          <LastSection files={files} records={records} />
-                        </Grid2>
-                      </Grid2> */}
+
                         <NounsPage word={word} />
+                      </>
+                    }
+                  />
+                </>
+                <>
+                  <Route
+                    path="/verbpage"
+                    element={
+                      <>
+                        <Navbar
+                          navItems={[
+                            { text: " المعلومات الصوتيه", id: "section1" },
+                            { text: "المعلومات الصرفيه", id: "section2" },
+                            { text: " المعلومات الدلاليه", id: "section3" },
+                            { text: "المتصاحبات اللفظية", id: "section4" },
+                          ]}
+                          setWord={setWord}
+                          word={word}
+                        ></Navbar>
+
+                        <VervPage word={word} />
                       </>
                     }
                   />
