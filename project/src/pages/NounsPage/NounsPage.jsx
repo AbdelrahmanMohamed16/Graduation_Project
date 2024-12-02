@@ -2,7 +2,6 @@ import { Grid2 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Section1 from "../../sections/Section1";
 import DividerComponent from "../../components/Divider/DividerComponent";
-import Section2 from "../../sections/Section2/Section2";
 import Section3 from "../../sections/Section3";
 import LastSection from "../../sections/LastSection/LastSection";
 import BigSection from "../../sections/BigSection/BigSection";
@@ -11,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import Swal from "sweetalert2";
 import { clearSavedState } from "../../redux/userSlice";
+import Section2 from "../../sections/Section2/Section2";
 
 export default function NounsPage(props) {
   const [value, setValue] = useState(-1);
