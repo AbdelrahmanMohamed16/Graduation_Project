@@ -12,7 +12,9 @@ import {
   updateImage_obj,
   updateMeaning,
   updateMorphologicalInfo,
+  getVerb,
   updateSemantic_info_obj,
+  clearSemantic_info_obj,
 } from "../../redux/userSlice";
 
 function InputField({
@@ -38,50 +40,38 @@ function InputField({
   dataOptions,
   setImage,
   image,
+  onFocus,
+  nouns = false,
 }) {
-  const [option, setOption] = useState("");
-  const styled = option ? "none" : "block";
-  const image_obj = useSelector((state) => state.user.image_obj);
+  console.log(dataOptions);
   const [selectedOption, setSelectedOption] = useState(defaultOption || "");
   useEffect(() => {
     setSelectedOption(defaultOption);
   }, [defaultOption]);
-
   const dispatch = useDispatch();
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-    if (set) {
-      if (dataOptions.length) {
-        const option = dataOptions.filter(
-          (option) => option.text === event.target.value
-        );
-        console.log(dataOptions);
-        if (option.length > 0) {
-          const [fristElement] = option;
-          console.log(fristElement._id);
-          dispatch(getWord({ wordId: fristElement._id }));
-        }
-      }
-      set(event.target.value);
-    }
-    if (word) {
-      dispatch(updateForm({ name, value: event.target.value }));
-    }
-    if (semantic_info) {
-      dispatch(updateSemantic_info_obj({ name, value: event.target.value }));
-    }
-    if (MorphologicalInfo) {
-      if (set) {
-        set(event.target.value);
-      }
-      dispatch(updateMorphologicalInfo({ name, value: event.target.value }));
-    }
-    if (diacritics) {
-    }
+
+  const handleTextChange = (event) => {
+    const value = event.target.value;
+    set?.(value);
+
+    if (MorphologicalInfo) dispatch(updateMorphologicalInfo({ name, value }));
+    if (semantic_info) dispatch(clearSemantic_info_obj({ name, value }));
+    if (collocates_obj) dispatch(updateCollocates_obj({ name, value }));
+    if (meaning) dispatch(updateMeaning({ name, value, arr: null }));
+    if (setImage) setImage({ ...image, [name]: value });
   };
-  const handleInputChange = (event) => {
-    if (set) {
-      set(event.target.value);
+
+  const handleSelectOptions = (event) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+    set?.(value);
+
+    if (dataOptions?.length) {
+      const option = dataOptions.find((opt) => opt.text === value);
+      if (option)
+        nouns
+          ? dispatch(getWord({ wordId: option._id }))
+          : dispatch(getVerb({ wordId: option._id }));
     }
 
     if (MorphologicalInfo) {
@@ -116,7 +106,7 @@ function InputField({
         variant={variant}
         type={type}
         disabled={disabled ? disabled : null}
-        onChange={handleInputChange}
+        onChange={handleTextChange}
         value={val ? val : ""}
         sx={{
           width: "100%",
@@ -184,7 +174,7 @@ function InputField({
         multiline
         rows={6}
         variant={variant}
-        onChange={handleInputChange}
+        onChange={handleTextChange}
         value={val ? val : ""}
         sx={{
           width: "100%",
@@ -240,7 +230,7 @@ function InputField({
           labelId="select-filled-label"
           id="select-filled"
           value={selectedOption ? selectedOption : ""}
-          onChange={handleChange}
+          onChange={handleSelectOptions}
           color="white"
 
           // sx={{

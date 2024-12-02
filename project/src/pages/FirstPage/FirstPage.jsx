@@ -10,16 +10,25 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { assignedWords } from "../../redux/userSlice";
+import { assignedVerbs, assignedWords } from "../../redux/userSlice";
+import { Box } from "@mui/material";
 
 export default function AccordionWithWords() {
   const [expanded, setExpanded] = React.useState(false);
+  const [selectedWord, setSelectedWord] = React.useState("");
   const words = useSelector((state) => state.user.wordData);
+  const nouns = useSelector((state) => state.user.nouns);
+  const verbs = useSelector((state) => state.user.verbs);
+  const assigned_functional_words = useSelector(
+    (state) => state.user.assigned_functional_words
+  );
+
   // const [wordData, setWordData] = React.useState(words || []);
   const [wordData, setWordData] = React.useState([...words] || []);
   const dispatch = useDispatch();
 
-  const handleExpansion = (panel) => {
+  const handleExpansion = (item, panel) => {
+    setSelectedWord(expanded === panel ? "" : item.word);
     setExpanded(expanded === panel ? false : panel);
   };
 
@@ -45,8 +54,6 @@ export default function AccordionWithWords() {
   // Move meaning down
   const moveMeaningDown = (wordIndex, meaningIndex) => {
     if (meaningIndex === wordData[wordIndex].meanings.length - 1) return; // Prevent moving the last meaning down
-
-    // Deep copy the wordData to avoid modifying the original state
     const newWordData = wordData.map((word) => ({
       ...word,
       meanings: [...word.meanings],
@@ -63,20 +70,23 @@ export default function AccordionWithWords() {
 
   const navigate = useNavigate();
   const handleAddWord = () => {
-    dispatch(assignedWords({}));
-    navigate("/words");
+    if (nouns.includes(selectedWord)) {
+      dispatch(assignedWords());
+      navigate("/nounpage");
+    }
+    if (verbs.includes(selectedWord)) {
+      dispatch(assignedVerbs());
+      navigate("/verbpage");
+    }
+    if (assigned_functional_words.includes(selectedWord)) {
+    }
   };
   return (
     <div style={{ direction: "rtl" }}>
       <div style={{ display: "flex", alignItems: "center" }}>
         {" "}
         <h1 style={{ marginRight: 20 }}>الكلمات المسنده الي المحرر</h1>
-        <div style={{ marginRight: "auto", marginLeft: 20 }}>
-          <ButtonCompnent
-            text="املا البطاقة"
-            onclick={handleAddWord}
-          ></ButtonCompnent>
-        </div>
+        <div style={{ marginRight: "auto", marginLeft: 20 }}></div>
       </div>
 
       <div
@@ -92,7 +102,7 @@ export default function AccordionWithWords() {
             <Accordion
               key={index}
               expanded={expanded === index}
-              onChange={() => handleExpansion(index)}
+              onChange={() => handleExpansion(item, index)}
               TransitionProps={{ timeout: 400 }}
               sx={{
                 mb: 1,
@@ -156,9 +166,17 @@ export default function AccordionWithWords() {
                   >
                     {item.status}
                   </Typography>
+                  {selectedWord && (
+                    <Box sx={{ marginLeft: "auto" }}>
+                      <ButtonCompnent
+                        text="املا البطاقة"
+                        onclick={handleAddWord}
+                      ></ButtonCompnent>
+                    </Box>
+                  )}
                 </div>
 
-                {item.meanings.map((meaning, meaningIndex) => (
+                {item.meanings?.map((meaning, meaningIndex) => (
                   <div
                     key={meaningIndex}
                     style={{

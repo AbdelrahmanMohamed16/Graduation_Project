@@ -47,7 +47,7 @@ function Section2() {
             MorphologicalInfo={true}
           ></InputField>
         </Grid>
-        <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
+        {/* <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}
           <InputField
             label={"الفئة الكلامية"}
@@ -58,7 +58,7 @@ function Section2() {
             defaultOption={form_morphological_info?.word_class}
             options={["مشتق", "مصدر", "علم", "ظرف"]}
           ></InputField>
-        </Grid>
+        </Grid> */}
         <Grid size={{ xs: 12, sm: 5, md: 4, lg: 3 }}>
           {" "}
           <InputField

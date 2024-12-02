@@ -7,15 +7,18 @@ import Radio from "@mui/material/Radio";
 import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import Grid from "@mui/material/Grid2";
-import { Box, Grid2, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import {
   clearForm,
   clearSemantic_info,
   clearSemantic_info_obj,
   fetchDataWithState,
+  fetchDataWithStateVirb,
   updateForm,
 } from "../../redux/userSlice";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
@@ -48,7 +51,7 @@ MyFormControlLabel.propTypes = {
   value: PropTypes.any,
 };
 
-function LastSection({ files, records }) {
+function LastSection({ files, records, verb = false, value, value2 }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
@@ -66,6 +69,8 @@ function LastSection({ files, records }) {
   const morphological = useSelector((state) => state.user.morphological_info);
   const semanticFromStore = useSelector((state) => state.user.semantic_info);
   const [semantic, setSemantic] = React.useState(semanticFromStore);
+  const isLoading = useSelector((state) => state.user.loading);
+
   React.useEffect(() => {
     if (semanticFromStore.length > 0) {
       setSemantic(semanticFromStore);
@@ -117,41 +122,52 @@ function LastSection({ files, records }) {
   };
 
   const submitPublics = async () => {
-    try {
-      let updatedSemantic = await structuredClone(semantic);
+    console.log(value);
+    console.log(value2);
 
-      for (let index = 0; index < files.length; index++) {
-        const imageURL = await sendImages(files[index].image);
+    if (value === -1 && value2 === -1) {
+      try {
+        let updatedSemantic = await structuredClone(semantic);
 
-        const semanticObject = updatedSemantic[files[index].index];
+        for (let index = 0; index < files.length; index++) {
+          const imageURL = await sendImages(files[index].image);
 
-        if (
-          semanticObject &&
-          semanticObject.meaning &&
-          semanticObject.meaning.image
-        ) {
-          semanticObject.meaning.image.url = imageURL;
+          const semanticObject = updatedSemantic[files[index].index];
+
+          if (
+            semanticObject &&
+            semanticObject.meaning &&
+            semanticObject.meaning.image
+          ) {
+            semanticObject.meaning.image.url = imageURL;
+          }
         }
+
+        let updatedDiacritic = await structuredClone(diacritic);
+        for (let index = 0; index < records.length; index++) {
+          const recordURL = await sendRecord(records[index]);
+
+          updatedDiacritic[index].pronounciation = recordURL; // Update specific field
+        }
+
+        setDiacritic(updatedDiacritic);
+        setSemantic(updatedSemantic);
+        dispatch(updateForm({ name: "diacritics", value: updatedDiacritic }));
+        dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
+        dispatch(
+          updateForm({ name: "morphological_info", value: morphological })
+        );
+        verb
+          ? dispatch(fetchDataWithStateVirb())
+          : dispatch(fetchDataWithState());
+      } catch (error) {
+        console.error("Error in submitPublics: ", error);
       }
-
-      let updatedDiacritic = await structuredClone(diacritic);
-      for (let index = 0; index < records.length; index++) {
-        const recordURL = await sendRecord(records[index]);
-
-        updatedDiacritic[index].pronounciation = recordURL; // Update specific field
-      }
-
-      setDiacritic(updatedDiacritic);
-      setSemantic(updatedSemantic);
-      dispatch(updateForm({ name: "diacritics", value: updatedDiacritic }));
-      dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
-      dispatch(
-        updateForm({ name: "morphological_info", value: morphological })
-      );
-
-      dispatch(fetchDataWithState());
-    } catch (error) {
-      console.error("Error in submitPublics: ", error);
+    } else {
+      Swal.fire({
+        title: "يرجي اتمام حفظ المعلومىة الدلالية",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
   };
 
@@ -198,7 +214,32 @@ function LastSection({ files, records }) {
       >
         <Grid container spacing={2} width={{ xs: "30%", sm: "50%" }} mt={2}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <ButtonCompnent text="حفظ" onclick={submitPublics}></ButtonCompnent>
+            <LoadingButton
+              variant="contained"
+              loading={isLoading}
+              loadingIndicator={
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    color: "#ffffff", // Change spinner color
+                  }}
+                />
+              }
+              // loadingPosition="start"
+              sx={{
+                width: "100%",
+                background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+                borderRadius: "5px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                "&.MuiLoadingButton-loading": {
+                  background: "linear-gradient(to right, #0F2D4D, #2369B3)", // Keep the background color during loading
+                },
+              }}
+              onClick={submitPublics}
+            >
+              حفظ
+            </LoadingButton>
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
             <ButtonCompnent text="ارسل للمدقق"></ButtonCompnent>

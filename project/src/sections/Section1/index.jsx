@@ -1,13 +1,108 @@
-import { Grid2, Typography } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import InputField from "../../components/Input/InputField";
 import Voice from "../../components/Voice/Voice";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDiacritics } from "../../redux/userSlice";
+import Swal from "sweetalert2";
 
-function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
-  const { word_with_diacritics, phonetic_writing } = data;
+const PhoneticKeyboard = ({ index, field, examples, setExamples }) => {
+  const ipaCharacters = [
+    "ʌ",
+    "æ",
+    "θ",
+    "ð",
+    "ʃ",
+    "ʒ",
+    "ŋ",
+    "ʧ",
+    "ʤ",
+    "ɪ",
+    "ɛ",
+    "ɔ",
+    "ʊ",
+    "ʌ",
+    "ɛ",
+    "ɑ",
+    "ɔ",
+    "ɒ",
+    "ʍ",
+    "ɾ",
+    "ɹ",
+    "j",
+    "w",
+    "p",
+    "b",
+    "t",
+    "d",
+    "k",
+    "g",
+  ];
+  const dispatch = useDispatch();
+
+  // Inject character into focused input field
+  const handleKeyPress = (char) => {
+    const activeElement = document.activeElement; // Get the currently focused element
+    if (
+      activeElement &&
+      (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA")
+    ) {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+
+      console.log("field = ", field);
+      console.log("index = ", index);
+      console.log("examples = ", examples);
+
+      const newValue =
+        activeElement.value.slice(0, start) +
+        char +
+        activeElement.value.slice(end);
+      setExamples((prev) =>
+        prev.map((example, i) =>
+          i === index ? { ...example, [field]: newValue } : example
+        )
+      );
+      console.log("examples = ", examples);
+      dispatch(updateDiacritics(examples));
+
+      activeElement.focus(); // Keep focus on the input
+    }
+  };
+
+  return (
+    <Grid2 container spacing={1} justifyContent="center" mt={2}>
+      {ipaCharacters.map((char, index) => (
+        <Grid2 item key={index}>
+          <Button
+            variant="outlined"
+            sx={{ padding: "10px", fontSize: "18px", fontFamily: "El Messiri" }}
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent focus loss
+              handleKeyPress(char);
+            }}
+          >
+            {char}
+          </Button>
+        </Grid2>
+      ))}
+    </Grid2>
+  );
+};
+
+function DataInputs({
+  data,
+  onChange,
+  addRecord,
+  index,
+  setRecorded,
+  setIndex,
+  setField,
+}) {
+  const { word_with_diacritics, phonetic_writing, pronounciation } = data;
+  console.log(data);
   return (
     <Grid2
       container
@@ -31,9 +126,10 @@ function DataInputs({ data, onChange, addRecord, index, setRecorded }) {
           set={(value) => onChange("phonetic_writing", value)}
         />
       </Grid2>
-      <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+      <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
         <Voice
           setVoice={(value) => {
+            console.log(value);
             onChange("pronounciation", value);
             setRecorded(true);
           }}
@@ -72,11 +168,13 @@ export default function Section1({ word = "المدخل", addRecord }) {
         i === index ? { ...example, [field]: value } : example
       )
     );
-    dispatch(updateDiacritics(examples));
   };
+  useEffect(() => {
+    dispatch(updateDiacritics(examples));
+  }, [examples, dispatch]);
 
   const addExample = () => {
-    if (recorded) {
+    if (examples[examples.length - 1].pronounciation) {
       setExamples((prev) => [
         ...prev,
         {
@@ -86,6 +184,11 @@ export default function Section1({ word = "المدخل", addRecord }) {
         },
       ]);
       setRecorded(false);
+    } else {
+      Swal.fire({
+        title: "يرجي التسجيل حتي تتمكن من اضافة مثال اخر ",
+        confirmButtonText: "موافق",
+      });
     }
   };
 

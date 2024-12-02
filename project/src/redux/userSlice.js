@@ -4,6 +4,7 @@ const initialState = {
   error: false,
   data: JSON.parse(localStorage.getItem("data")) || null,
   loading: false,
+  pageLoading: false,
   message: "",
   auth: localStorage.getItem("authToken") || false,
   form: JSON.parse(localStorage.getItem("form")) || {},
@@ -16,6 +17,10 @@ const initialState = {
   collocates_obj: {},
   meaning: {},
   image_obj: {},
+  verbs: [],
+  nouns: [],
+  assigned_functional_words: [],
+  saved: false,
 };
 
 export const loginUser = createAsyncThunk(
@@ -48,12 +53,12 @@ export const loginUser = createAsyncThunk(
 );
 export const assignedWords = createAsyncThunk(
   "user/assignedWords",
-  async ({ _ }, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `https://arabic-data-collector.onrender.com/api/v1/Word`,
+        "https://arabic-data-collector.onrender.com/api/v1/Word",
         {
-          method: "get",
+          method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
@@ -63,13 +68,40 @@ export const assignedWords = createAsyncThunk(
 
       const data = await response.json();
 
-      if (response.status !== 200 || !response.ok) {
+      if (!response.ok) {
         return rejectWithValue(data);
-      } else {
-        return { data };
       }
+
+      return { data };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
+export const assignedVerbs = createAsyncThunk(
+  "user/assignedVerbs",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        "https://arabic-data-collector.onrender.com/api/v1/Verb",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return { data };
+    } catch (error) {
+      return rejectWithValue({ message: error.message });
     }
   }
 );
@@ -77,6 +109,7 @@ export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
     try {
+      console.log(wordId);
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Word/${wordId}`,
         {
@@ -100,39 +133,110 @@ export const getWord = createAsyncThunk(
     }
   }
 );
-export const fetchDataWithState = createAsyncThunk(
-  "user/fetchDataWithState",
-  async (payload, { getState, rejectWithValue }) => {
+
+export const getVerb = createAsyncThunk(
+  "user/getVerb",
+  async ({ wordId }, { rejectWithValue }) => {
     try {
-      const state = getState();
-      const someState = { ...state.user.form }; // Clone the state to avoid mutation
-      delete someState._id;
+      console.log(wordId);
       const response = await fetch(
-        "https://arabic-data-collector.onrender.com/api/v1/Word",
+        `https://arabic-data-collector.onrender.com/api/v1/Verb/${wordId}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(someState),
         }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data || { message: "Failed to fetch data" });
+        return rejectWithValue(data);
       }
 
-      return data; // Only return the data directly, not as an object { data }
+      return { data };
     } catch (error) {
-      // Return a custom error if something goes wrong
-      return rejectWithValue({ message: error.message || "An error occurred" });
+      return rejectWithValue({ message: error.message });
     }
   }
 );
 
+export const fetchDataWithState = createAsyncThunk(
+  "user/fetchDataWithState",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      console.log("helllllllllllllo in fetch");
+      const { user } = getState();
+      console.log(user.form);
+      const payload = { ...user.form };
+      const id = payload._id;
+      console.log(payload);
+      delete payload._id;
+
+      const response = await fetch(
+        `https://arabic-data-collector.onrender.com/api/v1/Word/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({ message: "error here" });
+    }
+  }
+);
+export const fetchDataWithStateVirb = createAsyncThunk(
+  "user/fetchDataWithStateVirb",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      console.log("helllllllllllllo in fetch");
+      const { user } = getState();
+      console.log(user.form);
+      const payload = { ...user.form };
+      const id = payload._id;
+      console.log(payload);
+      delete payload._id;
+
+      const response = await fetch(
+        `https://arabic-data-collector.onrender.com/api/v1/Verb/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({ message: "error here" });
+    }
+  }
+);
+
+// Slice
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -151,6 +255,7 @@ export const userSlice = createSlice({
       state.form[action.payload.name] = action.payload.value;
     },
     updateDiacritics: (state, action) => {
+      console.log(action.payload);
       state.diacritics = action.payload;
     },
     updateMorphologicalInfo: (state, action) => {
@@ -210,6 +315,9 @@ export const userSlice = createSlice({
     clearSemantic_info: (state) => {
       state.semantic_info = [];
     },
+    clearSavedState: (state) => {
+      state.saved = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -218,54 +326,126 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        // state.loading = false;
-        // state.data = action.payload.data;
-        let data = action.payload.data.assigned_words.map((item) => ({
+        const { data } = action.payload;
+        state.loading = false;
+        state.auth = true;
+        state.data = data;
+        let wordData = [];
+        const words = data.assigned_words.map((item) => ({
           word: item.text,
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
-        state.wordData = data;
-        state.auth = true;
-        state.data = action.payload.data;
-        localStorage.setItem("authToken", action.payload.data.token);
-        localStorage.setItem("wordData", data);
-        localStorage.getItem("wordData");
+        const verbs = data.assigned_verbs.map((item) => ({
+          word: item.text,
+          status: item.state,
+          meanings: item.semantic_info.map((info) => info.meaning.text),
+        }));
+        const assigned_functional_words = data.assigned_functional_words.map(
+          (item) => ({
+            word: item.text,
+            status: item.state,
+          })
+        );
+        state.assigned_functional_words = data.assigned_functional_words.map(
+          (item) => item.text
+        );
+        state.nouns = data.assigned_words.map((item) => item.text);
+        state.verbs = data.assigned_verbs.map((item) => item.text);
+
+        wordData = [...words, ...assigned_functional_words, ...verbs];
+        state.wordData = wordData;
+
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("wordData", JSON.stringify(wordData));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.token = null;
-        state.user = null;
+        state.message = action.payload.message;
+      });
+
+    builder
+      .addCase(assignedWords.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(assignedWords.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data;
+        localStorage.setItem("data", JSON.stringify(action.payload.data));
+      })
+      .addCase(assignedWords.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
         state.message = action.payload.message;
       });
     builder
-      .addCase(getWord.pending, (state) => {
+      .addCase(assignedVerbs.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = false;
+      })
+      .addCase(assignedVerbs.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data;
+        localStorage.setItem("data", JSON.stringify(action.payload.data));
+      })
+      .addCase(assignedVerbs.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
+
+    builder
+      .addCase(getWord.pending, (state) => {
+        state.pageLoading = true;
+        state.error = false;
       })
       .addCase(getWord.fulfilled, (state, action) => {
-        state.loading = false;
-        state.form = action.payload.data.data;
-        state.semantic_info = state.form.semantic_info;
-        state.morphological_info = state.form.morphological_info;
-        state.diacritics = state.form.diacritics;
-        localStorage.setItem("form", JSON.stringify(action.payload.data.data));
+        const { data } = action.payload.data;
+        state.pageLoading = false;
+        state.form = data;
+        state.semantic_info = data.semantic_info;
+        state.morphological_info = data.morphological_info;
+        state.diacritics = data.diacritics;
+        console.log(state.diacritics);
+        localStorage.setItem("form", JSON.stringify(data));
       })
       .addCase(getWord.rejected, (state, action) => {
-        // state.loading = false;
-        // state.error = true;
-        // state.token = null;
-        // state.user = null;
-        // state.message = action.payload.message;
-        console.log(action.payload);
+        state.pageLoading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
+    builder
+      .addCase(getVerb.pending, (state) => {
+        state.pageLoading = true;
+        state.error = false;
+      })
+      .addCase(getVerb.fulfilled, (state, action) => {
+        const { data } = action.payload.data;
+        state.pageLoading = false;
+        state.form = data;
+        state.semantic_info = data.semantic_info;
+        state.morphological_info = data.morphological_info;
+        state.diacritics = data.diacritics;
+        localStorage.setItem("form", JSON.stringify(data));
+      })
+      .addCase(getVerb.rejected, (state, action) => {
+        state.pageLoading = false;
+        state.error = true;
+        state.message = action.payload.message;
       });
     builder
       .addCase(fetchDataWithState.pending, (state) => {
+        console.log("in pending state");
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchDataWithState.fulfilled, (state, action) => {
+        console.log("in fulfilled state");
+        state.loading = false;
+        state.saved = true;
+
         console.log(action.payload);
         // console.log(action.payload.data);
         // state.loading = false;
@@ -276,27 +456,28 @@ export const userSlice = createSlice({
         // localStorage.setItem("form", JSON.stringify(action.payload.data.data));
       })
       .addCase(fetchDataWithState.rejected, (state, action) => {
-        // state.loading = false;
-        // state.error = true;
-        // state.token = null;
-        // state.user = null;
-        // state.message = action.payload.message;
-        console.log(action.payload);
+        console.log("in rejected state");
+        console.log(action);
+        state.loading = false;
+        state.error = true;
       });
     builder
-      .addCase(assignedWords.pending, (state) => {
+      .addCase(fetchDataWithStateVirb.pending, (state) => {
+        console.log("in pending state");
         state.loading = true;
-        state.error = null;
+        state.error = false;
       })
-      .addCase(assignedWords.fulfilled, (state, action) => {
-        console.log(action.payload);
+      .addCase(fetchDataWithStateVirb.fulfilled, (state, action) => {
+        console.log("in fulfilled state");
         state.loading = false;
-        state.data = action.payload.data;
-        localStorage.setItem("data", JSON.stringify(action.payload.data));
-      })
-      .addCase(assignedWords.rejected, (state, action) => {
-        console.log(assignedWords.rejected);
+        state.saved = true;
         console.log(action.payload);
+      })
+      .addCase(fetchDataWithStateVirb.rejected, (state, action) => {
+        console.log("in rejected state");
+        console.log(action);
+        state.loading = false;
+        state.error = true;
       });
   },
 });
@@ -318,7 +499,8 @@ export const {
   clearCollocates,
   clearCollocates_Obj,
   clearForm,
-  clearSemantic_info,
+  clearSemanticInfo,
+  clearSavedState,
 } = userSlice.actions;
 
 export default userSlice.reducer;

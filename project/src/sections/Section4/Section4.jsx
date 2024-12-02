@@ -17,6 +17,7 @@ import {
   updateSemantic_info,
   updateSemantic_info_obj,
 } from "../../redux/userSlice";
+import Swal from "sweetalert2";
 function Example({ data, onChange }) {
   const { text, source } = data;
 
@@ -66,28 +67,40 @@ function Section4({
   const meaning_obj = useSelector((state) => state.user.meaning);
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
-    if (collocates_obj.collocate_text !== undefined) {
-      if (collocatesIndex || collocatesIndex === 0) {
-        dispatch(
-          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-        );
-      } else {
-        dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+    if (meaning_obj?.text) {
+      if (collocates_obj.collocate_text !== undefined) {
+        if (collocatesIndex || collocatesIndex === 0) {
+          dispatch(
+            updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+          );
+        } else {
+          dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+        }
+        dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       }
-      dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
-    }
-    dispatch(updateSemantic_info_obj({ name: "meaning", value: meaning_obj }));
-    dispatch(updateSemantic_info_obj({ name: "completed", value: completed }));
-    if (index !== undefined) {
-      // dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
-      dispatch(updateSemantic_info({ index: index }));
+      dispatch(
+        updateSemantic_info_obj({ name: "meaning", value: meaning_obj })
+      );
+      dispatch(
+        updateSemantic_info_obj({ name: "completed", value: completed })
+      );
+      if (index !== undefined) {
+        // dispatch(updateSemanticInfoObj({ name: "collocates", value: null }));
+
+        dispatch(updateSemantic_info({ index: index }));
+      } else {
+        dispatch(updateSemantic_info({ index: null }));
+      }
+      dispatch(clearSemantic_info_obj());
+      dispatch(clearCollocates());
+      setValue(-1);
+      setValue2(-1);
     } else {
-      dispatch(updateSemantic_info({ index: null }));
+      Swal.fire({
+        title: "يرجي كتابة المعنى الدلالي ",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
-    dispatch(clearSemantic_info_obj());
-    dispatch(clearCollocates());
-    setValue(-1);
-    setValue2(-1);
   };
   const handleChange = (index, field, value) => {
     setExamples((prev) =>
@@ -98,23 +111,30 @@ function Section4({
     dispatch(updateCollocates_obj({ name: "example", value: example }));
   };
   const handleAddNewCollocates = () => {
-    if (collocatesIndex || collocatesIndex === 0) {
-      dispatch(
-        updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
-      );
+    if (collocate_text !== undefined) {
+      if (collocatesIndex || collocatesIndex === 0) {
+        dispatch(
+          updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
+        );
+      } else {
+        dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      }
+      if (!arrCollocates) {
+        setArrCollocates([collocates_obj]);
+      } else {
+        setArrCollocates([...arrCollocates, collocates_obj]);
+      }
+      dispatch(clearCollocates_Obj());
+      setCollocate_text("");
+      Setmeaning("");
+      setExamples([{}]);
+      setValue2(-1);
     } else {
-      dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
+      Swal.fire({
+        title: "يرجى كتابة تركيب تصاحبي",
+        confirmButtonText: "موافق", // Change the button text here
+      });
     }
-    if (!arrCollocates) {
-      setArrCollocates([collocates_obj]);
-    } else {
-      setArrCollocates([...arrCollocates, collocates_obj]);
-    }
-    dispatch(clearCollocates_Obj());
-    setCollocate_text("");
-    Setmeaning("");
-    setExamples([{}]);
-    setValue2(-1);
   };
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
