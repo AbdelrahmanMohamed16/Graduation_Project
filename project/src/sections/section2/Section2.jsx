@@ -1,12 +1,10 @@
 import Grid from "@mui/material/Grid2";
 import InputField from "../../components/Input/InputField";
-import { Divider, Grid2, Typography } from "@mui/material";
-import DividerComponent from "../../components/Divider/DividerComponent";
-import { useDispatch, useSelector } from "react-redux";
+import { Grid2, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 function Section2() {
-  const dispatch = useDispatch();
   const morphologicalInfo = useSelector(
     (state) => state.user.form?.morphological_info
   );

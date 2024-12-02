@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Section1 from "../../sections/Section1";
 import DividerComponent from "../../components/Divider/DividerComponent";
 import Section2 from "../../sections/Section2/Section2";
-import Section3 from "../../sections/Section3/index";
+import Section3 from "../../sections/Section3";
 import LastSection from "../../sections/LastSection/LastSection";
 import BigSection from "../../sections/BigSection/BigSection";
 import TabSection from "../../sections/TabSection/TabSection";
