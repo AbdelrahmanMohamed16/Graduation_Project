@@ -4,7 +4,9 @@ import InputField from "../../components/Input/InputField";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { updateMeaning } from "../../redux/userSlice";
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
@@ -20,6 +22,7 @@ const VisuallyHiddenInput = styled("input")({
 
 function ExampleData({ data, onChange }) {
   const { text, source } = data;
+  const [editingTextFormat, seteditingTextFormat] = useState(false);
 
   return (
     <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
@@ -30,6 +33,36 @@ function ExampleData({ data, onChange }) {
           val={text}
           set={(value) => onChange("text", value)}
         />
+        {editingTextFormat && (
+          <ReactQuill
+            value={text}
+            onChange={(value) => onChange("text", value)}
+            modules={{
+              toolbar: [["bold"], [{ color: [] }]],
+            }}
+            style={{
+              width: "100%", // Keeps the original width you wanted
+              // minHeight: "150px", // Matches the box height
+              marginLeft: "-65%", // Offsets the content to align correctly
+            }}
+          />
+        )}
+        <Typography
+          variant="p"
+          color="red"
+          component={"button"}
+          fontSize={"15px"}
+          border={"none"}
+          mt={1}
+          bgcolor={"transparent"}
+          onClick={() => seteditingTextFormat(!editingTextFormat)}
+        >
+          {editingTextFormat
+            ? " اخفاء التنسيق"
+            : !text.includes("<")
+            ? "تنسيق المثال"
+            : "عرض التنسيق"}
+        </Typography>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 2 }}>
         <InputField
@@ -80,27 +113,6 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
-  // const handleSubmitImage = async () => {
-  //   if (word && file && (Semantic_fields || semanticFields)) {
-  //     const formData = new FormData();
-  //     formData.append("image", file);
-  //     formData.append("word", word);
-  //     formData.append("Semantic_fields", Semantic_fields || semanticFields);
-
-  //     try {
-  //       const response = await fetch("http://localhost:3000/upload", {
-  //         method: "POST",
-  //         body: formData,
-  //       });
-
-  //       const data = await response.json();
-  //       setImage({ ...image, file: data.url });
-  //       alert("File uploaded successfully!");
-  //     } catch (error) {
-  //       console.error("Error uploading file:", error);
-  //     }
-  //   }
-  // };
   return (
     <div id="section3">
       <Grid2
@@ -191,38 +203,12 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
           rowSpacing={5}
           columnSpacing={{ xs: 1, sm: 2, md: 5 }}
         >
-          <Grid2 size={{ xs: 4, sm: 2 }}>
-            <div className="no-print">
-              {" "}
-              <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                endIcon={<CloudUploadIcon />}
-                style={{ width: "100%" }}
-                sx={{
-                  background: "linear-gradient(to right, #0F2D4D, #2369B3)",
-                }}
-              >
-                صورة شارحة
-                <VisuallyHiddenInput
-                  type="file"
-                  onChange={(event) => {
-                    if (event.target.files[0]) {
-                      addFile && addFile(event.target.files[0], index);
-                      setImageURL(URL.createObjectURL(event.target.files[0]));
-                      setImage({
-                        ...image,
-                        url: URL.createObjectURL(event.target.files[0]),
-                      });
-                    }
-                  }}
-                />
-              </Button>
-            </div>
-          </Grid2>
-          <Grid2 container size={{ xs: 6, sm: 4 }} justifyContent={"center"}>
+          <Grid2
+            container
+            size={{ xs: 12, sm: 4 }}
+            justifyContent={"center"}
+            py={2}
+          >
             <Grid2 size={12}>
               <img
                 width={"100%"}
@@ -241,11 +227,39 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
                     ? imageURL
                     : PlaceholderImage
                 }
-              ></img>
+              />
             </Grid2>
-            {/* <Grid2 size={8}>
-              <ButtonCompnent text="اعتماد" onclick={handleSubmitImage} />
-            </Grid2> */}
+            <Grid2 size={6}>
+              <div className="no-print">
+                {" "}
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  endIcon={<CloudUploadIcon />}
+                  style={{ width: "100%" }}
+                  sx={{
+                    background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+                  }}
+                >
+                  صورة شارحة
+                  <VisuallyHiddenInput
+                    type="file"
+                    onChange={(event) => {
+                      if (event.target.files[0]) {
+                        addFile && addFile(event.target.files[0], index);
+                        setImageURL(URL.createObjectURL(event.target.files[0]));
+                        setImage({
+                          ...image,
+                          url: URL.createObjectURL(event.target.files[0]),
+                        });
+                      }
+                    }}
+                  />
+                </Button>
+              </div>
+            </Grid2>
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 4 }}>
             <InputField

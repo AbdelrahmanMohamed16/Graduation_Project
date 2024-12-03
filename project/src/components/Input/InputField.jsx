@@ -43,7 +43,6 @@ function InputField({
   onFocus,
   nouns = false,
 }) {
-  console.log(dataOptions);
   const [selectedOption, setSelectedOption] = useState(defaultOption || "");
   useEffect(() => {
     setSelectedOption(defaultOption);
@@ -89,12 +88,7 @@ function InputField({
       dispatch(updateMeaning({ name, value: event.target.value, arr: null }));
     }
     if (setImage) {
-      console.log("image: ", image);
-      console.log("name: ", name);
-      console.log("value: ", event.target.value);
       setImage({ ...image, [name]: event.target.value });
-      // dispatch(updateImage_obj({ name, value: event.target.value }));
-      // console.log(image_obj);
     }
   };
 
@@ -108,6 +102,7 @@ function InputField({
         disabled={disabled ? disabled : null}
         onChange={handleTextChange}
         value={val ? val : ""}
+        onFocus={onFocus && onFocus}
         sx={{
           width: "100%",
           fontSize: "2px", // Adjust the label font size here
