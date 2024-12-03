@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Section4 from "../Section4/Section4";
+import Section4 from "../CollocatesSection/Section4";
 import { useSelector } from "react-redux";
 
 function CustomTabPanel(props) {

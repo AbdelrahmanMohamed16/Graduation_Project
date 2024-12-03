@@ -1,16 +1,16 @@
 import { Grid2 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Section1 from "../../sections/Section1";
+import Section1 from "../../sections/DiacriticsSection";
 import DividerComponent from "../../components/Divider/DividerComponent";
-import Section3 from "../../sections/Section3";
-import BigSection from "../../sections/BigSection/BigSection";
-import TabSection from "../../sections/TabSection/TabSection";
+import Section3 from "../../sections/SemanticInfoSection";
+import BigSection from "../../sections/SemanticInfoTabsSection/BigSection";
+import TabSection from "../../sections/CollocatesTabsSection/TabSection";
 import { useDispatch, useSelector } from "react-redux";
-import Section2InVerb from "../../sections/Section2InVerb/Section2InVerb";
+import Section2InVerb from "../../sections/VerbsMorphologicalsSection/Section2InVerb";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import Swal from "sweetalert2";
 import { clearSavedState } from "../../redux/userSlice";
-import LastSection from "../../sections/LastSection/LastSection";
+import LastSection from "../../sections/FormControlSection/LastSection";
 
 export default function VervPage(props) {
   const [value, setValue] = useState(-1);

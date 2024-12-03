@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Section3 from "../Section3";
-import Section4 from "../Section4/Section4";
-import TabSection from "../TabSection/TabSection";
+import Section3 from "../SemanticInfoSection";
+import Section4 from "../CollocatesSection/Section4";
+import TabSection from "../CollocatesTabsSection/TabSection";
 import { useDispatch } from "react-redux";
 import {
   updateCollocates,

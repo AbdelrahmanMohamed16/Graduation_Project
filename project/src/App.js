@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar/Navbar";
 
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import AccordionWithWords from "./pages/FirstPage/FirstPage";
+import AccordionWithWords from "./pages/UserInfoPage/FirstPage";
 import NounsPage from "./pages/NounsPage/NounsPage";
 import VerbPage from "./pages/VerbPage/VerbPage";
 // import { getWord } from "./redux/userSlice";
