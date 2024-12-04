@@ -15,6 +15,7 @@ import {
   getVerb,
   updateSemantic_info_obj,
   clearSemantic_info_obj,
+  clearForm,
 } from "../../redux/userSlice";
 
 function InputField({
@@ -65,6 +66,11 @@ function InputField({
     setSelectedOption(value);
     set?.(value);
 
+    // choosed اختر
+    if (value === "") {
+      dispatch(clearForm());
+    }
+    // choosed a words
     if (dataOptions?.length) {
       const option = dataOptions.find((opt) => opt.text === value);
       if (option)
@@ -78,8 +84,6 @@ function InputField({
     }
     if (semantic_info) {
       dispatch(updateSemantic_info_obj({ name, value: event.target.value }));
-    }
-    if (diacritics) {
     }
     if (collocates_obj) {
       dispatch(updateCollocates_obj({ name, value: event.target.value }));

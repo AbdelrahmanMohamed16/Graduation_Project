@@ -310,6 +310,12 @@ export const userSlice = createSlice({
       state.collocates_obj = {};
     },
     clearForm: (state) => {
+      state.diacritics = [];
+      state.morphological_info = {};
+      state.semantic_info_obj = {};
+      state.semantic_info = [];
+      state.collocates_obj = {};
+      state.collocates = [];
       state.form = {};
     },
     clearSemantic_info: (state) => {
@@ -332,17 +338,20 @@ export const userSlice = createSlice({
         state.data = data;
         let wordData = [];
         const words = data.assigned_words.map((item) => ({
+          id: item._id,
           word: item.text,
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
         const verbs = data.assigned_verbs.map((item) => ({
+          id: item._id,
           word: item.text,
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
         const assigned_functional_words = data.assigned_functional_words.map(
           (item) => ({
+            id: item._id,
             word: item.text,
             status: item.state,
           })

@@ -10,10 +10,15 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { assignedVerbs, assignedWords } from "../../redux/userSlice";
+import {
+  assignedVerbs,
+  assignedWords,
+  getVerb,
+  getWord,
+} from "../../redux/userSlice";
 import { Box } from "@mui/material";
 
-export default function AccordionWithWords() {
+export default function AccordionWithWords({ setWord }) {
   const [expanded, setExpanded] = React.useState(false);
   const [selectedWord, setSelectedWord] = React.useState("");
   const words = useSelector((state) => state.user.wordData);
@@ -28,7 +33,7 @@ export default function AccordionWithWords() {
   const dispatch = useDispatch();
 
   const handleExpansion = (item, panel) => {
-    setSelectedWord(expanded === panel ? "" : item.word);
+    setSelectedWord(expanded === panel ? "" : item);
     setExpanded(expanded === panel ? false : panel);
   };
 
@@ -70,11 +75,15 @@ export default function AccordionWithWords() {
 
   const navigate = useNavigate();
   const handleAddWord = () => {
-    if (nouns.includes(selectedWord)) {
+    if (nouns.includes(selectedWord.word)) {
+      dispatch(getWord({ wordId: selectedWord.id }));
+      setWord?.(selectedWord.word);
       dispatch(assignedWords());
       navigate("/nounpage");
     }
-    if (verbs.includes(selectedWord)) {
+    if (verbs.includes(selectedWord.word)) {
+      dispatch(getVerb({ wordId: selectedWord.id }));
+      setWord?.(selectedWord.word);
       dispatch(assignedVerbs());
       navigate("/verbpage");
     }

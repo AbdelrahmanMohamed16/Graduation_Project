@@ -26,7 +26,7 @@ function Navbar(props) {
   const optionsVerb = data?.assigned_verbs?.map((word) => word.text);
   const dataOptionsVerb = data?.assigned_verbs;
 
-  const { window, navItems, setWord, word, first } = props;
+  const { window, navItems, setWord, word } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
