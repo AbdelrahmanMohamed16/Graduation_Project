@@ -88,6 +88,8 @@ export default function AccordionWithWords({ setWord }) {
       navigate("/verbpage");
     }
     if (assigned_functional_words.includes(selectedWord)) {
+      navigate("/functionalpage");
+      setWord?.(selectedWord.word);
     }
   };
   return (

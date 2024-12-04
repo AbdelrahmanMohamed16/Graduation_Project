@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 
 function Section2() {
   const morphologicalInfo = useSelector(
-    (state) => state.user.form?.morphological_info
+    (state) => state.user.morphological_info
   );
   const [form_morphological_info, setForm_morphological_info] = useState(
     morphologicalInfo || {}

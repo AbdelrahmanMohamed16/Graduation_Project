@@ -109,7 +109,7 @@ export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
     try {
-      console.log(wordId);
+      // console.log(wordId);
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Word/${wordId}`,
         {
@@ -138,7 +138,7 @@ export const getVerb = createAsyncThunk(
   "user/getVerb",
   async ({ wordId }, { rejectWithValue }) => {
     try {
-      console.log(wordId);
+      // console.log(wordId);
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Verb/${wordId}`,
         {
@@ -167,12 +167,9 @@ export const fetchDataWithState = createAsyncThunk(
   "user/fetchDataWithState",
   async (_, { getState, rejectWithValue }) => {
     try {
-      console.log("helllllllllllllo in fetch");
       const { user } = getState();
-      console.log(user.form);
       const payload = { ...user.form };
       const id = payload._id;
-      console.log(payload);
       delete payload._id;
 
       const response = await fetch(
@@ -203,12 +200,9 @@ export const fetchDataWithStateVirb = createAsyncThunk(
   "user/fetchDataWithStateVirb",
   async (_, { getState, rejectWithValue }) => {
     try {
-      console.log("helllllllllllllo in fetch");
       const { user } = getState();
-      console.log(user.form);
       const payload = { ...user.form };
       const id = payload._id;
-      console.log(payload);
       delete payload._id;
 
       const response = await fetch(
@@ -242,7 +236,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      console.log("---------from logged out--------------");
       state.token = null;
       state.error = false;
       state.data = null;
@@ -255,7 +248,7 @@ export const userSlice = createSlice({
       state.form[action.payload.name] = action.payload.value;
     },
     updateDiacritics: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.diacritics = action.payload;
     },
     updateMorphologicalInfo: (state, action) => {
@@ -417,7 +410,6 @@ export const userSlice = createSlice({
         state.semantic_info = data.semantic_info;
         state.morphological_info = data.morphological_info;
         state.diacritics = data.diacritics;
-        console.log(state.diacritics);
         localStorage.setItem("form", JSON.stringify(data));
       })
       .addCase(getWord.rejected, (state, action) => {
@@ -454,8 +446,6 @@ export const userSlice = createSlice({
         console.log("in fulfilled state");
         state.loading = false;
         state.saved = true;
-
-        console.log(action.payload);
         // console.log(action.payload.data);
         // state.loading = false;
         // state.form = action.payload.data.data;
@@ -466,7 +456,7 @@ export const userSlice = createSlice({
       })
       .addCase(fetchDataWithState.rejected, (state, action) => {
         console.log("in rejected state");
-        console.log(action);
+        // console.log(action);
         state.loading = false;
         state.error = true;
       });
@@ -480,11 +470,11 @@ export const userSlice = createSlice({
         console.log("in fulfilled state");
         state.loading = false;
         state.saved = true;
-        console.log(action.payload);
+        // console.log(action.payload);
       })
       .addCase(fetchDataWithStateVirb.rejected, (state, action) => {
         console.log("in rejected state");
-        console.log(action);
+        // console.log(action);
         state.loading = false;
         state.error = true;
       });

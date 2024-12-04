@@ -66,7 +66,7 @@ const PhoneticKeyboard = ({ index, field, examples, setExamples }) => {
   return (
     <Grid2 container spacing={1} justifyContent="center" mt={2}>
       {ipaCharacters.map((char, index) => (
-        <Grid2 item key={index}>
+        <Grid2 key={index}>
           <Button
             variant="outlined"
             sx={{ padding: "10px", fontSize: "18px", fontFamily: "El Messiri" }}
@@ -131,14 +131,16 @@ function DataInputs({ data, onChange, addRecord, index, setIndex, setField }) {
 }
 
 export default function Section1({ word = "المدخل", addRecord }) {
-  const examplesInfo = useSelector((state) => state.user.form.diacritics);
+  const examplesInfo = useSelector((state) => state.user.diacritics);
   const [index, setIndex] = useState();
   const [field, setField] = useState();
-  const [examples, setExamples] = useState([
-    { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
-  ]);
+  const [examples, setExamples] = useState(
+    examplesInfo || [
+      { word_with_diacritics: "", phonetic_writing: "", pronounciation: null },
+    ]
+  );
   useEffect(() => {
-    if (examplesInfo !== undefined) setExamples(examplesInfo);
+    if (examplesInfo.length) setExamples(examplesInfo);
     else
       setExamples([
         {
@@ -198,7 +200,11 @@ export default function Section1({ word = "المدخل", addRecord }) {
         columnSpacing={{ xs: 1, sm: 2, md: 5 }}
       >
         <Grid2 size={{ xs: 8, sm: 4, md: 3 }}>
-          <InputField label={word} text={true} disabled={true} />
+          <InputField
+            label={word ? word : "المدخل"}
+            text={true}
+            disabled={true}
+          />
         </Grid2>
         <Grid2 size={12}>
           <Typography

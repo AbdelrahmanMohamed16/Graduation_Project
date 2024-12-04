@@ -32,7 +32,6 @@ export default function VervPage(props) {
     dispatch(clearSavedState({}));
   }, [saveDone]);
   const addFile = (file, index) => {
-    console.log(index);
     if (index !== undefined && index < files.length) {
       const updatedFiles = [...files];
       if (file.image) {
@@ -55,11 +54,6 @@ export default function VervPage(props) {
       setRecords([...records, record]);
     }
   };
-
-  useEffect(() => {
-    console.log("files: ", files);
-    console.log("records: ", records);
-  }, [files, records]);
 
   const semantic_info = useSelector((state) => state.user.semantic_info);
   const [semantic_info_arr, setSemantic_info_arr] = useState(
@@ -135,6 +129,8 @@ export default function VervPage(props) {
             verb={true}
             value={value}
             value2={value2}
+            setFiles={setFiles}
+            setRecords={setRecords}
           />
         </Grid2>
       )}

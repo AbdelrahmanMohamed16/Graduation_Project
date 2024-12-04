@@ -32,7 +32,6 @@ export default function NounsPage(props) {
   }, [saveDone]);
 
   const addFile = (file, index) => {
-    console.log(index);
     if (index !== undefined && index < files.length) {
       const updatedFiles = [...files];
       if (file.image) {
@@ -55,11 +54,6 @@ export default function NounsPage(props) {
       setRecords([...records, record]);
     }
   };
-
-  useEffect(() => {
-    console.log("files: ", files);
-    console.log("records: ", records);
-  }, [files, records]);
 
   const semantic_info = useSelector((state) => state.user.semantic_info);
   const isLoading = useSelector((state) => state.user.pageLoading);
@@ -137,6 +131,8 @@ export default function NounsPage(props) {
             virb={true}
             value={value}
             value2={value2}
+            setFiles={setFiles}
+            setRecords={setRecords}
           />
         </Grid2>
       )}

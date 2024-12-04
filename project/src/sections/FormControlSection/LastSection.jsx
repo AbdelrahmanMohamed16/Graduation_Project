@@ -51,7 +51,15 @@ MyFormControlLabel.propTypes = {
   value: PropTypes.any,
 };
 
-function LastSection({ files, records, verb = false, value, value2 }) {
+function LastSection({
+  files,
+  records,
+  verb = false,
+  value,
+  value2,
+  setFiles,
+  setRecords,
+}) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
@@ -76,6 +84,7 @@ function LastSection({ files, records, verb = false, value, value2 }) {
       setSemantic(semanticFromStore);
     }
   }, [semanticFromStore]);
+
   const sendImages = async (file) => {
     let imageURL = "";
     imageFormData.append("image", file);
@@ -98,6 +107,7 @@ function LastSection({ files, records, verb = false, value, value2 }) {
     }
     return imageURL;
   };
+
   const sendRecord = async (record) => {
     let recordURL = "";
     try {
@@ -122,9 +132,6 @@ function LastSection({ files, records, verb = false, value, value2 }) {
   };
 
   const submitPublics = async () => {
-    console.log(value);
-    console.log(value2);
-
     if (value === -1 && value2 === -1) {
       try {
         let updatedSemantic = await structuredClone(semantic);
@@ -149,6 +156,9 @@ function LastSection({ files, records, verb = false, value, value2 }) {
 
           updatedDiacritic[index].pronounciation = recordURL; // Update specific field
         }
+        // to prevent multiple upload times
+        setFiles([]);
+        setRecords([]);
 
         setDiacritic(updatedDiacritic);
         setSemantic(updatedSemantic);

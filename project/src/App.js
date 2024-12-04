@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar/Navbar";
 
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AccordionWithWords from "./pages/UserInfoPage/FirstPage";
 import NounsPage from "./pages/NounsPage/NounsPage";
 import VerbPage from "./pages/VerbPage/VerbPage";
@@ -18,14 +18,7 @@ import FunctionalPage from "./pages/FunctionalPage/FunctionalPage";
 
 function App() {
   const auth = useSelector((state) => state.user.auth);
-  // const semantic_info = useSelector((state) => state.user.semantic_info);
-  // const [semantic_info_arr, setSemantic_info_arr] = useState(
-  //   semantic_info || {}
-  // );
-  // useEffect(() => {
-  //   setSemantic_info_arr(semantic_info);
-  // }, [semantic_info]);
-  const [word, setWord] = useState("المدخل");
+  const [word, setWord] = useState("");
   const theme = createTheme({
     direction: "rtl",
   });
