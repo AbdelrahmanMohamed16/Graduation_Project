@@ -66,10 +66,6 @@ function InputField({
     setSelectedOption(value);
     set?.(value);
 
-    // choosed اختر
-    if (value === "") {
-      dispatch(clearForm());
-    }
     // choosed a words
     if (dataOptions?.length) {
       const option = dataOptions.find((opt) => opt.text === value);

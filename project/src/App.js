@@ -8,16 +8,18 @@ import { CacheProvider } from "@emotion/react";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar/Navbar";
 
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import AccordionWithWords from "./pages/UserInfoPage/FirstPage";
 import NounsPage from "./pages/NounsPage/NounsPage";
 import VerbPage from "./pages/VerbPage/VerbPage";
 import FunctionalPage from "./pages/FunctionalPage/FunctionalPage";
+import { clearForm } from "./redux/userSlice";
 // import { getWord } from "./redux/userSlice";
 
 function App() {
   const auth = useSelector((state) => state.user.auth);
+  const dispatch = useDispatch();
   const [word, setWord] = useState("");
   const theme = createTheme({
     direction: "rtl",
@@ -27,6 +29,13 @@ function App() {
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
+
+  useEffect(() => {
+    // choosed اختر
+    if (word === "") {
+      dispatch(clearForm());
+    }
+  }, [word]);
 
   return (
     <CacheProvider value={cacheRtl}>
