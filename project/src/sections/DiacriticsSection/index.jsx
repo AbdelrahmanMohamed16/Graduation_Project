@@ -83,7 +83,15 @@ const PhoneticKeyboard = ({ index, field, examples, setExamples }) => {
   );
 };
 
-function DataInputs({ data, onChange, addRecord, index, setIndex, setField }) {
+function DataInputs({
+  data,
+  onChange,
+  addRecord,
+  index,
+  setIndex,
+  setField,
+  deleteRecord,
+}) {
   const { word_with_diacritics, phonetic_writing } = data;
   return (
     <Grid2
@@ -124,13 +132,14 @@ function DataInputs({ data, onChange, addRecord, index, setIndex, setField }) {
           addRecord={addRecord}
           index={index}
           initialURL={data.pronounciation}
+          deleteRecord={deleteRecord}
         />
       </Grid2>
     </Grid2>
   );
 }
 
-export default function Section1({ word = "المدخل", addRecord }) {
+export default function Section1({ word = "المدخل", addRecord, deleteRecord }) {
   const examplesInfo = useSelector((state) => state.user.diacritics);
   const [index, setIndex] = useState();
   const [field, setField] = useState();
@@ -225,6 +234,7 @@ export default function Section1({ word = "المدخل", addRecord }) {
             index={index}
             setField={setField}
             setIndex={setIndex}
+            deleteRecord={deleteRecord}
           />
         ))}
         <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>

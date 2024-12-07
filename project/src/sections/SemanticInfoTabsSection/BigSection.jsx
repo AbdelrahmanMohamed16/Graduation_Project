@@ -7,12 +7,14 @@ import Section3 from "../SemanticInfoSection";
 import Section4 from "../CollocatesSection/Section4";
 import TabSection from "../CollocatesTabsSection/TabSection";
 import { useDispatch } from "react-redux";
+import ClearIcon from "@mui/icons-material/Clear";
 import {
   updateCollocates,
   updateMeaning,
   updateSemantic_info,
   updateSemantic_info_obj,
 } from "../../redux/userSlice";
+import { IconButton, Stack } from "@mui/material";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,6 +53,7 @@ export default function BasicTabs({
   value2,
   setValue2,
   addFile,
+  deleteFile,
 }) {
   const dispach = useDispatch();
   const handleChange = (event, newValue) => {
@@ -88,12 +91,17 @@ export default function BasicTabs({
           aria-label="basic tabs example"
         >
           {arr?.map((item, index) => (
+            // <Stack direction={"row"} alignItems={"center"} key={index}>
             <Tab
               label={item.meaning?.text}
-              key={index}
               {...a11yProps(index)}
+              key={index}
               sx={{ fontSize: 25 }}
             />
+            //   <IconButton>
+            //     <ClearIcon />
+            //   </IconButton>
+            // </Stack>
           ))}
         </Tabs>
       </Box>
@@ -114,6 +122,7 @@ export default function BasicTabs({
                 setValue={setValue2}
                 setValue2={setValue}
                 i={index}
+                deleteFile={deleteFile}
               />
             </>
           </CustomTabPanel>

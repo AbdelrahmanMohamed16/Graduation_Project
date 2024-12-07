@@ -3,26 +3,31 @@ import InputField from "../../components/Input/InputField";
 import Box from "@mui/material/Box";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useEffect, useState } from "react";
-import { Grid2, Typography } from "@mui/material";
+import { Button, Grid2, IconButton, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import RadioGroup, { useRadioGroup } from "@mui/material/RadioGroup";
 import MyFormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   clearCollocates,
   clearCollocates_Obj,
   clearSemantic_info_obj,
+  deleteCollocate,
+  deleteCollocateExample,
+  deleteSemanticInfo,
   updateCollocates,
   updateCollocates_obj,
   updateSemantic_info,
   updateSemantic_info_obj,
 } from "../../redux/userSlice";
 import Swal from "sweetalert2";
-function Example({ data, onChange }) {
+function Example({ index, data, setExamples, onChange }) {
   const { text, source } = data;
   const [editingTextFormat, seteditingTextFormat] = useState(false);
+  const dispatch = useDispatch();
   return (
     <Grid container spacing={2} size={12} sx={{ my: "10px" }}>
       <Grid size={{ xs: 12, md: 8 }}>
@@ -58,7 +63,7 @@ function Example({ data, onChange }) {
         >
           {editingTextFormat
             ? " اخفاء التنسيق"
-            : !text.includes("<")
+            : !text?.includes("<")
             ? "تنسيق المثال"
             : "عرض التنسيق"}
         </Typography>
@@ -73,6 +78,39 @@ function Example({ data, onChange }) {
           }}
         />
       </Grid>
+      <Grid size={{ xs: 12, md: 2 }}>
+        {index ? (
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => {
+              Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن يمكنك الرجوع عن هذا الأمر",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "نعم",
+                cancelButtonText: "لا",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  dispatch(deleteCollocateExample({ index }));
+                  setExamples((prev) =>
+                    prev.filter((example) => example !== prev[index])
+                  );
+                }
+              });
+            }}
+          >
+            حذف المثال
+          </Button>
+        ) : (
+          <></>
+        )}
+      </Grid>
     </Grid>
   );
 }
@@ -85,6 +123,7 @@ function Section4({
   setArrCollocates,
   index,
   collocatesIndex,
+  deleteFile,
 }) {
   const [collocate_text, setCollocate_text] = useState(data?.collocate_text);
   const [meaning, Setmeaning] = useState(data?.meaning);
@@ -100,7 +139,7 @@ function Section4({
   const dispatch = useDispatch();
   const handleNewSemantic = () => {
     if (meaning_obj?.text) {
-      if (collocates_obj.collocate_text !== undefined) {
+      if (collocates_obj?.collocate_text !== undefined) {
         if (collocatesIndex || collocatesIndex === 0) {
           dispatch(
             updateCollocates({ arr: null, collocatesIndex: collocatesIndex })
@@ -228,14 +267,49 @@ function Section4({
               margin: "auto",
             }}
           >
-            <ButtonCompnent
-              text={
-                collocatesIndex >= 0 ? "حفظ التغييرات" : "أضف متصاحبة جديدة"
-              }
-              rounded={true}
-              icon={true}
-              onclick={handleAddNewCollocates}
-            ></ButtonCompnent>
+            <Stack alignItems={"center"} spacing={2}>
+              <ButtonCompnent
+                text={
+                  collocatesIndex >= 0 ? "حفظ التغييرات" : "أضف متصاحبة جديدة"
+                }
+                rounded={true}
+                icon={true}
+                onclick={handleAddNewCollocates}
+              ></ButtonCompnent>
+              {collocatesIndex ? (
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => {
+                    Swal.fire({
+                      title: "هل أنت متأكد؟",
+                      text: "لن يمكنك الرجوع عن هذا الأمر",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "نعم",
+                      cancelButtonText: "لا",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        dispatch(deleteCollocate({ index: collocatesIndex }));
+                        setValue2(-1);
+                        setArrCollocates((prev) =>
+                          prev.filter((item) => item !== prev[collocatesIndex])
+                        );
+                      }
+                    });
+                  }}
+                  sx={{ marginLeft: 2 }}
+                >
+                  حذف المتصاحبة اللفظية
+                </Button>
+              ) : (
+                <></>
+              )}
+            </Stack>
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -249,6 +323,8 @@ function Section4({
               <Example
                 key={index}
                 data={data}
+                index={index}
+                setExamples={setExamples}
                 onChange={(field, value) => {
                   handleChange(index, field, value);
                 }}
@@ -352,6 +428,40 @@ function Section4({
                   onclick={handleNewSemantic}
                 />
               </Grid>
+              {index ? (
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => {
+                      Swal.fire({
+                        title: "هل أنت متأكد؟",
+                        text: "لن يمكنك الرجوع عن هذا الأمر",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "نعم",
+                        cancelButtonText: "لا",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          dispatch(deleteSemanticInfo({ index }));
+                          setValue(-1);
+                          setValue2(-1);
+                          deleteFile(index);
+                        }
+                      });
+                    }}
+                    sx={{ marginLeft: 2 }}
+                  >
+                    حذف المعلومة الدلالية
+                  </Button>
+                </Grid>
+              ) : (
+                <></>
+              )}
             </Grid>
           </Grid>
         </Grid>

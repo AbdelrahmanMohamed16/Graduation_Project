@@ -3,12 +3,17 @@ import { Box, Button, Stack } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDispatch } from "react-redux";
+import { deleteDiacriticExample } from "../../redux/userSlice";
+import Swal from "sweetalert2";
 
-const Voice = ({ setVoice, addRecord, index, initialURL }) => {
+const Voice = ({ setVoice, addRecord, index, initialURL, deleteRecord }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(initialURL || null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (initialURL) {
@@ -96,6 +101,36 @@ const Voice = ({ setVoice, addRecord, index, initialURL }) => {
             </span>
             <PlayArrowIcon sx={{ color: "black", fontSize: "30px" }} />
           </Button>
+        )}
+        {index ? (
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => {
+              Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن يمكنك الرجوع عن هذا الأمر",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "نعم",
+                cancelButtonText: "لا",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  dispatch(deleteDiacriticExample({ index }));
+                  deleteRecord(index);
+                }
+              });
+            }}
+            sx={{ marginLeft: 2 }}
+          >
+            حذف المثال
+          </Button>
+        ) : (
+          <></>
         )}
       </Stack>
     </div>

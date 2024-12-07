@@ -55,6 +55,22 @@ export default function NounsPage(props) {
     }
   };
 
+  const deleteRecord = (index) => {
+    console.log("index on delete record", index);
+    if (index !== undefined && index < records.length) {
+      setRecords(() => records.filter((record) => record !== records[index]));
+    }
+    console.log("records after delete", records);
+  };
+
+  const deleteFile = (index) => {
+    console.log("index on delete files", index);
+    if (index !== undefined && index < files.length) {
+      setFiles(() => files.filter((file) => file !== files[index]));
+    }
+    console.log("files after delete", records);
+  };
+
   const semantic_info = useSelector((state) => state.user.semantic_info);
   const isLoading = useSelector((state) => state.user.pageLoading);
   const [semantic_info_arr, setSemantic_info_arr] = useState(
@@ -69,7 +85,11 @@ export default function NounsPage(props) {
         <LoadingPage></LoadingPage>
       ) : (
         <Grid2 mx={4} my={3} width={"100%"}>
-          <Section1 word={props.word} addRecord={addRecord} />
+          <Section1
+            word={props.word}
+            addRecord={addRecord}
+            deleteRecord={deleteRecord}
+          />
           <div className="no-print">
             {" "}
             <DividerComponent />
@@ -81,7 +101,6 @@ export default function NounsPage(props) {
           {semantic_info_arr?.length > 0 ? (
             value === -1 ? (
               <>
-                {console.log(semantic_info_arr)}
                 <BigSection
                   arr={semantic_info_arr}
                   value={value}
@@ -89,6 +108,7 @@ export default function NounsPage(props) {
                   value2={value2}
                   setValue2={setValue2}
                   addFile={addFile}
+                  deleteFile={deleteFile}
                 />
                 <div style={{ padding: 24 }}>
                   {" "}
@@ -97,6 +117,7 @@ export default function NounsPage(props) {
                     value={value2}
                     setValue={setValue2}
                     setValue2={setValue}
+                    deleteFile={deleteFile}
                   />
                 </div>
               </>
@@ -108,16 +129,18 @@ export default function NounsPage(props) {
                 addFile={addFile}
                 value2={value2}
                 setValue2={setValue2}
+                deleteFile={deleteFile}
               />
             )
           ) : (
             <>
-              <Section3 addFile={addFile} />
+              <Section3 addFile={addFile} deleteFile={deleteFile} />
               <TabSection
                 value={value2}
                 value1={value}
                 setValue={setValue2}
                 setValue2={setValue}
+                deleteFile={deleteFile}
               />
             </>
           )}

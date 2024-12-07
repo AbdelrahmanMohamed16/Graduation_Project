@@ -7,7 +7,12 @@ import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-
 import { useDispatch } from "react-redux";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { updateMeaning } from "../../redux/userSlice";
+import {
+  deleteSemanticInfoMeaningExample,
+  updateMeaning,
+} from "../../redux/userSlice";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const VisuallyHiddenInput = styled("input")({
   //   clip: "rect(0 0 0 0)",
   //   clipPath: "inset(50%)",
@@ -20,12 +25,12 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function ExampleData({ data, onChange }) {
+function ExampleData({ index, setExamples, data, onChange }) {
   const { text, source } = data;
   const [editingTextFormat, seteditingTextFormat] = useState(false);
-
+  const dispatch = useDispatch();
   return (
-    <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
+    <Grid2 container spacing={2} size={12}>
       <Grid2 size={{ xs: 12, md: 8 }}>
         <InputField
           text={true}
@@ -64,7 +69,7 @@ function ExampleData({ data, onChange }) {
             : "عرض التنسيق"}
         </Typography>
       </Grid2>
-      <Grid2 size={{ xs: 12, md: 2 }}>
+      <Grid2 size={{ xs: 12, md: 4 }}>
         <InputField
           text={true}
           label="المرجع"
@@ -74,6 +79,26 @@ function ExampleData({ data, onChange }) {
           }}
         />
       </Grid2>
+      {index ? (
+        <Grid2 size={{ xs: 12, md: 4 }}>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => {
+              dispatch(deleteSemanticInfoMeaningExample({ index }));
+              setExamples((prev) =>
+                prev.filter((example) => example !== prev[index])
+              );
+            }}
+          >
+            حذف المثال
+          </Button>
+        </Grid2>
+      ) : (
+        <></>
+      )}
     </Grid2>
   );
 }
@@ -178,12 +203,14 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
           rowSpacing={5}
           columnSpacing={{ xs: 1, sm: 2, md: 5 }}
         >
-          {example.map((data, index) => (
+          {example.map((data, i) => (
             <ExampleData
-              key={index}
+              key={i}
+              index={i}
+              setExamples={setExamples}
               data={data}
               onChange={(field, value) => {
-                handleChange(index, field, value);
+                handleChange(i, field, value);
               }}
             />
           ))}

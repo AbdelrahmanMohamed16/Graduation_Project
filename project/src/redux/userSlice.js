@@ -251,6 +251,15 @@ export const userSlice = createSlice({
       // console.log(action.payload);
       state.diacritics = action.payload;
     },
+    deleteDiacriticExample: (state, action) => {
+      console.log("index on delete example", action.payload.index);
+      if (action.payload.index) {
+        state.diacritics = state.diacritics.filter(
+          (item) => item !== state.diacritics[action.payload.index]
+        );
+        console.log("diacritics after delete example", state.diacritics);
+      }
+    },
     updateMorphologicalInfo: (state, action) => {
       state.morphological_info[action.payload.name] = action.payload.value;
     },
@@ -285,6 +294,21 @@ export const userSlice = createSlice({
         state.semantic_info = [...state.semantic_info, state.semantic_info_obj];
       }
     },
+    deleteSemanticInfo: (state, action) => {
+      if (action.payload.index) {
+        state.semantic_info = state.semantic_info.filter(
+          (item) => item !== state.semantic_info[action.payload.index]
+        );
+        clearSemantic_info_obj();
+      }
+    },
+    deleteSemanticInfoMeaningExample: (state, action) => {
+      if (action.payload.index) {
+        state.meaning.example = state.meaning.example.filter(
+          (item) => item !== state.meaning.example[action.payload.index]
+        );
+      }
+    },
     updateCollocates: (state, action) => {
       if (action.payload.collocatesIndex !== null) {
         state.collocates[action.payload.collocatesIndex] = state.collocates_obj;
@@ -295,6 +319,23 @@ export const userSlice = createSlice({
           state.collocates = [...state.collocates, state.collocates_obj];
         }
       }
+    },
+    deleteCollocate: (state, action) => {
+      if (action.payload.index) {
+        state.collocates = state.collocates.filter(
+          (item) => item !== state.collocates[action.payload.index]
+        );
+        clearCollocates_Obj();
+      }
+    },
+    deleteCollocateExample: (state, action) => {
+      console.log(action.payload.index);
+      if (action.payload.index) {
+        state.collocates_obj.example = state.collocates_obj.example.filter(
+          (item) => item !== state.collocates_obj.example[action.payload.index]
+        );
+      }
+      console.log(state);
     },
     clearCollocates: (state) => {
       state.collocates = [];
@@ -484,21 +525,26 @@ export const userSlice = createSlice({
 export const {
   login,
   updateForm,
-  updateMorphologicalInfo,
   updateDiacritics,
   updateDiacriticswithRecord,
-  updateCollocates_obj,
+  deleteDiacriticExample,
+  updateMorphologicalInfo,
   updateSemantic_info_obj,
   updateSemantic_infowithImage,
   clearSemantic_info_obj,
   updateSemantic_info,
+  deleteSemanticInfo,
+  deleteSemanticInfoMeaningExample,
+  clearSemanticInfo,
   updateMeaning,
   updateImage_obj,
   updateCollocates,
+  deleteCollocate,
+  deleteCollocateExample,
   clearCollocates,
+  updateCollocates_obj,
   clearCollocates_Obj,
   clearForm,
-  clearSemanticInfo,
   clearSavedState,
 } = userSlice.actions;
 

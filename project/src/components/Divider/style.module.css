@@ -1,10 +1,11 @@
 .div {
   position: relative;
-  margin-top: 80px;
+  /* margin-top: 80px; */
 }
 .span {
   position: absolute;
   left: 50%;
+  top: 100%;
   transform: translate(-50%, -50%);
   background-color: white;
 }

@@ -35,7 +35,14 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
+export default function BasicTabs({
+  arr,
+  value,
+  setValue,
+  setValue2,
+  i,
+  deleteFile,
+}) {
   const coll = useSelector((state) => state.user.collocates);
   const [arrCollocates, setArrCollocates] = React.useState(coll || []);
   const handleChange = (event, newValue) => {
@@ -86,12 +93,13 @@ export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
             setArrCollocates={setArrCollocates}
             arrCollocates={arrCollocates}
             index={i}
+            deleteFile={deleteFile}
           />
         </div>
       )}
       {arrCollocates?.map((item, index) => {
         return (
-          <CustomTabPanel value={value} index={index}>
+          <CustomTabPanel value={value} index={index} key={index}>
             <>
               <Section4
                 data={item}
@@ -101,6 +109,7 @@ export default function BasicTabs({ arr, value, setValue, setValue2, i }) {
                 arrCollocates={arrCollocates}
                 collocatesIndex={index}
                 index={i}
+                deleteFile={deleteFile}
               />
             </>
           </CustomTabPanel>
