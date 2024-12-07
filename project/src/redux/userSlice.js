@@ -263,6 +263,18 @@ export const userSlice = createSlice({
     updateMorphologicalInfo: (state, action) => {
       state.morphological_info[action.payload.name] = action.payload.value;
     },
+    //verb case
+    deleteMorphologicalInfoExample: (state, action) => {
+      console.log(state.morphological_info);
+      if (action.payload.index) {
+        state.morphological_info.derivational_forms =
+          state.morphological_info.derivational_forms.filter(
+            (item) =>
+              item !==
+              state.morphological_info.derivational_forms[action.payload.index]
+          );
+      }
+    },
     updateCollocates_obj: (state, action) => {
       state.collocates_obj[action.payload.name] = action.payload.value;
     },
@@ -529,6 +541,7 @@ export const {
   updateDiacriticswithRecord,
   deleteDiacriticExample,
   updateMorphologicalInfo,
+  deleteMorphologicalInfoExample,
   updateSemantic_info_obj,
   updateSemantic_infowithImage,
   clearSemantic_info_obj,

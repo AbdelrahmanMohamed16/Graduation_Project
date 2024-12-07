@@ -6,6 +6,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PlaceholderImage from "../../assets/images/landscape-placeholder-svgrepo-com.svg";
 import { useDispatch } from "react-redux";
 import ReactQuill from "react-quill";
+import Swal from "sweetalert2";
 import "react-quill/dist/quill.snow.css";
 import {
   deleteSemanticInfoMeaningExample,
@@ -138,6 +139,24 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
   const addExample = () => {
     setExamples((prev) => [...prev, { text: "", source: "" }]);
   };
+
+  let fetchOptions = async () => {
+    await fetch("https://arabic-data-collector.onrender.com/api/v1/dropdown", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }).then(async (res) => {
+      let { data } = await res.json();
+      setOptions(await data[2].choices);
+    });
+  };
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
   return (
     <div id="section3">
       <Grid2
@@ -182,7 +201,41 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
               text="اضف"
               icon={true}
               onclick={() => {
-                setOptions((prevFields) => [...prevFields, option]);
+                fetch(
+                  "https://arabic-data-collector.onrender.com/api/v1/dropdown/semantic_fields",
+                  {
+                    method: "PATCH",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${localStorage.getItem(
+                        "authToken"
+                      )}`,
+                    },
+                    body: JSON.stringify({
+                      choice: option,
+                    }),
+                  }
+                )
+                  .then(() => {
+                    setOptions((prevFields) => [...prevFields, option]);
+                    Swal.fire({
+                      position: "center",
+                      icon: "success",
+                      title: "تم إضافة المجال الدلالي الجديد",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  })
+                  .catch(() => {
+                    Swal.fire({
+                      position: "center",
+                      icon: "error",
+                      title: "حدث خطأ",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  });
+                fetchOptions();
               }}
             />
           </Grid2>

@@ -20,6 +20,12 @@ export default function NounsPage(props) {
   const saveDone = useSelector((state) => state.user.saved);
   const dispatch = useDispatch();
   useEffect(() => {
+    if (props.word === "") {
+      setFiles([]);
+      setFiles([]);
+    }
+  }, [props?.word]);
+  useEffect(() => {
     if (saveDone) {
       Swal.fire({
         title: "تم الحفظ بنجاح!",

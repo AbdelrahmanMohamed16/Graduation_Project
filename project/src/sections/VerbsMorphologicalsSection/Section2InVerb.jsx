@@ -1,14 +1,18 @@
 import Grid from "@mui/material/Grid2";
 import InputField from "../../components/Input/InputField";
-import { Grid2, Typography } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import ButtonCompnent from "../../components/Button/ButtonCompnent";
-import { updateMorphologicalInfo } from "../../redux/userSlice";
+import {
+  deleteMorphologicalInfoExample,
+  updateMorphologicalInfo,
+} from "../../redux/userSlice";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
-function ExampleData({ data, onChange }) {
-  console.log(data);
-
+function ExampleData({ index, setExamples, data, onChange }) {
+  const dispatch = useDispatch();
   return (
     <Grid2 container spacing={2} size={12} sx={{ my: "10px" }}>
       <Grid2 size={{ xs: 12, md: 10 }}>
@@ -19,6 +23,39 @@ function ExampleData({ data, onChange }) {
           set={(value) => onChange(value)}
         />
       </Grid2>
+      {index ? (
+        <Grid2 size={{ xs: 12, md: 2 }}>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => {
+              Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن يمكنك الرجوع عن هذا الأمر",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "نعم",
+                cancelButtonText: "لا",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  dispatch(deleteMorphologicalInfoExample({ index }));
+                  setExamples((prev) =>
+                    prev.filter((example) => example !== prev[index])
+                  );
+                }
+              });
+            }}
+          >
+            حذف الصورة الإشتقاقية
+          </Button>
+        </Grid2>
+      ) : (
+        <></>
+      )}
     </Grid2>
   );
 }
@@ -116,7 +153,8 @@ function Section2InVerb() {
         </Grid>
         <Grid2
           container
-          size={{ xs: 12, sm: 6, md: 4, lg: 5 }}
+          // size={{ xs: 12, sm: 6, md: 4, lg: 5 }}
+          size={{ xs: 12, md: 10 }}
           rowSpacing={1}
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
@@ -124,6 +162,8 @@ function Section2InVerb() {
             <ExampleData
               key={index}
               data={data}
+              index={index}
+              setExamples={setExamples}
               onChange={(value) => {
                 handleChange(index, value);
               }}

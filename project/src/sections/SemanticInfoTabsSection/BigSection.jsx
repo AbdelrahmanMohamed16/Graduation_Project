@@ -7,7 +7,6 @@ import Section3 from "../SemanticInfoSection";
 import Section4 from "../CollocatesSection/Section4";
 import TabSection from "../CollocatesTabsSection/TabSection";
 import { useDispatch } from "react-redux";
-import ClearIcon from "@mui/icons-material/Clear";
 import {
   updateCollocates,
   updateMeaning,
