@@ -11,8 +11,10 @@ import ButtonCompnent from "../../components/Button/ButtonCompnent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  assignedFunctionalWords,
   assignedVerbs,
   assignedWords,
+  get_functional_words,
   getVerb,
   getWord,
 } from "../../redux/userSlice";
@@ -87,9 +89,11 @@ export default function AccordionWithWords({ setWord }) {
       dispatch(assignedVerbs());
       navigate("/verbpage");
     }
-    if (assigned_functional_words.includes(selectedWord)) {
-      navigate("/functionalpage");
+    if (assigned_functional_words.includes(selectedWord.word)) {
+      dispatch(get_functional_words({ wordId: selectedWord.id }));
       setWord?.(selectedWord.word);
+      dispatch(assignedFunctionalWords());
+      navigate("/functionalpage");
     }
   };
   return (

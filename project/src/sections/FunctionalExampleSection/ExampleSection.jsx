@@ -39,7 +39,7 @@ function Example({
 export default function ExampleSection({ examples, onChange, addExample }) {
   return (
     <Grid container spacing={3} sx={{ padding: "20px" }}>
-      {examples.map((example) => (
+      {examples?.map((example) => (
         <Example
           key={example.id}
           data={example}

@@ -5,8 +5,12 @@ import Section1 from "../../sections/DiacriticsSection";
 import ExampleSection from "../../sections/FunctionalExampleSection/ExampleSection";
 import LastSection from "../../sections/FunctionalLastSection/LastSection";
 import DividerComponent from "../../components/Divider/DividerComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { updateForm } from "../../redux/userSlice";
 
 export default function FunctionalPage(props) {
+  const form = useSelector((state) => state.user.form);
+
   const [files, setFiles] = useState([]);
   const [records, setRecords] = useState([]);
   const [examples1, setExamples1] = useState([
@@ -18,19 +22,53 @@ export default function FunctionalPage(props) {
   const [examples3, setExamples3] = useState([
     { id: Date.now(), text: "", source: "" },
   ]);
-
+  useEffect(() => {
+    console.log(form);
+    if (form.linguistic_function) {
+      setExamples1(form.linguistic_function.example);
+    }
+    if (form.contextual_indicators) {
+      setExamples2(form.contextual_indicators.example);
+    }
+    if (form.syntactic_collocation) {
+      setExamples3(form.syntactic_collocation.example);
+    }
+  }, [form]);
+  const dispatch = useDispatch();
   // Function to handle changes in example fields
   const handleExampleChange = (setExamples) => (id, field, value) => {
     setExamples((prev) =>
-      prev.map((example) =>
+      prev?.map((example) =>
         example.id === id ? { ...example, [field]: value } : example
       )
     );
   };
+  // useEffect(() => {
+  //   dispatch(
+  //     updateForm({ name: "linguistic_function", value: { example: examples1 } })
+  //   );
+  // }, [dispatch, examples1]);
+  // useEffect(() => {
+  //   dispatch(
+  //     updateForm({
+  //       name: "contextual_indicators",
+  //       value: { example: examples2 },
+  //     })
+  //   );
+  // }, [dispatch, examples2]);
+  // useEffect(() => {
+  //   dispatch(
+  //     updateForm({
+  //       name: "syntactic_collocation",
+  //       value: { example: examples3 },
+  //     })
+  //   );
+  // }, [dispatch, examples3]);
 
   // Function to add a new example
   const addNewExample = (setExamples) => () => {
     setExamples((prev) => [...prev, { id: Date.now(), text: "", source: "" }]);
+    console.log("i added new example");
   };
 
   // Smooth scrolling logic using event delegation
@@ -59,7 +97,7 @@ export default function FunctionalPage(props) {
       <Grid2 mx={4} my={3} width={"100%"}>
         {/* Section 1 */}
         <section id="section1">
-          <Section1 />
+          <Section1 word={props.word} />
         </section>
 
         {/* Section 2 */}
@@ -130,7 +168,14 @@ export default function FunctionalPage(props) {
         </div>
 
         {/* Last Section */}
-        <LastSection files={files} records={records} />
+        <LastSection
+          files={files}
+          records={records}
+          Functional={true}
+          ex1={examples1}
+          ex2={examples2}
+          ex3={examples3}
+        />
       </Grid2>
     </Grid2>
   );

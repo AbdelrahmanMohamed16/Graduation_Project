@@ -105,6 +105,33 @@ export const assignedVerbs = createAsyncThunk(
     }
   }
 );
+export const assignedFunctionalWords = createAsyncThunk(
+  "user/assignedFunctionalWords",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        "https://arabic-data-collector.onrender.com/api/v1/FunctionalWord",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return { data };
+    } catch (error) {
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
 export const getWord = createAsyncThunk(
   "user/getWord",
   async ({ wordId }, { rejectWithValue }) => {
@@ -141,6 +168,34 @@ export const getVerb = createAsyncThunk(
       // console.log(wordId);
       const response = await fetch(
         `https://arabic-data-collector.onrender.com/api/v1/Verb/${wordId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return { data };
+    } catch (error) {
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
+export const get_functional_words = createAsyncThunk(
+  "user/get_functional_words",
+  async ({ wordId }, { rejectWithValue }) => {
+    try {
+      // console.log(wordId);
+      const response = await fetch(
+        `https://arabic-data-collector.onrender.com/api/v1/FunctionalWord/${wordId}`,
         {
           method: "GET",
           headers: {
@@ -229,6 +284,40 @@ export const fetchDataWithStateVirb = createAsyncThunk(
     }
   }
 );
+export const fetchDataWithStateFunctional = createAsyncThunk(
+  "user/fetchDataWithStateFunctional",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { user } = getState();
+      const payload = { ...user.form };
+      const id = payload._id;
+      delete payload._id;
+      console.log(payload);
+
+      const response = await fetch(
+        `https://arabic-data-collector.onrender.com/api/v1/FunctionalWord/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({ message: "error here" });
+    }
+  }
+);
 
 // Slice
 export const userSlice = createSlice({
@@ -246,7 +335,9 @@ export const userSlice = createSlice({
     },
     updateForm: (state, action) => {
       state.form[action.payload.name] = action.payload.value;
+      console.log(JSON.parse(JSON.stringify(state.form)));
     },
+
     updateDiacritics: (state, action) => {
       // console.log(action.payload);
       state.diacritics = action.payload;
@@ -378,6 +469,7 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log("helllllllllllllllllllllo");
         const { data } = action.payload;
         state.loading = false;
         state.auth = true;
@@ -389,6 +481,7 @@ export const userSlice = createSlice({
           status: item.state,
           meanings: item.semantic_info.map((info) => info.meaning.text),
         }));
+        console.log(data);
         const verbs = data.assigned_verbs.map((item) => ({
           id: item._id,
           word: item.text,
@@ -407,6 +500,9 @@ export const userSlice = createSlice({
         );
         state.nouns = data.assigned_words.map((item) => item.text);
         state.verbs = data.assigned_verbs.map((item) => item.text);
+        console.log("الكلمات الوظيفية", state.assigned_functional_words);
+        console.log(state.nouns);
+        console.log(state.verbs);
 
         wordData = [...words, ...assigned_functional_words, ...verbs];
         state.wordData = wordData;
@@ -450,7 +546,21 @@ export const userSlice = createSlice({
         state.error = true;
         state.message = action.payload.message;
       });
-
+    builder
+      .addCase(assignedFunctionalWords.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(assignedFunctionalWords.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data;
+        localStorage.setItem("data", JSON.stringify(action.payload.data));
+      })
+      .addCase(assignedFunctionalWords.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
     builder
       .addCase(getWord.pending, (state) => {
         state.pageLoading = true;
@@ -485,6 +595,24 @@ export const userSlice = createSlice({
         localStorage.setItem("form", JSON.stringify(data));
       })
       .addCase(getVerb.rejected, (state, action) => {
+        state.pageLoading = false;
+        state.error = true;
+        state.message = action.payload.message;
+      });
+    builder
+      .addCase(get_functional_words.pending, (state) => {
+        state.pageLoading = true;
+        state.error = false;
+      })
+      .addCase(get_functional_words.fulfilled, (state, action) => {
+        const { data } = action.payload.data;
+        console.log(data);
+        state.pageLoading = false;
+        state.form = data;
+        state.diacritics = data.diacritics;
+        localStorage.setItem("form", JSON.stringify(data));
+      })
+      .addCase(get_functional_words.rejected, (state, action) => {
         state.pageLoading = false;
         state.error = true;
         state.message = action.payload.message;
@@ -526,6 +654,24 @@ export const userSlice = createSlice({
         // console.log(action.payload);
       })
       .addCase(fetchDataWithStateVirb.rejected, (state, action) => {
+        console.log("in rejected state");
+        // console.log(action);
+        state.loading = false;
+        state.error = true;
+      });
+    builder
+      .addCase(fetchDataWithStateFunctional.pending, (state) => {
+        console.log("in pending state");
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(fetchDataWithStateFunctional.fulfilled, (state, action) => {
+        console.log("in fulfilled state");
+        state.loading = false;
+        state.saved = true;
+        // console.log(action.payload);
+      })
+      .addCase(fetchDataWithStateFunctional.rejected, (state, action) => {
         console.log("in rejected state");
         // console.log(action);
         state.loading = false;

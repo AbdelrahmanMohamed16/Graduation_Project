@@ -25,7 +25,10 @@ function Navbar(props) {
   const dataOptionsNoun = data?.assigned_words;
   const optionsVerb = data?.assigned_verbs?.map((word) => word.text);
   const dataOptionsVerb = data?.assigned_verbs;
-
+  const optionsFunctionalWord = data?.assigned_functional_words?.map(
+    (word) => word.text
+  );
+  const dataOptionsFunctionalWord = data?.assigned_functional_words;
   const { window, navItems, setWord, word } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -126,13 +129,21 @@ function Navbar(props) {
                     <InputField
                       select={true}
                       label="قائمة المداخل المطلوب تحريرها"
-                      options={optionsNoun || optionsVerb}
+                      options={
+                        optionsNoun || optionsVerb || optionsFunctionalWord
+                      }
                       set={setWord}
-                      dataOptions={dataOptionsNoun || dataOptionsVerb}
+                      dataOptions={
+                        dataOptionsNoun ||
+                        dataOptionsVerb ||
+                        dataOptionsFunctionalWord
+                      }
                       defaultOption={word}
                       val={word}
                       name={"text"}
                       nouns={optionsNoun ? true : false}
+                      verbs={optionsVerb ? true : false}
+                      functionalWords={optionsFunctionalWord ? true : false}
                     />
                   )}
                 </Typography>
@@ -167,13 +178,21 @@ function Navbar(props) {
                       <InputField
                         select={true}
                         label="قائمة المداخل المطلوب تحريرها"
-                        options={optionsNoun || optionsVerb}
+                        options={
+                          optionsNoun || optionsVerb || optionsFunctionalWord
+                        }
                         set={setWord}
-                        dataOptions={dataOptionsNoun || dataOptionsVerb}
+                        dataOptions={
+                          dataOptionsNoun ||
+                          dataOptionsVerb ||
+                          dataOptionsFunctionalWord
+                        }
                         defaultOption={word}
                         val={word}
                         name={"text"}
                         nouns={optionsNoun ? true : false}
+                        verbs={optionsVerb ? true : false}
+                        functionalWords={optionsFunctionalWord ? true : false}
                       />
                     )}
                   </Box>

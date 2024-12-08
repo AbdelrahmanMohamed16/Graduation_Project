@@ -16,6 +16,7 @@ import {
   updateSemantic_info_obj,
   clearSemantic_info_obj,
   clearForm,
+  get_functional_words,
 } from "../../redux/userSlice";
 
 function InputField({
@@ -43,6 +44,8 @@ function InputField({
   image,
   onFocus,
   nouns = false,
+  functionalWords = false,
+  verbs = false,
 }) {
   const [selectedOption, setSelectedOption] = useState(defaultOption || "");
   useEffect(() => {
@@ -69,10 +72,12 @@ function InputField({
     // choosed a words
     if (dataOptions?.length) {
       const option = dataOptions.find((opt) => opt.text === value);
-      if (option)
-        nouns
-          ? dispatch(getWord({ wordId: option._id }))
-          : dispatch(getVerb({ wordId: option._id }));
+      if (option) {
+        nouns && dispatch(getWord({ wordId: option._id }));
+        verbs && dispatch(getVerb({ wordId: option._id }));
+        functionalWords &&
+          dispatch(get_functional_words({ wordId: option._id }));
+      }
     }
 
     if (MorphologicalInfo) {

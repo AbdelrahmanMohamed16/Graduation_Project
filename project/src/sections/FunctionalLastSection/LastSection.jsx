@@ -1,7 +1,11 @@
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataWithState, updateForm } from "../../redux/userSlice";
+import {
+  fetchDataWithState,
+  fetchDataWithStateFunctional,
+  updateForm,
+} from "../../redux/userSlice";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { Box, Grid2, Typography } from "@mui/material";
@@ -42,7 +46,7 @@ MyFormControlLabel.propTypes = {
   value: PropTypes.any,
 };
 
-function LastSection({ files, records }) {
+function LastSection({ files, records, ex1, ex2, ex3 }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
   const dispatch = useDispatch();
@@ -140,15 +144,24 @@ function LastSection({ files, records }) {
         updatedDiacritic[index].pronounciation = recordURL; // Update specific field
       }
 
-      setDiacritic(updatedDiacritic);
-      setSemantic(updatedSemantic);
+      // setDiacritic(updatedDiacritic);
+      // setSemantic(updatedSemantic);
       dispatch(updateForm({ name: "diacritics", value: updatedDiacritic }));
-      dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
       dispatch(
-        updateForm({ name: "morphological_info", value: morphological })
+        updateForm({ name: "linguistic_function", value: { example: ex1 } })
       );
+      dispatch(
+        updateForm({ name: "contextual_indicators", value: { example: ex2 } })
+      );
+      dispatch(
+        updateForm({ name: "syntactic_collocation", value: { example: ex3 } })
+      );
+      // dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
+      // dispatch(
+      //   updateForm({ name: "morphological_info", value: morphological })
+      // );
 
-      dispatch(fetchDataWithState());
+      dispatch(fetchDataWithStateFunctional());
     } catch (error) {
       console.error("Error in submitPublics: ", error);
     }
@@ -181,38 +194,7 @@ function LastSection({ files, records }) {
           <ButtonCompnent text="AI" />
         </a>
       </Grid>
-      <Grid2 size={12} mt={4}>
-        <Typography
-          variant="h6"
-          fontWeight={"bold"}
-          fontFamily={"El Messiri"}
-          color="#0F2D4D"
-        >
-          حالة البطاقة:
-        </Typography>
-      </Grid2>
-      <Grid2 size={12} ml={2}>
-        <RadioGroup
-          name="use-radio-group"
-          defaultValue="first"
-          value={completed ? "second" : "first"}
-          sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
-          onChange={(e) => {
-            if (e.target.value === "first") {
-              setCompleted(false);
-            } else {
-              setCompleted(true);
-            }
-          }}
-        >
-          <MyFormControlLabel value="first" label="ناقص" control={<Radio />} />
-          <MyFormControlLabel
-            value="second"
-            label="مكتمل"
-            control={<Radio />}
-          />
-        </RadioGroup>
-      </Grid2>
+
       <Grid2 size={12} mt={4}>
         <Typography
           variant="h6"

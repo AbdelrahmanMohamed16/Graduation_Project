@@ -105,7 +105,7 @@ function App() {
                         setWord={setWord}
                         word={word}
                       ></Navbar>
-                      <FunctionalPage />
+                      <FunctionalPage word={word} />
                     </>
                   }
                 />
