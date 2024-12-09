@@ -188,7 +188,11 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
               label="المجال الدلالي"
               select={true}
               options={options}
-              defaultOption={Semantic_fields}
+              defaultOption={
+                typeof Semantic_fields == "object"
+                  ? Semantic_fields[0]
+                  : Semantic_fields
+              }
               name={"Semantic_fields"}
               semantic_info={true}
             />

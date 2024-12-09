@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar/Navbar";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AccordionWithWords from "./pages/UserInfoPage/FirstPage";
 import NounsPage from "./pages/NounsPage/NounsPage";
 import VerbPage from "./pages/VerbPage/VerbPage";
@@ -29,6 +29,33 @@ function App() {
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
+
+  const timeSpentRef = useRef(0); // Store the time spent without triggering re-renders
+  const [totalTimeSpent, setTotalTimeSpent] = useState(0); // Display time in UI
+  useEffect(() => {
+    const interval = setInterval(() => {
+      timeSpentRef.current += 1; // Increment time spent
+      // Update state every 1 minute to reduce re-renders
+      if (timeSpentRef.current % 60 === 0) {
+        setTotalTimeSpent(timeSpentRef.current); // Update state every 60 seconds
+      }
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []);
+
+  setInterval(() => {
+    fetch("https://arabic-data-collector.onrender.com/api/v1/Auth/time", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify({
+        time: totalTimeSpent,
+      }),
+    });
+  }, 900000);
 
   useEffect(() => {
     // choosed اختر

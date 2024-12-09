@@ -570,6 +570,7 @@ export const userSlice = createSlice({
         const { data } = action.payload.data;
         state.pageLoading = false;
         state.form = data;
+        console.log(data);
         state.semantic_info = data.semantic_info;
         state.morphological_info = data.morphological_info;
         state.diacritics = data.diacritics;

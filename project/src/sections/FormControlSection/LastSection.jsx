@@ -27,6 +27,7 @@ const StyledFormControlLabel = styled((props) => (
     {
       props: { checked: true },
       style: {
+        marginLeft: 0,
         ".MuiFormControlLabel-label": {
           color: "black",
         },
@@ -62,6 +63,14 @@ function LastSection({
 }) {
   let imageFormData = new FormData();
   let recordFormData = new FormData();
+  const stateFromStore = useSelector((s) => s.user.form.state);
+  const [status, setStatus] = React.useState(
+    stateFromStore ? stateFromStore : "قيد التحرير"
+  );
+  const notesFromStore = useSelector((s) => s.user.form.notes);
+  const [notes, setNotes] = React.useState(
+    notesFromStore ? notesFromStore : ""
+  );
   const dispatch = useDispatch();
   const diacriticFromStore = useSelector((state) => state.user.diacritics);
   const [diacritic, setDiacritic] = React.useState(diacriticFromStore);
@@ -162,6 +171,8 @@ function LastSection({
 
         setDiacritic(updatedDiacritic);
         setSemantic(updatedSemantic);
+        // dispatch(updateForm({ name: "state", value: status }));
+        dispatch(updateForm({ name: "notes", value: notes }));
         dispatch(updateForm({ name: "diacritics", value: updatedDiacritic }));
         dispatch(updateForm({ name: "semantic_info", value: updatedSemantic }));
         dispatch(
@@ -181,6 +192,10 @@ function LastSection({
     }
   };
 
+  const handleSend = async () => {
+    dispatch(updateForm({ name: "state", value: "قيد المراجعه" }));
+    submitPublics();
+  };
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>
@@ -196,22 +211,32 @@ function LastSection({
       <Grid2 size={12} ml={2}>
         <RadioGroup
           name="use-radio-group"
-          defaultValue="first"
+          value={status}
+          onChange={() => {
+            setStatus(
+              status === "قيد التحرير" ? "قيد المراجعه" : "قيد التحرير"
+            );
+          }}
           sx={{ width: "fit-content", direction: "rtl", marginTop: 0 }}
         >
           <MyFormControlLabel
-            value="first"
+            value="قيد التحرير"
             label="قيد التحرير"
             control={<Radio />}
           />
           <MyFormControlLabel
-            value="second"
+            value="قيد المراجعه"
             label="قيد المراجعه"
             control={<Radio />}
           />
         </RadioGroup>
         <div style={{ maxWidth: "500px" }}>
-          <InputField multiLine={true} label="ملاحظات للمدقق" />
+          <InputField
+            multiLine={true}
+            val={notes}
+            set={setNotes}
+            label="ملاحظات للمدقق"
+          />
         </div>
       </Grid2>
       <Box
@@ -252,7 +277,36 @@ function LastSection({
             </LoadingButton>
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <ButtonCompnent text="ارسل للمدقق"></ButtonCompnent>
+            {/* <ButtonCompnent
+              text="ارسل للمدقق"
+              onclick={handleSend}
+            ></ButtonCompnent> */}
+            <LoadingButton
+              variant="contained"
+              loading={isLoading}
+              loadingIndicator={
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    color: "#ffffff", // Change spinner color
+                  }}
+                />
+              }
+              // loadingPosition="start"
+              sx={{
+                width: "100%",
+                background: "linear-gradient(to right, #0F2D4D, #2369B3)",
+                borderRadius: "5px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                "&.MuiLoadingButton-loading": {
+                  background: "linear-gradient(to right, #0F2D4D, #2369B3)", // Keep the background color during loading
+                },
+              }}
+              onClick={handleSend}
+            >
+              ارسال للمدقق
+            </LoadingButton>
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
             <ButtonCompnent onclick={handlePrint} text="اطبع"></ButtonCompnent>
