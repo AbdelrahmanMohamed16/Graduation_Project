@@ -277,7 +277,9 @@ function Section4({
             <Stack alignItems={"center"} spacing={2}>
               <ButtonCompnent
                 text={
-                  collocatesIndex >= 0 ? "حفظ التغييرات" : "أضف متصاحبة جديدة"
+                  collocatesIndex >= 0
+                    ? "حفظ التغييرات"
+                    : "أضف المتصاحبة اللفظية"
                 }
                 rounded={true}
                 icon={true}
@@ -428,9 +430,7 @@ function Section4({
             <Grid container justifyContent={"center"} size={12} mt={5}>
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <ButtonCompnent
-                  text={
-                    index >= 0 ? "حفظ التغييرات" : "اضف معلومة دلالية جديدة"
-                  }
+                  text={index >= 0 ? "حفظ التغييرات" : "اضف المعلومة دلالية "}
                   icon={true}
                   onclick={handleNewSemantic}
                 />
