@@ -11,6 +11,8 @@ import "react-quill/dist/quill.snow.css";
 import {
   deleteSemanticInfoMeaningExample,
   updateMeaning,
+  updateSemantic_info_obj,
+  updateSemantic_info_obj_semantic_fields,
 } from "../../redux/userSlice";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -28,18 +30,36 @@ const VisuallyHiddenInput = styled("input")({
 
 function ExampleData({ index, setExamples, data, onChange }) {
   const { text, source } = data;
-  const [editingTextFormat, seteditingTextFormat] = useState(false);
+  const [editedTextFormat, seteditedTextFormat] = useState(text?.includes("<"));
   const dispatch = useDispatch();
   return (
     <Grid2 container spacing={2} size={12}>
       <Grid2 size={{ xs: 12, md: 8 }}>
-        <InputField
-          text={true}
-          label="أمثلة"
-          val={text}
-          set={(value) => onChange("text", value)}
-        />
-        {editingTextFormat && (
+        {!editedTextFormat ? (
+          <>
+            <InputField
+              text={true}
+              label="أمثلة"
+              val={text}
+              set={(value) => onChange("text", value)}
+            />
+            <Typography
+              variant="p"
+              color="red"
+              component={"button"}
+              fontSize={"15px"}
+              border={"none"}
+              mt={1}
+              bgcolor={"transparent"}
+              onClick={() => seteditedTextFormat(!editedTextFormat)}
+            >
+              تنسيق المثال
+            </Typography>
+          </>
+        ) : (
+          <></>
+        )}
+        {editedTextFormat ? (
           <ReactQuill
             value={text}
             onChange={(value) => onChange("text", value)}
@@ -52,23 +72,9 @@ function ExampleData({ index, setExamples, data, onChange }) {
               marginLeft: "-65%", // Offsets the content to align correctly
             }}
           />
+        ) : (
+          <></>
         )}
-        <Typography
-          variant="p"
-          color="red"
-          component={"button"}
-          fontSize={"15px"}
-          border={"none"}
-          mt={1}
-          bgcolor={"transparent"}
-          onClick={() => seteditingTextFormat(!editingTextFormat)}
-        >
-          {editingTextFormat
-            ? " اخفاء التنسيق"
-            : !text.includes("<")
-            ? "تنسيق المثال"
-            : "عرض التنسيق"}
-        </Typography>
       </Grid2>
       <Grid2 size={{ xs: 12, md: 4 }}>
         <InputField
@@ -113,10 +119,9 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
   ]);
   const [option, setOption] = useState("");
   const [text, setText] = useState(arr?.text);
-  const [imageText, setImageText] = useState(arr?.image.description);
-  const [imageSource, setImageSource] = useState(arr?.image.source);
+  const [imageText, setImageText] = useState(arr?.image?.description);
+  const [imageSource, setImageSource] = useState(arr?.image?.source);
   const [imageURL, setImageURL] = useState(null);
-
   const [example, setExamples] = useState(
     arr?.example || [{ file: "", text: "", source: "" }]
   );
@@ -193,7 +198,15 @@ export default function Section3({ arr, Semantic_fields, addFile, index }) {
                   ? Semantic_fields[0]
                   : Semantic_fields
               }
-              name={"Semantic_fields"}
+              val={
+                typeof Semantic_fields == "object"
+                  ? Semantic_fields[0]
+                  : Semantic_fields
+              }
+              // set={(value) => {
+              //   dispatch(updateSemantic_info_obj_semantic_fields({ value }));
+              // }}
+              name={"semantic_fields"}
               semantic_info={true}
             />
           </Grid2>

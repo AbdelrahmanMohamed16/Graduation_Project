@@ -58,7 +58,7 @@ function InputField({
     set?.(value);
 
     if (MorphologicalInfo) dispatch(updateMorphologicalInfo({ name, value }));
-    if (semantic_info) dispatch(clearSemantic_info_obj({ name, value }));
+    if (semantic_info) dispatch(updateSemantic_info_obj({ name, value }));
     if (collocates_obj) dispatch(updateCollocates_obj({ name, value }));
     if (meaning) dispatch(updateMeaning({ name, value, arr: null }));
     if (setImage) setImage({ ...image, [name]: value });

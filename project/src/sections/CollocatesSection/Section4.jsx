@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   clearCollocates,
   clearCollocates_Obj,
+  clearMeaning,
   clearSemantic_info_obj,
   deleteCollocate,
   deleteCollocateExample,
@@ -26,18 +27,36 @@ import {
 import Swal from "sweetalert2";
 function Example({ index, data, setExamples, onChange }) {
   const { text, source } = data;
-  const [editingTextFormat, seteditingTextFormat] = useState(false);
+  const [editedTextFormat, seteditedTextFormat] = useState(text?.includes("<"));
   const dispatch = useDispatch();
   return (
     <Grid container spacing={2} size={12} sx={{ my: "10px" }}>
       <Grid size={{ xs: 12, md: 8 }}>
-        <InputField
-          text={true}
-          label="أمثلة إستعمالية"
-          val={text}
-          set={(value) => onChange("text", value)}
-        />
-        {editingTextFormat && (
+        {!editedTextFormat ? (
+          <>
+            <InputField
+              text={true}
+              label="أمثلة"
+              val={text}
+              set={(value) => onChange("text", value)}
+            />
+            <Typography
+              variant="p"
+              color="red"
+              component={"button"}
+              fontSize={"15px"}
+              border={"none"}
+              mt={1}
+              bgcolor={"transparent"}
+              onClick={() => seteditedTextFormat(!editedTextFormat)}
+            >
+              تنسيق المثال
+            </Typography>
+          </>
+        ) : (
+          <></>
+        )}
+        {editedTextFormat ? (
           <ReactQuill
             value={text}
             onChange={(value) => onChange("text", value)}
@@ -50,23 +69,9 @@ function Example({ index, data, setExamples, onChange }) {
               marginLeft: "-65%", // Offsets the content to align correctly
             }}
           />
+        ) : (
+          <></>
         )}
-        <Typography
-          variant="p"
-          color="red"
-          component={"button"}
-          fontSize={"15px"}
-          border={"none"}
-          bgcolor={"transparent"}
-          mt={1}
-          onClick={() => seteditingTextFormat(!editingTextFormat)}
-        >
-          {editingTextFormat
-            ? " اخفاء التنسيق"
-            : !text?.includes("<")
-            ? "تنسيق المثال"
-            : "عرض التنسيق"}
-        </Typography>
       </Grid>
       <Grid size={{ xs: 12, md: 2 }}>
         <InputField
@@ -79,6 +84,7 @@ function Example({ index, data, setExamples, onChange }) {
         />
       </Grid>
       <Grid size={{ xs: 12, md: 2 }}>
+        {console.log(index)}
         {index ? (
           <Button
             variant="contained"
@@ -99,7 +105,7 @@ function Example({ index, data, setExamples, onChange }) {
                 if (result.isConfirmed) {
                   dispatch(deleteCollocateExample({ index }));
                   setExamples((prev) =>
-                    prev.filter((example) => example !== prev[index])
+                    prev?.filter((example) => example !== prev[index])
                   );
                 }
               });
@@ -147,8 +153,8 @@ function Section4({
         } else {
           dispatch(updateCollocates({ arr: null, collocatesIndex: null }));
         }
-        dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       }
+      dispatch(updateSemantic_info_obj({ name: "collocates", value: null }));
       dispatch(
         updateSemantic_info_obj({ name: "meaning", value: meaning_obj })
       );
@@ -163,6 +169,7 @@ function Section4({
         dispatch(updateSemantic_info({ index: null }));
       }
       dispatch(clearSemantic_info_obj());
+      dispatch(clearMeaning());
       dispatch(clearCollocates());
       setValue(-1);
       setValue2(-1);

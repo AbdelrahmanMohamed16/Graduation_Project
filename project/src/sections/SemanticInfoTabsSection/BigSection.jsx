@@ -75,8 +75,8 @@ export default function BasicTabs({
       );
       dispach(
         updateSemantic_info_obj({
-          name: "Semantic_fields",
-          value: arr[newValue].Semantic_fields,
+          name: "semantic_fields",
+          value: arr[newValue].semantic_fields,
         })
       );
     }
@@ -110,7 +110,7 @@ export default function BasicTabs({
             <>
               <Section3
                 arr={item.meaning}
-                Semantic_fields={item.Semantic_fields}
+                Semantic_fields={item.semantic_fields}
                 word={word}
                 index={index}
                 addFile={addFile}

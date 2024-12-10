@@ -82,6 +82,7 @@ export default function NounsPage(props) {
   const [semantic_info_arr, setSemantic_info_arr] = useState(
     semantic_info || {}
   );
+  console.log(semantic_info);
   useEffect(() => {
     setSemantic_info_arr(semantic_info);
   }, [semantic_info]);
@@ -118,7 +119,7 @@ export default function NounsPage(props) {
                 />
                 <div style={{ padding: 24 }}>
                   {" "}
-                  <Section3 addFile={addFile} />
+                  <Section3 addFile={addFile} deleteFile={deleteFile} />
                   <TabSection
                     value={value2}
                     setValue={setValue2}

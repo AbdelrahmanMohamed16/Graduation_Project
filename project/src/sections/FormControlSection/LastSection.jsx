@@ -12,8 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
   clearForm,
-  clearSemantic_info,
-  clearSemantic_info_obj,
   fetchDataWithState,
   fetchDataWithStateVirb,
   updateForm,
@@ -158,7 +156,7 @@ function LastSection({
             semanticObject.meaning.image.url = imageURL;
           }
         }
-
+        console.log(updatedSemantic);
         let updatedDiacritic = await structuredClone(diacritic);
         for (let index = 0; index < records?.length; index++) {
           const recordURL = await sendRecord(records[index]);

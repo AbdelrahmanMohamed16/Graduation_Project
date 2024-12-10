@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   error: false,
@@ -386,6 +386,9 @@ export const userSlice = createSlice({
         state.meaning[action.payload.name] = action.payload.value;
       }
     },
+    clearMeaning: (state, action) => {
+      state.meaning = {};
+    },
     updateImage_obj: (state, action) => {
       state.image_obj[action.payload.name] = action.payload.value;
       updateMeaning({ name: "image", value: state.image_obj });
@@ -399,7 +402,7 @@ export const userSlice = createSlice({
     },
     deleteSemanticInfo: (state, action) => {
       if (action.payload.index) {
-        state.semantic_info = state.semantic_info.filter(
+        state.semantic_info = state.semantic_info?.filter(
           (item) => item !== state.semantic_info[action.payload.index]
         );
         clearSemantic_info_obj();
@@ -407,7 +410,7 @@ export const userSlice = createSlice({
     },
     deleteSemanticInfoMeaningExample: (state, action) => {
       if (action.payload.index) {
-        state.meaning.example = state.meaning.example.filter(
+        state.meaning.example = state.meaning.example?.filter(
           (item) => item !== state.meaning.example[action.payload.index]
         );
       }
@@ -422,10 +425,11 @@ export const userSlice = createSlice({
           state.collocates = [...state.collocates, state.collocates_obj];
         }
       }
+      console.log("collocates", JSON.parse(JSON.stringify(state.collocates)));
     },
     deleteCollocate: (state, action) => {
       if (action.payload.index) {
-        state.collocates = state.collocates.filter(
+        state.collocates = state.collocates?.filter(
           (item) => item !== state.collocates[action.payload.index]
         );
         clearCollocates_Obj();
@@ -434,7 +438,7 @@ export const userSlice = createSlice({
     deleteCollocateExample: (state, action) => {
       console.log(action.payload.index);
       if (action.payload.index) {
-        state.collocates_obj.example = state.collocates_obj.example.filter(
+        state.collocates_obj.example = state.collocates_obj.example?.filter(
           (item) => item !== state.collocates_obj.example[action.payload.index]
         );
       }
@@ -697,6 +701,7 @@ export const {
   deleteSemanticInfoMeaningExample,
   clearSemanticInfo,
   updateMeaning,
+  clearMeaning,
   updateImage_obj,
   updateCollocates,
   deleteCollocate,
