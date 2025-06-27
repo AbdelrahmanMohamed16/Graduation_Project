@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const verbDropDownModel = require("../Models/verbDropDownModel");
-const { checkAuth } = require("../controllers/checkAuth");
+// const { checkAuth } = require("../controllers/checkAuth");
 
-router.use(checkAuth);
+// router.use(checkAuth);
 
 router.get("/", async (req, res) => {
   try {

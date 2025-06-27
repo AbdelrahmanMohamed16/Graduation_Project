@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const userModel = require("../Models/userModel");
 const FunctionalWordModel = require("../Models/functionalWordModel");
-const { checkAuth } = require("../controllers/checkAuth");
+// const { checkAuth } = require("../controllers/checkAuth");
 
-router.use(checkAuth);
+// router.use(checkAuth);
 
 // get request for funtional word using ID
 router.get("/:ID", async (req, res) => {

@@ -3,9 +3,9 @@ const router = express.Router();
 const verbModel = require("../Models/verbModel");
 const userModel = require("../Models/userModel");
 
-const { checkAuth } = require("../controllers/checkAuth");
+// const { checkAuth } = require("../controllers/checkAuth");
 
-router.use(checkAuth);
+// router.use(checkAuth);
 
 router.get("/:ID", async (req, res) => {
   try {
